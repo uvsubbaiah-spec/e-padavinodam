@@ -32,7 +32,9 @@ Open the site in **Chrome** → menu (⋮) → **Install app** (or **Add to Home
 
 ## Typing answers
 
-Players can use the in-app Telugu akshara keypad, or tap **abc→తె** and type in English on any phone keyboard: `kamalam` → కమలం, `sankraanti` → సంక్రాంతి, `amma` → అమ్మ. Capitals give the harder sounds (T ట, D డ, N ణ, L ళ, Sh ష, E ఏ, O ఓ) and `aa`/`ee`/`oo` give long vowels; the app also offers the likely alternatives to tap. A Telugu keyboard works in the same box. On a computer, just start typing letters while a puzzle is open.
+A bar above the keyboard switches between **తెలుగు** (the in-app Telugu akshara keypad) and **ENG** (type in English on any phone keyboard), and **దాచు** hides the keyboard to show the whole grid. In ENG: `kamalam` → కమలం, `sankraanti` → సంక్రాంతి, `amma` → అమ్మ. Capitals give the harder sounds (T ట, D డ, N ణ, L ళ, Sh ష, E ఏ, O ఓ) and `aa`/`ee`/`oo` give long vowels; the app also offers the likely alternatives to tap. A Telugu keyboard works in the same box. On a computer, just start typing letters while a puzzle is open.
+
+The magnifier buttons on the puzzle's top bar zoom the grid from 100% to 200% (it then scrolls sideways); pinch-zoom on the phone works too.
 
 ## Keeping posts up to date
 
