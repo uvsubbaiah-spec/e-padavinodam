@@ -1,0 +1,1636 @@
+<!doctype html>
+<html lang="te">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>ఈ-పద వినోదం</title>
+<meta name="description" content="telugupadavinodam.blogspot.com లోని తెలుగు పద వినోదాలను ఫోన్‌లో ఆడండి">
+<meta name="theme-color" content="#8E2C2C">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hind+Guntur:wght@400;500;600;700&family=Mandali&family=Ramabhadra&family=Tenali+Ramakrishna&display=swap">
+<style>
+:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+[hidden]{display:none!important}
+img{max-width:100%}
+/* Layout: one phone-width column, a screen per view, tab bar at the foot; cream paper, kumkum red, marigold */
+:root{
+  --bg:#FBF3E4; --surface:#FFFBF3; --ink:#2A1F17; --muted:#6B5849; --line:#EADBC4;
+  --primary:#8E2C2C; --on-primary:#FFFFFF; --title:#8E2C2C;
+  --gold:#F2A93B; --gold-tint:#FCE8C3; --rose:#F7E1D7; --leaf-tint:#E1EDE2; --leaf-ink:#2F5A3E;
+  --chip:#F1E4CF; --off:#A08C7A;
+  --cell:#FFFBF3; --grid-line:#2A1F17; --num:#5C4A3B; --block:#2E2A3A;
+  --key:#FFFBF3; --key-border:#E3D2B8; --clue-bg:#FCE8C3; --done:#7A6656; --wrong:#A8360B; --wrong-bg:#FADBD0;
+  --toast-bg:#2A1F17; --toast-ink:#FFF6E8; --pill-bg:#FCE8C3; --pill-ink:#6E1F1F;
+  --hero:#8E2C2C; --hero-ink:#FFF6E8; --hero-sub:#F6DCC8; --hero-deep:#6E1F1F;
+  --shadow:0 6px 18px rgba(90,50,20,.09);
+  --accent:#F2A93B; --on-accent:#2A1F17;
+  --word:color-mix(in srgb, var(--accent) 38%, var(--cell));
+  --i-halo:#FCE8C3; --i-ring:#E9C27D; --i-ink:#2A1F17; --i-maroon:#8E2C2C; --i-clay:#D9644A; --i-gold:#F2A93B; --i-cream:#FFFBF3; --i-leaf:#6FA27A; --i-chai:#B5733A; --i-steam:#C9A98A; --i-glow:#FFE7A3; --i-glow-op:.75; --i-star-op:0;
+  --b-halo:#F2A93B; --b-op1:0; --b-op2:.16; --b-ray:#D9644A; --b-glass:#FFF1C9; --b-line:#2A1F17; --b-fil:#D9644A; --b-base:#A08C7A;
+  --font-ui:'Hind Guntur','Noto Sans Telugu',system-ui,sans-serif;
+  --font-head:'Ramabhadra','Hind Guntur',sans-serif;
+  --font-display:'Tenali Ramakrishna','Ramabhadra','Hind Guntur',sans-serif;
+  --font-grid:var(--font-ui); --size-mult:1;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#1E1714; --surface:#2A211C; --ink:#F5EBDD; --muted:#C4B3A0; --line:#3D312A;
+    --primary:#F2A93B; --on-primary:#2A1F17; --title:#F2A93B;
+    --gold:#F2A93B; --gold-tint:#3A2E26; --rose:#3A2A26; --leaf-tint:#24352A; --leaf-ink:#A8D3B2;
+    --chip:#3A2E26; --off:#8A7563;
+    --cell:#352A23; --grid-line:#120D0B; --num:#D8C8B5; --block:#120D0B;
+    --key:#352A23; --key-border:#4A3B31; --clue-bg:#33281F; --done:#A8978A; --wrong:#FF9A76; --wrong-bg:#4E2A20;
+    --toast-bg:#F5EBDD; --toast-ink:#2A1F17; --pill-bg:#3A2E26; --pill-ink:#F2A93B;
+    --hero:#3A2420; --hero-ink:#F5EBDD; --hero-sub:#D8C8B5; --hero-deep:#24150F;
+    --shadow:0 6px 18px rgba(0,0,0,.35);
+    --i-halo:#33281F; --i-ring:#5A4738; --i-ink:#120D0B; --i-maroon:#C2504A; --i-clay:#E57B5E; --i-gold:#F7BC55; --i-cream:#F5EBDD; --i-leaf:#7DB389; --i-chai:#C88A4E; --i-steam:#9C8672; --i-glow:#FFD86B; --i-glow-op:.32; --i-star-op:1;
+    --b-halo:#FFD86B; --b-op1:.26; --b-op2:.42; --b-ray:#F7BC55; --b-glass:#FFE38A; --b-line:#1E1714; --b-fil:#E5502F; --b-base:#C4B3A0;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#1E1714; --surface:#2A211C; --ink:#F5EBDD; --muted:#C4B3A0; --line:#3D312A;
+  --primary:#F2A93B; --on-primary:#2A1F17; --title:#F2A93B;
+  --gold:#F2A93B; --gold-tint:#3A2E26; --rose:#3A2A26; --leaf-tint:#24352A; --leaf-ink:#A8D3B2;
+  --chip:#3A2E26; --off:#8A7563;
+  --cell:#352A23; --grid-line:#120D0B; --num:#D8C8B5; --block:#120D0B;
+  --key:#352A23; --key-border:#4A3B31; --clue-bg:#33281F; --done:#A8978A; --wrong:#FF9A76; --wrong-bg:#4E2A20;
+  --toast-bg:#F5EBDD; --toast-ink:#2A1F17; --pill-bg:#3A2E26; --pill-ink:#F2A93B;
+  --hero:#3A2420; --hero-ink:#F5EBDD; --hero-sub:#D8C8B5; --hero-deep:#24150F;
+  --shadow:0 6px 18px rgba(0,0,0,.35);
+  --i-halo:#33281F; --i-ring:#5A4738; --i-ink:#120D0B; --i-maroon:#C2504A; --i-clay:#E57B5E; --i-gold:#F7BC55; --i-cream:#F5EBDD; --i-leaf:#7DB389; --i-chai:#C88A4E; --i-steam:#9C8672; --i-glow:#FFD86B; --i-glow-op:.32; --i-star-op:1;
+  --b-halo:#FFD86B; --b-op1:.26; --b-op2:.42; --b-ray:#F7BC55; --b-glass:#FFE38A; --b-line:#1E1714; --b-fil:#E5502F; --b-base:#C4B3A0;
+  color-scheme:dark;
+}
+/* The app's own theme choice (Settings) wins over the system theme */
+:root[data-app-theme="cozy"]{
+  --bg:#FBF3E4; --surface:#FFFBF3; --ink:#2A1F17; --muted:#6B5849; --line:#EADBC4;
+  --primary:#8E2C2C; --on-primary:#FFFFFF; --title:#8E2C2C;
+  --gold:#F2A93B; --gold-tint:#FCE8C3; --rose:#F7E1D7; --leaf-tint:#E1EDE2; --leaf-ink:#2F5A3E;
+  --chip:#F1E4CF; --off:#A08C7A;
+  --cell:#FFFBF3; --grid-line:#2A1F17; --num:#5C4A3B; --block:#2E2A3A;
+  --key:#FFFBF3; --key-border:#E3D2B8; --clue-bg:#FCE8C3; --done:#7A6656; --wrong:#A8360B; --wrong-bg:#FADBD0;
+  --toast-bg:#2A1F17; --toast-ink:#FFF6E8; --pill-bg:#FCE8C3; --pill-ink:#6E1F1F;
+  --hero:#8E2C2C; --hero-ink:#FFF6E8; --hero-sub:#F6DCC8; --hero-deep:#6E1F1F;
+  --shadow:0 6px 18px rgba(90,50,20,.09);
+  --i-halo:#FCE8C3; --i-ring:#E9C27D; --i-ink:#2A1F17; --i-maroon:#8E2C2C; --i-clay:#D9644A; --i-gold:#F2A93B; --i-cream:#FFFBF3; --i-leaf:#6FA27A; --i-chai:#B5733A; --i-steam:#C9A98A; --i-glow:#FFE7A3; --i-glow-op:.75; --i-star-op:0;
+  --b-halo:#F2A93B; --b-op1:0; --b-op2:.16; --b-ray:#D9644A; --b-glass:#FFF1C9; --b-line:#2A1F17; --b-fil:#D9644A; --b-base:#A08C7A;
+  color-scheme:light;
+}
+:root[data-app-theme="night"]{
+  --bg:#1E1714; --surface:#2A211C; --ink:#F5EBDD; --muted:#C4B3A0; --line:#3D312A;
+  --primary:#F2A93B; --on-primary:#2A1F17; --title:#F2A93B;
+  --gold:#F2A93B; --gold-tint:#3A2E26; --rose:#3A2A26; --leaf-tint:#24352A; --leaf-ink:#A8D3B2;
+  --chip:#3A2E26; --off:#8A7563;
+  --cell:#352A23; --grid-line:#120D0B; --num:#D8C8B5; --block:#120D0B;
+  --key:#352A23; --key-border:#4A3B31; --clue-bg:#33281F; --done:#A8978A; --wrong:#FF9A76; --wrong-bg:#4E2A20;
+  --toast-bg:#F5EBDD; --toast-ink:#2A1F17; --pill-bg:#3A2E26; --pill-ink:#F2A93B;
+  --hero:#3A2420; --hero-ink:#F5EBDD; --hero-sub:#D8C8B5; --hero-deep:#24150F;
+  --shadow:0 6px 18px rgba(0,0,0,.35);
+  --i-halo:#33281F; --i-ring:#5A4738; --i-ink:#120D0B; --i-maroon:#C2504A; --i-clay:#E57B5E; --i-gold:#F7BC55; --i-cream:#F5EBDD; --i-leaf:#7DB389; --i-chai:#C88A4E; --i-steam:#9C8672; --i-glow:#FFD86B; --i-glow-op:.32; --i-star-op:1;
+  --b-halo:#FFD86B; --b-op1:.26; --b-op2:.42; --b-ray:#F7BC55; --b-glass:#FFE38A; --b-line:#1E1714; --b-fil:#E5502F; --b-base:#C4B3A0;
+  color-scheme:dark;
+}
+:root[data-app-theme="white"]{
+  --bg:#F3F4F6; --surface:#FFFFFF; --ink:#15171C; --muted:#565C68; --line:#DADDE3;
+  --primary:#2D46B9; --on-primary:#FFFFFF; --title:#2D46B9;
+  --gold:#F5B82E; --gold-tint:#E8ECFA; --rose:#EEF1FB; --leaf-tint:#E3F1E6; --leaf-ink:#22543A;
+  --chip:#E8EAF0; --off:#8A909B;
+  --cell:#FFFFFF; --grid-line:#15171C; --num:#3A3F49; --block:#15171C;
+  --key:#FFFFFF; --key-border:#D3D7DF; --clue-bg:#EEF1FB; --done:#6B717C; --wrong:#A8360B; --wrong-bg:#FCE3DA;
+  --toast-bg:#15171C; --toast-ink:#FFFFFF; --pill-bg:#E8ECFA; --pill-ink:#1F338F;
+  --hero:#2D46B9; --hero-ink:#FFFFFF; --hero-sub:#DDE3FF; --hero-deep:#1F338F;
+  --shadow:0 6px 18px rgba(20,24,40,.08);
+  --i-halo:#FCE8C3; --i-ring:#E9C27D; --i-ink:#2A1F17; --i-maroon:#8E2C2C; --i-clay:#D9644A; --i-gold:#F2A93B; --i-cream:#FFFBF3; --i-leaf:#6FA27A; --i-chai:#B5733A; --i-steam:#C9A98A; --i-glow:#FFE7A3; --i-glow-op:.75; --i-star-op:0;
+  --b-halo:#F2A93B; --b-op1:0; --b-op2:.16; --b-ray:#D9644A; --b-glass:#FFF1C9; --b-line:#2A1F17; --b-fil:#D9644A; --b-base:#A08C7A;
+  color-scheme:light;
+}
+
+html{box-sizing:border-box;height:100%}
+*,*::before,*::after{box-sizing:inherit}
+body{height:100%;margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-ui);font-size:16px;line-height:1.5;-webkit-tap-highlight-color:transparent}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer}
+a{color:var(--primary)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+h1,h2,h3{text-wrap:balance}
+
+#app{height:100%;max-width:520px;margin:0 auto;display:flex;flex-direction:column;background:var(--bg)}
+#view{flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column}
+#view.is-fixed{overflow:hidden}
+.gutter{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.page{display:flex;flex-direction:column;gap:22px;padding-block:18px 28px}
+
+/* headings */
+.apphead{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.apptitle{margin:0;font-family:var(--font-display);font-weight:400;font-size:40px;line-height:1.1;color:var(--title)}
+.appsub{margin:0;font-size:14px;color:var(--muted)}
+.sec{display:flex;flex-direction:column;gap:10px}
+.sec-h{margin:0;font-family:var(--font-head);font-weight:400;font-size:18px;line-height:1.4}
+.sec-row{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.note{margin:0;font-size:13px;line-height:1.55;color:var(--muted)}
+
+.iconbtn{width:46px;height:46px;flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;border:0;border-radius:999px;background:var(--surface);color:var(--ink);box-shadow:var(--shadow);text-decoration:none}
+.ghostbtn{width:44px;height:44px;flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;border:0;border-radius:12px;background:transparent;color:var(--ink);text-decoration:none;padding:0}
+
+/* hero */
+.hero{position:relative;overflow:hidden;display:flex;flex-direction:column;gap:16px;padding:20px;border-radius:24px;background:var(--hero);color:var(--hero-ink);box-shadow:inset 0 0 0 1px rgba(242,169,59,.45),0 12px 28px rgba(110,31,31,.25)}
+.hero-top{display:flex;justify-content:space-between;gap:16px}
+.hero-txt{display:flex;flex-direction:column;gap:4px;min-width:0}
+.badge{align-self:flex-start;font-size:12px;font-weight:700;padding:3px 10px;border-radius:999px;background:var(--gold);color:#2A1F17}
+.hero h2{margin:4px 0 0;font-family:var(--font-head);font-weight:400;font-size:23px;line-height:1.35}
+.hero p{margin:0;font-size:14px;color:var(--hero-sub)}
+.minigrid{flex-shrink:0;align-self:flex-start;display:grid;grid-template-columns:repeat(7,12px);gap:2px;padding:4px;border-radius:10px;background:var(--hero-deep);transform:rotate(4deg)}
+.minigrid span{width:12px;height:12px;border-radius:1px;background:#FFF6E8}
+.minigrid span.on{background:var(--gold)}
+.minigrid span.mb{background:var(--block) url(rain.webp) center/cover}
+body.no-rain .minigrid span.mb{background-image:none}
+.prog{display:flex;flex-direction:column;gap:6px}
+.prog-row{display:flex;justify-content:space-between;font-size:13px;color:var(--hero-sub)}
+.bar{height:8px;border-radius:999px;background:var(--hero-deep);overflow:hidden}
+.bar i{display:block;height:8px;border-radius:999px;background:var(--gold)}
+.cta{display:flex;align-items:center;justify-content:center;gap:8px;height:50px;border:0;border-radius:14px;background:var(--gold);color:#2A1F17;font-size:16px;font-weight:700;text-decoration:none;box-shadow:inset 0 -3px 0 rgba(0,0,0,.14)}
+.muggu{position:absolute;right:-44px;bottom:-48px;opacity:.22;pointer-events:none}
+.hero > :not(.muggu){position:relative}
+
+/* lists and cards */
+.card{display:flex;flex-direction:column;border-radius:22px;background:var(--surface);box-shadow:var(--shadow);overflow:hidden}
+.rowlink{display:flex;align-items:center;gap:14px;min-height:64px;padding:12px 16px;color:var(--ink);text-decoration:none;border:0;background:transparent;width:100%;text-align:left}
+.rowlink + .rowlink{border-top:1px dashed var(--line)}
+.rowlink .t{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.rowlink .t b{font-size:16px;font-weight:600;line-height:1.4}
+.rowlink .t small{font-size:13px;color:var(--muted)}
+.tile{width:46px;height:46px;flex-shrink:0;display:flex;align-items:center;justify-content:center;border-radius:14px;background:var(--leaf-tint);color:var(--leaf-ink)}
+.pill{flex-shrink:0;font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px}
+.pill.mid{background:var(--gold-tint);color:var(--pill-ink)}
+.pill.ok{background:var(--leaf-tint);color:var(--leaf-ink)}
+.pill.new{background:var(--chip);color:var(--ink)}
+.chips{display:flex;gap:10px;overflow-x:auto;margin-inline:calc(-1 * max(16px,env(safe-area-inset-left,0px)));padding:0 max(16px,env(safe-area-inset-left,0px)) 6px}
+.mchip{flex:0 0 auto;display:flex;flex-direction:column;gap:1px;min-width:108px;padding:12px 14px;border-radius:18px;color:var(--ink);text-decoration:none}
+.mchip b{font-size:15px;font-weight:700}
+.mchip small{font-size:13px;color:var(--muted)}
+.mchip:nth-child(3n+1){background:var(--gold-tint)}
+.mchip:nth-child(3n+2){background:var(--rose)}
+.mchip:nth-child(3n){background:var(--leaf-tint)}
+.tip{display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:20px;background:var(--rose)}
+.tip p{margin:0;font-size:14px;line-height:1.55}
+.tip .ic{width:42px;height:42px;flex-shrink:0;display:flex;align-items:center;justify-content:center;border-radius:12px;background:var(--primary);color:var(--on-primary)}
+.search{display:flex;flex-direction:column;gap:6px}
+.search label{font-size:13px;font-weight:600;color:var(--muted)}
+.search .box{display:flex;align-items:center;gap:8px;height:50px;padding:0 16px;border-radius:999px;background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow)}
+.search input{flex:1;min-width:0;height:46px;border:0;background:transparent;outline:none;font-size:16px}
+
+/* tab bar */
+#tabs{flex-shrink:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));padding:6px 8px 8px;background:var(--surface);border-top:1px solid var(--line)}
+#tabs a{display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;color:var(--muted);text-decoration:none;font-size:12px;font-weight:500}
+#tabs a span{display:flex;align-items:center;justify-content:center;width:60px;height:32px;border-radius:999px}
+#tabs a[aria-current="page"]{color:var(--primary);font-weight:700}
+#tabs a[aria-current="page"] span{background:var(--gold-tint)}
+
+/* puzzle screen */
+.play{flex:1;min-height:0;display:flex;flex-direction:column}
+.pbar{flex-shrink:0;display:flex;align-items:center;gap:2px;height:56px;padding-left:max(6px,env(safe-area-inset-left,0px));padding-right:max(6px,env(safe-area-inset-right,0px));background:var(--surface);border-bottom:1px solid var(--line)}
+.pbar .t{flex:1;min-width:0}
+.pbar h1{margin:0;font-family:var(--font-head);font-weight:400;font-size:17px;line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pbar p{margin:0;font-size:12px;line-height:1.3;color:var(--muted)}
+.ptools{flex-shrink:0;display:flex;align-items:center;justify-content:space-between;gap:8px;height:54px}
+.seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:2px;padding:3px;border-radius:999px;background:var(--chip)}
+.seg button{min-height:36px;padding:0 14px;border:0;border-radius:999px;background:transparent;font-size:14px;font-weight:500;color:var(--ink)}
+.seg button[aria-pressed="true"]{background:var(--primary);color:var(--on-primary);font-weight:700}
+.seg.wide button{min-height:42px}
+.timer{display:flex;align-items:center;gap:5px;font-size:15px;font-weight:600;color:var(--muted);font-variant-numeric:tabular-nums}
+.hint{display:flex;align-items:center;gap:4px;height:44px;padding:0 14px 0 4px;border:0;border-radius:999px;background:var(--pill-bg);color:var(--pill-ink);font-size:14px;font-weight:700}
+.pmid{flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:12px;padding-bottom:10px}
+.grid{--gw:min(calc(100vw - 32px),460px,max(250px,calc(100dvh - 520px)));width:var(--gw);max-width:100%;margin-inline:auto;display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));gap:2px;padding:2px;border-radius:10px;overflow:hidden;background:var(--grid-line);box-shadow:var(--shadow)}
+.cell{position:relative;aspect-ratio:1;min-width:0;margin:0;padding:0;border:0;display:flex;align-items:center;justify-content:center;background:var(--cell);color:var(--ink);font-family:var(--font-grid);font-weight:600;line-height:1;font-size:calc(var(--gw) / var(--n) * .40 * var(--size-mult))}
+.cell .num{position:absolute;top:3px;left:4px;font-family:var(--font-ui);font-weight:700;font-size:max(9px,calc(var(--gw) / var(--n) * .19));color:var(--num)}
+.cell .ltr{padding-top:.18em}
+.cell.is-word{background:var(--word)}
+.cell.is-wrong{background:var(--wrong-bg);color:var(--wrong)}
+.cell.is-cur{background:var(--accent);color:var(--on-accent);box-shadow:inset 0 0 0 2px rgba(0,0,0,.18)}
+.cell.is-cur .num{color:var(--on-accent)}
+.blk{aspect-ratio:1;background:var(--block) url(rain.webp) center/cover no-repeat}
+body.no-rain .blk{background-image:none}
+.cluebar{flex-shrink:0;display:flex;align-items:stretch;min-height:58px;border-radius:16px;background:var(--clue-bg)}
+.cluebar .mid{flex:1;min-width:0;display:flex;align-items:center;gap:10px;padding:6px 2px;border:0;background:transparent;text-align:left;color:var(--ink)}
+.tag{flex-shrink:0;padding:4px 10px;border-radius:999px;font-size:13px;font-weight:700;background:var(--primary);color:var(--on-primary)}
+.cluebar .txt{font-size:15px;font-weight:500;line-height:1.4}
+.ppanel{flex-shrink:0;display:flex;flex-direction:column;gap:6px;padding-top:8px;padding-bottom:10px;background:var(--bg);border-top:1px solid var(--line)}
+.strip{display:flex;gap:4px;overflow-x:auto;min-height:46px}
+.strip .note2{flex:1;display:flex;align-items:center;padding:0 12px;border-radius:12px;font-size:14px;font-weight:600;background:color-mix(in srgb, var(--accent) 25%, var(--key))}
+.k{min-width:0;height:44px;padding:0;border:1px solid var(--key-border);border-radius:12px;background:var(--key);color:var(--ink);font-size:19px;font-weight:500;box-shadow:inset 0 -2px 0 var(--key-border)}
+.strip .k{flex:0 0 auto;min-width:46px;padding:0 6px;font-weight:600}
+.strip.guni .k{background:color-mix(in srgb, var(--accent) 22%, var(--key))}
+.k[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.keys{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:4px}
+.acts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}
+.acts .k{display:flex;align-items:center;justify-content:center;gap:4px;font-size:14px;font-weight:700;background:var(--chip)}
+.cluelist{height:268px;overflow-y:auto;display:flex;flex-direction:column;gap:2px}
+.clue{display:flex;align-items:flex-start;gap:10px;width:100%;min-height:46px;padding:9px 10px;border:0;border-radius:12px;background:transparent;text-align:left;color:var(--ink)}
+.clue .n{width:26px;flex-shrink:0;font-weight:700;font-size:14px;line-height:1.55}
+.clue .x{flex:1;font-size:15px;line-height:1.5}
+.clue.is-on{background:var(--word)}
+.clue.is-done .x{color:var(--done);text-decoration:line-through}
+.tabrow{display:flex;align-items:center;gap:6px}
+.tabrow .seg{flex:0 0 auto}
+.phonekb{display:flex;flex-direction:column;gap:8px;padding:6px 0}
+.wide-btn{display:flex;align-items:center;justify-content:center;gap:8px;min-height:52px;border:0;border-radius:16px;font-size:16px;font-weight:700;text-decoration:none;padding:0 18px}
+.wide-btn.pri{background:var(--primary);color:var(--on-primary)}
+.wide-btn.sec{background:var(--gold);color:#2A1F17;box-shadow:inset 0 -3px 0 rgba(0,0,0,.12)}
+.wide-btn.ter{background:var(--chip);color:var(--ink)}
+.wide-btn.link{background:transparent;color:var(--primary);min-height:44px}
+
+/* settings */
+.box{display:flex;flex-direction:column;padding:16px;border-radius:22px;background:var(--surface);box-shadow:var(--shadow);gap:16px}
+.box h3{margin:0;font-size:15px;font-weight:600}
+.fld{display:flex;flex-direction:column;gap:8px}
+.sw-row,.radio{display:flex;align-items:center;gap:12px;width:100%;min-height:62px;padding:8px 0;border:0;background:transparent;text-align:left;color:var(--ink)}
+.box .sw-row + .sw-row,.box .radio + .radio{border-top:1px dashed var(--line)}
+.sw-row .t,.radio .t{flex:1;display:flex;flex-direction:column;gap:1px}
+.sw-row .t b,.radio .t b{font-size:15px;font-weight:600}
+.sw-row .t small,.radio .t small{font-size:13px;line-height:1.45;color:var(--muted)}
+.sw{position:relative;flex-shrink:0;width:50px;height:30px;border-radius:999px;background:var(--off);transition:background .15s}
+.sw::after{content:"";position:absolute;top:4px;left:4px;width:22px;height:22px;border-radius:50%;background:#FFFFFF;transition:left .15s}
+[aria-pressed="true"] > .sw{background:var(--primary)}
+[aria-pressed="true"] > .sw::after{left:24px}
+.dot{flex-shrink:0;width:22px;height:22px;border-radius:50%;border:2px solid var(--off)}
+[aria-pressed="true"] > .dot{border:7px solid var(--primary)}
+.swatches{display:flex;gap:16px;padding-left:4px}
+.swatch{width:46px;height:46px;border-radius:50%;border:0;padding:0}
+.swatch[aria-pressed="true"]{box-shadow:0 0 0 3px var(--surface),0 0 0 5px var(--ink)}
+.font{display:flex;align-items:center;gap:12px;width:100%;min-height:62px;padding:8px 14px;border-radius:16px;border:1px solid var(--line);background:var(--surface);text-align:left;color:var(--ink)}
+.font[aria-pressed="true"]{border:2px solid var(--primary);background:var(--gold-tint)}
+.font .t{flex:1;display:flex;flex-direction:column}
+.font .s{font-size:22px;line-height:1.4}
+.font small{font-size:12px;color:var(--muted)}
+.rainsample{width:42px;height:42px;border-radius:10px;flex-shrink:0}
+.soon{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:4px;font-size:14px;color:var(--muted)}
+
+/* finish screen */
+.done{align-items:center;text-align:center;gap:14px}
+.done .art{width:min(300px,78vw);max-width:100%}
+.done .art svg{display:block;width:100%;height:auto}
+.dots{display:flex;justify-content:center}
+.dots button{width:44px;height:36px;display:flex;align-items:center;justify-content:center;border:0;background:transparent;padding:0}
+.dots i{display:block;width:9px;height:9px;border-radius:999px;background:var(--off)}
+.dots [aria-pressed="true"] i{width:24px;background:var(--primary)}
+.cheer{margin:0;font-family:var(--font-display);font-weight:400;font-size:54px;line-height:1.1;color:var(--title)}
+.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;width:100%}
+.stat{display:flex;flex-direction:column;align-items:center;gap:2px;padding:12px;border-radius:20px;background:var(--surface);box-shadow:var(--shadow)}
+.stat small{font-size:13px;color:var(--muted)}
+.stat b{font-family:var(--font-head);font-weight:400;font-size:26px;font-variant-numeric:tabular-nums}
+.btncol{display:flex;flex-direction:column;gap:10px;width:100%}
+
+/* toast */
+#toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);width:min(440px,calc(100% - 32px));padding:12px 16px;border-radius:16px;background:var(--toast-bg);color:var(--toast-ink);font-size:14px;font-weight:500;line-height:1.5;box-shadow:0 10px 26px rgba(42,31,23,.28);z-index:20;pointer-events:none}
+
+/* bulb */
+.b-halo1{fill:var(--b-halo);opacity:var(--b-op1)} .b-halo2{fill:var(--b-halo);opacity:var(--b-op2)}
+.b-ray{stroke:var(--b-ray);fill:none;stroke-width:2.6;stroke-linecap:round}
+.b-glass{fill:var(--b-glass);stroke:var(--b-line);stroke-width:2.2;stroke-linejoin:round}
+.b-hi{stroke:#FFFFFF;fill:none;stroke-width:2.4;stroke-linecap:round;opacity:.9}
+.b-fil{stroke:var(--b-fil);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.b-base{fill:var(--b-base);stroke:var(--b-line);stroke-width:2.2}
+.b-lines{stroke:var(--b-line);stroke-width:1.6;fill:none} .b-tip{fill:var(--b-line)}
+/* illustrations */
+.f-halo{fill:var(--i-halo)} .s-ring{fill:none;stroke:var(--i-ring);stroke-width:3;stroke-dasharray:1 11;stroke-linecap:round}
+.stars{fill:var(--i-gold);opacity:var(--i-star-op)}
+.f-cream{fill:var(--i-cream)} .f-ink{fill:var(--i-ink)} .f-maroon{fill:var(--i-maroon)} .f-clay{fill:var(--i-clay)} .f-gold{fill:var(--i-gold)} .f-leaf{fill:var(--i-leaf)} .f-chai{fill:var(--i-chai)}
+.f-glow{fill:var(--i-glow);opacity:var(--i-glow-op)} .nf{fill:none}
+.s-ink{stroke:var(--i-ink)} .s-gold{stroke:var(--i-gold)} .s-clay{stroke:var(--i-clay)} .s-steam{stroke:var(--i-steam)}
+
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+
+/* admin and editor */
+.lockbtn{position:relative}
+.lockbtn.is-admin{background:var(--gold-tint);color:var(--pill-ink)}
+.hdr-btns{display:flex;gap:8px}
+.inp{width:100%;min-height:46px;padding:10px 14px;border-radius:14px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font-size:16px}
+.inp:focus{outline:3px solid var(--accent);outline-offset:1px}
+textarea.inp{min-height:110px;resize:vertical;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px}
+.inp.sm{min-height:40px;padding:6px 8px;border-radius:10px;font-size:15px;text-align:center}
+.lbl{font-size:13px;font-weight:600;color:var(--muted)}
+.row2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.row3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.file{display:flex;flex-direction:column;gap:6px}
+.file input[type=file]{width:100%;padding:10px;border-radius:14px;border:2px dashed var(--line);background:var(--bg);color:var(--muted);font-size:14px}
+.btnrow{display:flex;flex-wrap:wrap;gap:10px}
+.btnrow .wide-btn{flex:1 1 160px}
+.wide-btn[disabled]{opacity:.55;cursor:not-allowed}
+.status{display:flex;flex-direction:column;gap:6px;padding:12px 14px;border-radius:14px;background:var(--gold-tint);font-size:14px;line-height:1.5}
+.status.err{background:var(--wrong-bg);color:var(--wrong)}
+.status.ok{background:var(--leaf-tint);color:var(--leaf-ink)}
+.steps{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:4px;font-size:14px;line-height:1.55}
+.copyline{display:flex;gap:8px;align-items:center}
+.copyline code{flex:1;min-width:0;overflow-x:auto;white-space:nowrap;padding:10px 12px;border-radius:12px;background:var(--bg);border:1px solid var(--line);font-size:12.5px}
+.implist{display:flex;flex-direction:column;border-radius:16px;border:1px solid var(--line);overflow:hidden}
+.imp{display:flex;align-items:center;gap:12px;min-height:56px;padding:8px 12px;border:0;background:var(--surface);text-align:left;width:100%;color:var(--ink)}
+.imp + .imp{border-top:1px dashed var(--line)}
+.imp .t{flex:1;min-width:0;display:flex;flex-direction:column}
+.imp .t b{font-size:15px;font-weight:600}
+.imp .t small{font-size:12.5px;color:var(--muted)}
+.chk{flex-shrink:0;width:24px;height:24px;border-radius:7px;border:2px solid var(--off);display:flex;align-items:center;justify-content:center;color:var(--on-primary)}
+[aria-pressed="true"] > .chk{background:var(--primary);border-color:var(--primary)}
+.mgr{display:flex;align-items:center;gap:10px;min-height:58px;padding:8px 0}
+.mgr + .mgr{border-top:1px dashed var(--line)}
+.mgr .t{flex:1;min-width:0;display:flex;flex-direction:column}
+.mgr .t b{font-size:15px;font-weight:600}
+.mgr .t small{font-size:12.5px;color:var(--muted)}
+.smallbtn{min-height:40px;padding:0 12px;border:0;border-radius:12px;background:var(--chip);color:var(--ink);font-size:13.5px;font-weight:700}
+.smallbtn.danger{background:var(--wrong-bg);color:var(--wrong)}
+.lockscreen{display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px;padding:40px 8px}
+.lockscreen .big{width:84px;height:84px;border-radius:999px;display:flex;align-items:center;justify-content:center;background:var(--gold-tint);color:var(--pill-ink)}
+.ebar{flex-shrink:0;display:flex;align-items:center;gap:2px;height:56px;padding-left:max(6px,env(safe-area-inset-left,0px));padding-right:max(10px,env(safe-area-inset-right,0px));background:var(--surface);border-bottom:1px solid var(--line)}
+.ebar h1{flex:1;margin:0;font-family:var(--font-head);font-weight:400;font-size:18px}
+.egrid{--gw:min(calc(100vw - 32px),488px);width:var(--gw);max-width:100%;margin-inline:auto;display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));gap:2px;padding:2px;border-radius:10px;background:var(--grid-line)}
+.ecell{position:relative;aspect-ratio:1;min-width:0;margin:0;padding:0;border:0;display:flex;align-items:center;justify-content:center;background:var(--cell);color:var(--ink);font-family:var(--font-grid);font-weight:600;line-height:1;font-size:calc(var(--gw) / var(--n) * .38)}
+.ecell .num{position:absolute;top:2px;left:3px;font-family:var(--font-ui);font-weight:700;font-size:max(8px,calc(var(--gw) / var(--n) * .2));color:var(--num)}
+.ecell .ltr{padding-top:.18em}
+.ecell.b{background:#1E1714}
+.ecell.b .num{color:#F5EBDD}
+.ecell.sel{box-shadow:inset 0 0 0 3px var(--accent)}
+.ecell.run{background:var(--word)}
+.ecell.miss{color:var(--wrong)}
+.cluerow{display:grid;grid-template-columns:56px minmax(0,1fr) 52px 40px;gap:6px;align-items:center}
+.cluerow .x{width:40px;height:40px;border:0;border-radius:10px;background:var(--wrong-bg);color:var(--wrong);font-size:18px;font-weight:700}
+.problems{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:3px;font-size:13.5px;line-height:1.5}
+.srcimgs{display:flex;gap:8px;overflow-x:auto}
+.srcimgs img{height:140px;border-radius:10px;border:1px solid var(--line)}
+.numedit{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.numedit .inp.sm{width:80px}
+.bignote{font-size:14px;line-height:1.6;margin:0}
+
+/* English → Telugu typing and clue fixing */
+.acts.five{grid-template-columns:repeat(5,minmax(0,1fr))}
+.acts.five .k{font-size:13px}
+.typebox{display:flex;flex-direction:column;gap:8px}
+.tl-row{display:flex;gap:8px;align-items:center}
+.tl-row .inp{flex:1;min-width:0;font-size:18px}
+.smallbtn.pri{background:var(--primary);color:var(--on-primary);min-height:46px;padding:0 18px}
+.tl-cands{display:flex;flex-wrap:wrap;gap:6px;align-items:center;min-height:46px}
+.tlc{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:0 12px;border-radius:12px;border:1px solid var(--key-border);background:var(--key);color:var(--ink);font-family:var(--font-grid);font-size:19px;font-weight:600;box-shadow:inset 0 -2px 0 var(--key-border)}
+.tlc small{font-family:var(--font-ui);font-size:11px;font-weight:700;color:var(--muted)}
+.tlc.fit{border-color:var(--accent);background:color-mix(in srgb, var(--accent) 24%, var(--key))}
+textarea.inp.tel{font-family:var(--font-ui);font-size:17px;line-height:1.55;min-height:96px}
+.fixbox{display:flex;flex-direction:column;gap:10px}
+</style>
+</head>
+<body>
+<div id="app">
+  <main id="view" aria-live="polite"></main>
+  <nav id="tabs" aria-label="ప్రధాన మెనూ">
+    <a href="#home" data-tab="home"><span><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"></path></svg></span>హోమ్</a>
+    <a href="#archive" data-tab="archive"><span><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg></span>ఆర్కైవ్</a>
+    <a href="#prefs" data-tab="prefs"><span><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"></path><circle cx="15" cy="6" r="2"></circle><circle cx="9" cy="12" r="2"></circle><circle cx="17" cy="18" r="2"></circle></svg></span>అమరికలు</a>
+  </nav>
+</div>
+<div id="toast" role="status" hidden></div>
+
+<script>
+(function () {
+  'use strict';
+  var root = document.documentElement;
+  var view = document.getElementById('view');
+  var tabs = document.getElementById('tabs');
+  var toastEl = document.getElementById('toast');
+  // Inside Claude this page is the admin studio; on your own website it is the public reader that loads the blog live.
+  var IS_CLAUDE = !!(window.claude && typeof window.claude.use === 'function');
+  var BLOG_STATE = 'loading';
+
+  var BLOG = 'https://telugupadavinodam.blogspot.com/';
+  var FEED = BLOG + 'feeds/posts/default?alt=json&max-results=500';
+  var WEEKDAYS = ['ఆదివారం', 'సోమవారం', 'మంగళవారం', 'బుధవారం', 'గురువారం', 'శుక్రవారం', 'శనివారం'];
+  var MONTHS = ['జనవరి', 'ఫిబ్రవరి', 'మార్చి', 'ఏప్రిల్', 'మే', 'జూన్', 'జూలై', 'ఆగస్టు', 'సెప్టెంబర్', 'అక్టోబర్', 'నవంబర్', 'డిసెంబర్'];
+  var AKSHARA = /[క-హౘ-ౚ](?:్[క-హౘ-ౚ])*(?:[ా-ౌౕౖ]|్(?![క-హ]))?[ఀ-ః]?|[అ-ఔౠౡ][ఀ-ః]?|\S/g;
+
+  /* ================= puzzles =================
+     A puzzle: {id, title, date 'DD.MM.YYYY', src, url?, grid: ['..#.'], nums: {'r,c': n}, ans: [['క','',..]] | null,
+                clues: [{d:'A'|'D', n, len, text}]} */
+  function sampleToPuzzle() {
+    var rows = [
+      ['క', 'మ', 'లం', null, 'పా', 'వు', 'రం'], ['లు', null, 'గ', null, 'య', null, 'గు'], ['వ', 'న', 'రు', null, 'సం', 'కె', 'లు'],
+      [null, null, null, null, null, null, null],
+      ['కో', 'కి', 'ల', null, 'ఉ', 'గా', 'ది'], ['వె', null, 'క్ష', null, 'య్యా', null, 'క్కు'], ['ల', 'వ', 'ణం', null, 'ల', 'త', 'లు']];
+    var text = {
+      A1: 'తామర పువ్వు', A3: 'శాంతికి చిహ్నమైన పక్షి', A5: 'నీరు, అడవి వంటి సహజ సంపద', A6: 'ఖైదీ కాళ్ళకు వేసేవి', A7: 'వసంతంలో కూసే పక్షి', A9: 'తెలుగు సంవత్సరాది', A11: 'ఉప్పు', A12: 'తీగలు',
+      D1: 'వెన్నెలలో విచ్చే పువ్వు', D2: 'ఓడను నిలిపే ఇనుప సాధనం', D3: 'పండుగ రోజు చేసే తీపి వంటకం', D4: 'హరివిల్లులో ఏడు', D7: 'గుడి, దేవాలయం', D8: 'గుణం, స్వభావం', D9: 'పసిపాపను ఊపే తొట్టి', D10: 'తూర్పు, పడమర వంటివి'
+    };
+    var p = { id: 'sample', title: 'నమూనా పద వినోదం', date: '', src: 'sample', grid: [], nums: {}, ans: [], clues: [] };
+    rows.forEach(function (r) { p.grid.push(r.map(function (x) { return x === null ? '#' : '.'; }).join('')); p.ans.push(r.map(function (x) { return x || ''; })); });
+    autoNumber(p);
+    Object.keys(text).forEach(function (k) { p.clues.push({ d: k[0], n: +k.slice(1), len: 3, text: text[k] }); });
+    return p;
+  }
+  function autoNumber(p) {
+    var R = p.grid.length, C = p.grid[0].length, n = 0; p.nums = {};
+    function w(r, c) { return r >= 0 && c >= 0 && r < R && c < C && p.grid[r][c] !== '#'; }
+    for (var r = 0; r < R; r++) for (var c = 0; c < C; c++) {
+      if (!w(r, c)) continue;
+      if ((!w(r, c - 1) && w(r, c + 1)) || (!w(r - 1, c) && w(r + 1, c))) p.nums[r + ',' + c] = ++n;
+    }
+  }
+  var SAMPLE = sampleToPuzzle();
+  var PUZZLES = [];
+  var DATA_STATE = 'loading';
+
+  function key(r, c) { return r + ',' + c; }
+  function dateKey(d) { var m = /^(\d{2})\.(\d{2})\.(\d{4})$/.exec(d || ''); return m ? m[3] + m[2] + m[1] : '00000000'; }
+  function weekday(d) { var m = /^(\d{2})\.(\d{2})\.(\d{4})$/.exec(d || ''); if (!m) return ''; var dt = new Date(+m[3], +m[2] - 1, +m[1]); return WEEKDAYS[dt.getDay()] || ''; }
+  function monthName(d) { var m = /^(\d{2})\.(\d{2})\.(\d{4})$/.exec(d || ''); return m ? MONTHS[+m[2] - 1] + ' ' + m[3] : 'తేదీ లేనివి'; }
+  function sorted() { return PUZZLES.slice().sort(function (a, b) { return dateKey(b.date).localeCompare(dateKey(a.date)); }); }
+  function findPuzzle(id) {
+    if (id === 'sample') return SAMPLE;
+    if (id === 'draft') return D ? draftToPuzzle(D, true) : null;
+    for (var i = 0; i < PUZZLES.length; i++) if (PUZZLES[i].id === id) return PUZZLES[i];
+    return null;
+  }
+
+  var MODELS = {};
+  function model(p) {
+    if (p.id !== 'draft' && MODELS[p.id] && MODELS[p.id].p === p) return MODELS[p.id];
+    var R = p.grid.length, C = R ? p.grid[0].length : 0;
+    function isW(r, c) { return r >= 0 && c >= 0 && r < R && c < C && p.grid[r][c] !== '#'; }
+    var pos = {}; Object.keys(p.nums || {}).forEach(function (k) { var a = k.split(','); if (isW(+a[0], +a[1])) pos[p.nums[k]] = [+a[0], +a[1]]; });
+    var starts = { A: {}, D: {} };
+    (p.clues || []).forEach(function (cl) { var st = pos[cl.n]; if (st) starts[cl.d][key(st[0], st[1])] = true; });
+    var entries = {}, cellA = {}, cellD = {}, order = { A: [], D: [] }, problems = [];
+    (p.clues || []).slice().sort(function (a, b) { return a.n - b.n; }).forEach(function (cl) {
+      var id = cl.d + cl.n;
+      if (entries[id]) { problems.push(dirName(cl.d) + ' ' + cl.n + ': రెండుసార్లు ఉంది'); return; }
+      var st = pos[cl.n];
+      if (!st) { problems.push(dirName(cl.d) + ' ' + cl.n + ': గడిలో ఈ సంఖ్య లేదు'); return; }
+      var dr = cl.d === 'D' ? 1 : 0, dc = cl.d === 'A' ? 1 : 0, cells = [], r = st[0], c = st[1];
+      var L = +cl.len || 0;
+      while (isW(r, c)) {
+        if (cells.length && !L && starts[cl.d][key(r, c)]) break;
+        cells.push([r, c]); r += dr; c += dc;
+        if (L && cells.length >= L) break;
+      }
+      if (L && cells.length < L) problems.push(dirName(cl.d) + ' ' + cl.n + ': పొడవు ' + L + ', కానీ గడిలో ' + cells.length + ' గడులే ఉన్నాయి');
+      if (!cells.length) return;
+      entries[id] = { id: id, d: cl.d, n: cl.n, cells: cells, text: cl.text || '' };
+      order[cl.d].push(id);
+      cells.forEach(function (x) { var k = key(x[0], x[1]); if (cl.d === 'A') { if (!cellA[k]) cellA[k] = id; } else if (!cellD[k]) cellD[k] = id; });
+    });
+    var whites = 0, uncovered = 0, missingAns = 0;
+    for (var r = 0; r < R; r++) for (var c = 0; c < C; c++) {
+      if (!isW(r, c)) continue; whites++;
+      var k = key(r, c);
+      if (!cellA[k] && !cellD[k]) uncovered++;
+      if (!p.ans || !p.ans[r] || !p.ans[r][c]) missingAns++;
+    }
+    if (uncovered) problems.push(uncovered + ' తెల్ల గడులు ఏ ఆధారంలోనూ లేవు');
+    var m = { p: p, R: R, C: C, isW: isW, entries: entries, cellA: cellA, cellD: cellD, order: order, whites: whites, missingAns: missingAns, hasAns: whites > 0 && missingAns === 0, problems: problems };
+    m.sol = function (k) { var a = k.split(','); return (p.ans && p.ans[+a[0]] && p.ans[+a[0]][+a[1]]) || ''; };
+    if (p.id !== 'draft') MODELS[p.id] = m;
+    return m;
+  }
+
+  /* ================= saved state (this device) ================= */
+  var reduced = false;
+  try { reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
+  var LS = 'e-padavinodam-v2';
+  function freshProgress() { return { letters: {}, r: -1, c: -1, dir: 'A', elapsed: 0, hints: 0, done: false, doneTime: 0, variant: 0, started: false }; }
+  var S = { prefs: { theme: 'auto', accent: '#F2A93B', font: 'Hind Guntur', size: 'm', rain: !reduced, hard: false, skip: true, timer: true, keypad: 'app' }, prog: {}, lastVariant: -1, draft: null };
+  try {
+    var raw = localStorage.getItem(LS);
+    if (raw) { var o = JSON.parse(raw); if (o.prefs) Object.assign(S.prefs, o.prefs); if (o.prog) S.prog = o.prog; if (typeof o.lastVariant === 'number') S.lastVariant = o.lastVariant; if (o.draft) S.draft = o.draft; }
+    else {
+      var old = localStorage.getItem('e-padavinodam-v1');
+      if (old) { var oo = JSON.parse(old); if (oo.prefs) Object.assign(S.prefs, oo.prefs); if (oo.prog) S.prog.sample = Object.assign(freshProgress(), oo.prog); }
+    }
+  } catch (e) {}
+  function save() { try { localStorage.setItem(LS, JSON.stringify(S)); } catch (e) {} }
+  function prog(id) { if (!S.prog[id]) S.prog[id] = freshProgress(); return S.prog[id]; }
+  var D = S.draft;
+  var U = { panel: 'keys', tab: 'A', cons: null, conj: null, shown: {}, confirm: '', showVariant: null, query: '', busy: '', status: null, imports: null, importSel: {}, emode: 'black', er: 0, ec: 0, edir: 'A', etab: 'A', srcUrls: [], ctl: null };
+
+  var FONTS = {
+    'Hind Guntur': "'Hind Guntur','Noto Sans Telugu',sans-serif", 'Tenali Ramakrishna': "'Tenali Ramakrishna','Hind Guntur',sans-serif",
+    'Ramabhadra': "'Ramabhadra','Hind Guntur',sans-serif", 'Mandali': "'Mandali','Hind Guntur',sans-serif"
+  };
+  var SIZES = { s: .84, m: 1, l: 1.22 };
+  function applyPrefs() {
+    var p = S.prefs;
+    if (p.theme === 'auto') root.removeAttribute('data-app-theme'); else root.setAttribute('data-app-theme', p.theme);
+    root.style.setProperty('--accent', p.accent);
+    root.style.setProperty('--font-grid', FONTS[p.font] || FONTS['Hind Guntur']);
+    root.style.setProperty('--size-mult', String(SIZES[p.size] || 1));
+    document.body.classList.toggle('no-rain', !p.rain);
+  }
+
+  /* ================= helpers ================= */
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (ch) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]; }); }
+  function fmt(sec) { sec = Math.max(0, sec | 0); var h = Math.floor(sec / 3600), m = Math.floor(sec / 60) % 60, s = sec % 60; return (h ? h + ':' : '') + String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0'); }
+  function dirName(d) { return d === 'A' ? 'అడ్డం' : 'నిలువు'; }
+  var toastTimer = 0;
+  function toast(msg) { toastEl.textContent = msg; toastEl.hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(function () { toastEl.hidden = true; }, 3200); }
+  function cap(name) { try { return (window.claude && window.claude.use) ? window.claude.use(name) : Promise.resolve(null); } catch (e) { return Promise.resolve(null); } }
+
+  /* ================= English → Telugu (phonetic typing) =================
+     kamalam → కమలం, sankranti → సంక్రాంతి, amma → అమ్మ, telugu → తెలుగు.
+     Capitals pick the harder sounds: T ట, D డ, N ణ, L ళ, Sh ష, E ఏ, O ఓ; aa/A ఆ, ee/ii/I ఈ, oo/uu/U ఊ.
+     Ambiguous lowercase letters also come back as alternatives to tap. */
+  var TL = (function () {
+    var VOW = [['aa', 'ఆ', 'ా'], ['ai', 'ఐ', 'ై'], ['au', 'ఔ', 'ౌ'], ['ou', 'ఔ', 'ౌ'], ['ae', 'ఏ', 'ే'], ['ee', 'ఈ', 'ీ'], ['ii', 'ఈ', 'ీ'],
+      ['oo', 'ఊ', 'ూ'], ['uu', 'ఊ', 'ూ'], ['oa', 'ఓ', 'ో'], ['Ru', 'ఋ', 'ృ'], ['A', 'ఆ', 'ా'], ['I', 'ఈ', 'ీ'], ['U', 'ఊ', 'ూ'],
+      ['E', 'ఏ', 'ే'], ['O', 'ఓ', 'ో'], ['a', 'అ', ''], ['i', 'ఇ', 'ి'], ['u', 'ఉ', 'ు'], ['e', 'ఎ', 'ె'], ['o', 'ఒ', 'ొ']];
+    var CONS = [['ksh', 'క్ష'], ['chh', 'ఛ'], ['Ch', 'ఛ'], ['jn', 'జ్ఞ'], ['kh', 'ఖ'], ['gh', 'ఘ'], ['ch', 'చ'], ['jh', 'ఝ'], ['Th', 'ఠ'], ['th', 'థ'], ['Dh', 'ఢ'], ['dh', 'ధ'],
+      ['ph', 'ఫ'], ['bh', 'భ'], ['Sh', 'ష'], ['SH', 'ష'], ['sh', 'శ'], ['k', 'క'], ['g', 'గ'], ['c', 'చ'], ['j', 'జ'], ['z', 'జ'], ['T', 'ట'], ['t', 'త'], ['D', 'డ'], ['d', 'ద'],
+      ['N', 'ణ'], ['n', 'న'], ['p', 'ప'], ['f', 'ఫ'], ['b', 'బ'], ['m', 'మ'], ['y', 'య'], ['r', 'ర'], ['l', 'ల'], ['L', 'ళ'], ['v', 'వ'], ['w', 'వ'], ['S', 'శ'], ['s', 'స'],
+      ['h', 'హ'], ['x', 'క్ష'], ['q', 'క'], ['R', 'ర'], ['K', 'క'], ['G', 'గ'], ['J', 'జ'], ['P', 'ప'], ['B', 'బ'], ['V', 'వ'], ['W', 'వ'], ['Y', 'య'], ['Z', 'జ'],
+      ['F', 'ఫ'], ['C', 'చ'], ['X', 'క్ష'], ['Q', 'క']];
+    var CALT = { 'త': ['ట'], 'ట': ['త'], 'ద': ['డ'], 'డ': ['ద'], 'థ': ['ఠ'], 'ఠ': ['థ'], 'ధ': ['ఢ'], 'ఢ': ['ధ'], 'న': ['ణ'], 'ణ': ['న'], 'ల': ['ళ'], 'ళ': ['ల'], 'స': ['శ', 'ష'], 'శ': ['ష', 'స'], 'ష': ['శ', 'స'] };
+    var VALT = { 'ఎ': ['ఏ', 'ే'], 'ఏ': ['ఎ', 'ె'], 'ఒ': ['ఓ', 'ో'], 'ఓ': ['ఒ', 'ొ'] };
+    var SONORANT = 'mnyrlvw';
+    function tokenize(w) {
+      if (w.length > 1 && /^[A-Z][a-z]/.test(w)) w = w[0].toLowerCase() + w.slice(1);   // phone auto-capitalisation
+      var out = [], i = 0;
+      while (i < w.length) {
+        var prev = out[out.length - 1], hit = null, k;
+        if ((w[i] === 'M' || w[i] === 'H') && prev && prev.t === 'V') { out.push({ t: w[i] }); i++; continue; }
+        for (k = 0; k < VOW.length && !hit; k++) if (w.substr(i, VOW[k][0].length) === VOW[k][0]) hit = { t: 'V', src: VOW[k][0], ind: VOW[k][1], sign: VOW[k][2] };
+        for (k = 0; k < CONS.length && !hit; k++) if (w.substr(i, CONS[k][0].length) === CONS[k][0]) hit = { t: 'C', src: CONS[k][0], val: CONS[k][1] };
+        if (!hit) { i++; continue; }
+        out.push(hit); i += hit.src.length;
+      }
+      // m/n after a vowel: ం before most consonants and at the end (m), a joined letter before m n y r l v
+      for (var j = 0; j < out.length; j++) {
+        var t = out[j], p = out[j - 1], nx = out[j + 1];
+        if (t.t !== 'C' || (t.src !== 'm' && t.src !== 'n') || !p || p.t !== 'V') continue;
+        if (!nx) { if (t.src === 'm') out[j] = { t: 'M' }; }
+        else if (nx.t === 'C' && SONORANT.indexOf(nx.src[0].toLowerCase()) < 0) out[j] = { t: 'M' };
+      }
+      return out;
+    }
+    function build(toks) {
+      var aks = [], i = 0;
+      while (i < toks.length) {
+        var t = toks[i];
+        if (t.t === 'C') {
+          var cl = []; while (i < toks.length && toks[i].t === 'C') { cl.push(toks[i].val); i++; }
+          var a = cl.join('్');
+          if (i < toks.length && toks[i].t === 'V') { a += toks[i].sign; i++; } else a += '్';
+          aks.push(a);
+        } else if (t.t === 'V') { aks.push(t.ind); i++; }
+        else { var mk = t.t === 'M' ? 'ం' : 'ః'; if (aks.length) aks[aks.length - 1] += mk; else aks.push(mk); i++; }
+      }
+      return aks;
+    }
+    function word(w) {
+      var toks = tokenize(w), first = build(toks), seen = {}, cands = [];
+      function add(a) { var s = a.join(''); if (s && !seen[s]) { seen[s] = true; cands.push(a); } }
+      add(first);
+      for (var j = 0; j < toks.length && cands.length < 6; j++) {
+        var t = toks[j], alts = [];
+        if (t.t === 'C' && CALT[t.val]) alts = CALT[t.val].map(function (v) { return Object.assign({}, t, { val: v }); });
+        if (t.t === 'V' && VALT[t.ind]) alts = [Object.assign({}, t, { ind: VALT[t.ind][0], sign: VALT[t.ind][1] })];
+        alts.forEach(function (alt) { var c = toks.slice(); c[j] = alt; add(build(c)); });
+      }
+      return cands;
+    }
+    // Any mix of English and Telugu → candidate list; each candidate is a list of aksharas (one per crossword square)
+    function convert(text) {
+      var parts = String(text || '').normalize('NFC').match(/[A-Za-z]+|[^A-Za-z]+/g) || [], cands = [[]];
+      parts.forEach(function (seg) {
+        if (/^[A-Za-z]+$/.test(seg)) {
+          var opts = word(seg), next = [];
+          cands.forEach(function (base, bi) { opts.forEach(function (o, oi) { if (bi === 0 || oi === 0) next.push(base.concat(o)); }); });
+          cands = next.slice(0, 6);
+        } else {
+          var tel = (seg.match(AKSHARA) || []).filter(function (g) { return /[ఀ-౿]/.test(g); });
+          cands = cands.map(function (b) { return b.concat(tel); });
+        }
+      });
+      return cands.filter(function (c) { return c.length; });
+    }
+    return { convert: convert };
+  })();
+
+
+  var I = {
+    back: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"></path></svg>',
+    next: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"></path></svg>',
+    prev: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"></path></svg>',
+    arrow: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>',
+    check: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="m8 12 3 3 5-6"></path></svg>',
+    tick: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5 9-10"></path></svg>',
+    clock: '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>',
+    kb: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><rect x="2" y="6" width="20" height="12" rx="2"></rect><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M7 14h10"></path></svg>',
+    list: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"></path></svg>',
+    swap: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4v16M7 20l-3-3M7 20l3-3M17 20V4M17 4l-3 3M17 4l3 3"></path></svg>',
+    del: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 5H9l-6 7 6 7h12a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1z"></path><path d="m12 9 5 6M17 9l-5 6"></path></svg>',
+    sliders: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"></path><circle cx="15" cy="6" r="2"></circle><circle cx="9" cy="12" r="2"></circle><circle cx="17" cy="18" r="2"></circle></svg>',
+    lock: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4.5" y="10.5" width="15" height="10" rx="2.5"></rect><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"></path><circle cx="12" cy="15.5" r="1.4"></circle></svg>',
+    unlock: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4.5" y="10.5" width="15" height="10" rx="2.5"></rect><path d="M8 10.5V7.5a4 4 0 0 1 7.6-1.7"></path><circle cx="12" cy="15.5" r="1.4"></circle></svg>',
+    biglock: '<svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4.5" y="10.5" width="15" height="10" rx="2.5"></rect><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"></path><circle cx="12" cy="15.5" r="1.4"></circle></svg>',
+    out: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"></path></svg>',
+    search: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>',
+    copy: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"></rect><path d="M5 15V5a1 1 0 0 1 1-1h10"></path></svg>',
+    grid: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"></rect><path d="M9 3v18M15 3v18M3 9h18M3 15h18"></path></svg>',
+    close: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg>',
+    pen: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"></path><path d="m13.5 6.5 4 4"></path></svg>'
+  };
+  var MUGGU = '<svg class="muggu" width="150" height="150" viewBox="0 0 120 120" fill="none" aria-hidden="true"><path d="M60 6 114 60 60 114 6 60Z" stroke="#F2A93B" stroke-width="2"></path><path d="M60 30 90 60 60 90 30 60Z" stroke="#F2A93B" stroke-width="2"></path><circle cx="60" cy="60" r="10" stroke="#F2A93B" stroke-width="2"></circle><g fill="#F2A93B"><circle cx="60" cy="18" r="3"></circle><circle cx="102" cy="60" r="3"></circle><circle cx="60" cy="102" r="3"></circle><circle cx="18" cy="60" r="3"></circle><circle cx="39" cy="39" r="3"></circle><circle cx="81" cy="39" r="3"></circle><circle cx="81" cy="81" r="3"></circle><circle cx="39" cy="81" r="3"></circle></g></svg>';
+  function bulb(px) {
+    return '<svg width="' + px + '" height="' + px + '" viewBox="0 0 48 60" aria-hidden="true" focusable="false">' +
+      '<circle class="b-halo1" cx="24" cy="24" r="23"></circle><circle class="b-halo2" cx="24" cy="24" r="16"></circle>' +
+      '<path class="b-ray" d="M6.5 8.5l3.5 3.5M41.5 8.5 38 12M24 1.5v4.5M2.5 24h4M41.5 24h4"></path>' +
+      '<path class="b-glass" d="M24 9a14 14 0 0 0-8.2 25.4c1.5 1.1 2.4 2.8 2.4 4.6V42h11.6v-3c0-1.8.9-3.5 2.4-4.6A14 14 0 0 0 24 9z"></path>' +
+      '<path class="b-hi" d="M16.5 19.5a8.5 8.5 0 0 1 5-5.5"></path><path class="b-fil" d="M20 40.5v-9l2-3 2 3 2-3 2 3v9"></path>' +
+      '<rect class="b-base" x="17.5" y="42" width="13" height="10" rx="2.5"></rect><path class="b-lines" d="M18 45.5h12M18 48.5h12"></path><path class="b-tip" d="M21 52h6l-1 4.5h-4z"></path></svg>';
+  }
+  var VARIANTS = [
+    { key: 'chai', label: 'చాయ్', alt: 'చాయ్ కప్పు, పద వినోదం కాగితం' }, { key: 'deepam', label: 'దీపం', alt: 'ముగ్గుపై వెలుగుతున్న దీపం' },
+    { key: 'kite', label: 'గాలిపటం', alt: 'మబ్బుల్లో ఎగురుతున్న గాలిపటం' }, { key: 'medal', label: 'పతకం', alt: 'పద వినోదం గడిపై బంగారు పతకం' }];
+  function congrats(i) {
+    var v = VARIANTS[i] || VARIANTS[0];
+    var bg = '<circle class="f-halo" cx="120" cy="110" r="104"></circle><circle class="s-ring" cx="120" cy="110" r="104"></circle>', body = '';
+    if (v.key === 'chai') body = '<g class="stars"><circle cx="44" cy="56" r="2.5"></circle><circle cx="196" cy="48" r="2"></circle><circle cx="212" cy="112" r="2.5"></circle><circle cx="160" cy="22" r="2"></circle><circle cx="66" cy="30" r="1.8"></circle></g><g transform="rotate(-10 52 120)"><rect class="f-cream s-ink" stroke-width="3" x="24" y="86" width="56" height="66" rx="5"></rect><path class="s-ink nf" stroke-width="1.5" opacity=".5" d="M38 86v66M52 86v66M66 86v66M24 102h56M24 118h56M24 134h56"></path><rect class="f-ink" x="38" y="102" width="14" height="16"></rect><rect class="f-ink" x="52" y="134" width="14" height="18"></rect></g><path class="s-steam nf" stroke-width="4" stroke-linecap="round" d="M108 96c-8-10 8-16 0-26M124 90c-8-10 8-16 0-26M140 96c-8-10 8-16 0-26"></path><ellipse class="f-cream s-ink" stroke-width="3" cx="124" cy="176" rx="62" ry="11"></ellipse><path class="s-ink nf" stroke-width="10" stroke-linecap="round" d="M164 120c20-3 25 24 2 31"></path><path class="nf" style="stroke:var(--i-maroon)" stroke-width="4" stroke-linecap="round" d="M164 120c20-3 25 24 2 31"></path><path class="f-maroon s-ink" stroke-width="3" stroke-linejoin="round" d="M82 108h84v20c0 26-19 42-42 42s-42-16-42-42z"></path><ellipse class="f-chai s-ink" stroke-width="3" cx="124" cy="108" rx="42" ry="8"></ellipse><g class="f-gold"><circle cx="100" cy="138" r="3.5"></circle><circle cx="112" cy="142" r="3.5"></circle><circle cx="124" cy="143" r="3.5"></circle><circle cx="136" cy="142" r="3.5"></circle><circle cx="148" cy="138" r="3.5"></circle></g><ellipse class="f-leaf s-ink" stroke-width="2" cx="190" cy="172" rx="10" ry="5" transform="rotate(-30 190 172)"></ellipse><circle class="f-gold s-ink" stroke-width="2.5" cx="202" cy="156" r="13"></circle><circle class="f-clay" cx="202" cy="156" r="6.5"></circle>';
+    if (v.key === 'deepam') body = '<g class="stars"><circle cx="40" cy="70" r="2.5"></circle><circle cx="200" cy="44" r="2"></circle><circle cx="214" cy="104" r="2"></circle><circle cx="150" cy="20" r="2.2"></circle><circle cx="80" cy="26" r="1.8"></circle></g><circle class="f-glow" cx="120" cy="100" r="46"></circle><path class="nf s-gold" stroke-width="3" stroke-linejoin="round" d="M120 140 200 172 120 204 40 172Z"></path><path class="nf s-clay" stroke-width="2.5" stroke-linejoin="round" d="M120 154 164 172 120 190 76 172Z"></path><g class="f-maroon"><circle cx="120" cy="140" r="4"></circle><circle cx="200" cy="172" r="4"></circle><circle cx="120" cy="204" r="4"></circle><circle cx="40" cy="172" r="4"></circle></g><g class="f-gold"><circle cx="80" cy="156" r="3"></circle><circle cx="160" cy="156" r="3"></circle><circle cx="160" cy="188" r="3"></circle><circle cx="80" cy="188" r="3"></circle></g><path class="f-clay s-ink" stroke-width="3" stroke-linejoin="round" d="M168 146l24-10-8 18z"></path><path class="f-clay s-ink" stroke-width="3" stroke-linejoin="round" d="M68 150c4 22 24 34 52 34s48-12 52-34"></path><ellipse class="f-maroon s-ink" stroke-width="3" cx="120" cy="150" rx="52" ry="9"></ellipse><g class="f-gold"><circle cx="92" cy="166" r="3"></circle><circle cx="106" cy="171" r="3"></circle><circle cx="120" cy="173" r="3"></circle><circle cx="134" cy="171" r="3"></circle><circle cx="148" cy="166" r="3"></circle></g><path class="s-ink" stroke-width="3" stroke-linecap="round" d="M120 146v-26"></path><path class="f-gold s-ink" stroke-width="3" stroke-linejoin="round" d="M120 68c16 20 18 36 0 52c-18-16-16-32 0-52z"></path><path class="f-cream" d="M120 92c7 9 8 17 0 25c-8-8-7-16 0-25z"></path><path class="s-gold" stroke-width="3" stroke-linecap="round" d="M62 72v14M55 79h14M184 66v12M178 72h12M192 116v10M187 121h10"></path>';
+    if (v.key === 'kite') body = '<g class="stars"><circle cx="48" cy="60" r="2.5"></circle><circle cx="206" cy="124" r="2"></circle><circle cx="74" cy="28" r="2"></circle><circle cx="214" cy="92" r="1.8"></circle><circle cx="30" cy="110" r="2"></circle></g><path class="f-cream s-ink" stroke-width="2.5" stroke-linejoin="round" d="M150 60a12 12 0 0 1 12-12a16 16 0 0 1 30 2a11 11 0 0 1 3 22h-34a11 11 0 0 1-11-12z"></path><path class="s-ink nf" stroke-width="1.8" opacity=".7" d="M126 84Q64 140 28 214"></path><path class="f-maroon" d="M126 30 174 84 126 148 78 84Z"></path><path class="f-gold" d="M126 30 78 84H126Z"></path><path class="f-gold" d="M126 84H174L126 148Z"></path><path class="nf s-ink" stroke-width="3" stroke-linejoin="round" d="M126 30 174 84 126 148 78 84Z"></path><path class="s-ink" stroke-width="2" d="M126 30V148M78 84H174"></path><circle class="f-cream s-ink" stroke-width="2" cx="126" cy="84" r="6"></circle><path class="s-ink nf" stroke-width="2.5" stroke-linecap="round" d="M126 148c-12 14 12 22 0 36c-10 12 8 18 2 30"></path><path class="f-clay s-ink" stroke-width="1.5" stroke-linejoin="round" d="M112 162l12 6-12 6zM138 162l-12 6 12 6z"></path><path class="f-leaf s-ink" stroke-width="1.5" stroke-linejoin="round" d="M114 190l10 5-10 5zM136 190l-10 5 10 5z"></path><path class="f-cream s-ink" stroke-width="2.5" stroke-linejoin="round" d="M36 170a16 16 0 0 1 16-16a20 20 0 0 1 38 2a14 14 0 0 1 4 28H50a14 14 0 0 1-14-14z"></path>';
+    if (v.key === 'medal') body = '<g class="stars"><circle cx="40" cy="80" r="2.5"></circle><circle cx="204" cy="84" r="2"></circle><circle cx="58" cy="168" r="2"></circle><circle cx="190" cy="176" r="2.2"></circle></g><rect class="f-cream s-ink" stroke-width="3" x="58" y="100" width="124" height="96" rx="10"></rect><path class="s-ink nf" stroke-width="1.5" opacity=".5" d="M89 100v96M120 100v96M151 100v96M58 132h124M58 164h124"></path><rect class="f-ink" x="89" y="164" width="31" height="32"></rect><rect class="f-ink" x="151" y="132" width="31" height="32"></rect><text class="f-ink" x="73.5" y="156" text-anchor="middle" font-family="Hind Guntur, sans-serif" font-size="19" font-weight="700">ప</text><text class="f-ink" x="104.5" y="156" text-anchor="middle" font-family="Hind Guntur, sans-serif" font-size="19" font-weight="700">దం</text><path class="f-maroon s-ink" stroke-width="2.5" stroke-linejoin="round" d="M100 14h20l16 50h-20z"></path><path class="f-clay s-ink" stroke-width="2.5" stroke-linejoin="round" d="M140 14h-20l-16 50h20z"></path><circle class="f-gold s-ink" stroke-width="3" cx="120" cy="92" r="30"></circle><circle class="nf s-ink" stroke-width="1.5" opacity=".4" cx="120" cy="92" r="21"></circle><path class="f-cream s-ink" stroke-width="2" stroke-linejoin="round" d="M120 80 122.94 87.95 131.41 88.29 124.76 93.55 127.05 101.71 120 97 112.95 101.71 115.24 93.55 108.59 88.29 117.06 87.95Z"></path><g class="s-ink" stroke-width="1.5"><rect class="f-clay" x="40" y="58" width="11" height="5" rx="2" transform="rotate(30 45 60)"></rect><rect class="f-leaf" x="186" y="54" width="11" height="5" rx="2" transform="rotate(-25 191 56)"></rect><rect class="f-gold" x="196" y="120" width="11" height="5" rx="2" transform="rotate(50 201 122)"></rect><rect class="f-gold" x="28" y="120" width="11" height="5" rx="2" transform="rotate(-40 33 122)"></rect><circle class="f-leaf" cx="66" cy="36" r="4"></circle><circle class="f-clay" cx="176" cy="30" r="4"></circle></g>';
+    return '<svg viewBox="0 0 240 220" role="img" aria-label="' + esc(v.alt) + '">' + bg + body + '</svg>';
+  }
+
+  /* ================= solving ================= */
+  var CUR = null; // {p, m, P}
+  function setCurrent(id) {
+    var p = findPuzzle(id); if (!p) { CUR = null; return; }
+    var m = model(p), P = prog(id);
+    if (!m.isW(P.r, P.c)) {
+      var first = m.order.A[0] || m.order.D[0];
+      if (first) { P.r = m.entries[first].cells[0][0]; P.c = m.entries[first].cells[0][1]; P.dir = m.entries[first].d; }
+      else { outer: for (var r = 0; r < m.R; r++) for (var c = 0; c < m.C; c++) if (m.isW(r, c)) { P.r = r; P.c = c; break outer; } }
+    }
+    CUR = { id: id, p: p, m: m, P: P };
+  }
+  function cur() {
+    var m = CUR.m, P = CUR.P, k = key(P.r, P.c);
+    var id = (P.dir === 'A' ? m.cellA[k] : m.cellD[k]) || m.cellA[k] || m.cellD[k];
+    return id ? m.entries[id] : { id: 'X', d: P.dir, n: '', cells: [[P.r, P.c]], text: '' };
+  }
+  function idxIn(e) { var P = CUR.P; for (var i = 0; i < e.cells.length; i++) if (e.cells[i][0] === P.r && e.cells[i][1] === P.c) return i; return 0; }
+  function filledCount() { var m = CUR.m, L = CUR.P.letters, n = 0; for (var k in L) { var a = k.split(','); if (L[k] && m.isW(+a[0], +a[1])) n++; } return n; }
+  function wrongKeys() { var m = CUR.m, L = CUR.P.letters, out = []; if (!m.hasAns) return out; for (var k in L) if (L[k] && m.sol(k) && L[k] !== m.sol(k)) out.push(k); return out; }
+  function pickCell(r, c) {
+    var m = CUR.m, P = CUR.P, k = key(r, c);
+    if (P.r === r && P.c === c) { var o = P.dir === 'A' ? 'D' : 'A'; if (o === 'A' ? m.cellA[k] : m.cellD[k]) { P.dir = o; U.tab = o; } }
+    else { var d = P.dir; if (d === 'A' && !m.cellA[k] && m.cellD[k]) d = 'D'; else if (d === 'D' && !m.cellD[k] && m.cellA[k]) d = 'A'; P.r = r; P.c = c; P.dir = d; U.tab = d; }
+    save();
+  }
+  function goEntry(id) {
+    var e = CUR.m.entries[id], L = CUR.P.letters, first = null;
+    for (var i = 0; i < e.cells.length; i++) if (!L[key(e.cells[i][0], e.cells[i][1])]) { first = e.cells[i]; break; }
+    first = first || e.cells[0]; CUR.P.r = first[0]; CUR.P.c = first[1]; CUR.P.dir = e.d; U.tab = e.d; save();
+  }
+  function step(d) {
+    var all = CUR.m.order.A.concat(CUR.m.order.D); if (!all.length) return;
+    var i = all.indexOf(cur().id) + d; if (i < 0) i = all.length - 1; if (i >= all.length) i = 0; goEntry(all[i]);
+  }
+  function nextCell(e, idx) { for (var j = idx + 1; j < e.cells.length; j++) { var c = e.cells[j]; if (!S.prefs.skip || !CUR.P.letters[key(c[0], c[1])]) return c; } return null; }
+  function put(val, quiet) {
+    var P = CUR.P;
+    if (P.done) { toast('ఈ పద వినోదం పూర్తయింది. మళ్ళీ ఆడాలంటే “మళ్ళీ ఆడండి” నొక్కండి.'); return; }
+    var e = cur(), k = key(P.r, P.c);
+    P.letters[k] = val.normalize('NFC'); P.started = true; delete U.shown[k];
+    var nx = nextCell(e, idxIn(e)); if (nx) { P.r = nx[0]; P.c = nx[1]; }
+    U.cons = null; U.conj = null; save();
+    if (!quiet) afterInput();
+  }
+  function afterInput(soft) {
+    if (filledCount() === CUR.m.whites) {
+      if (!CUR.m.hasAns) { finish(); return; }
+      var w = wrongKeys();
+      if (!w.length) { finish(); return; }
+      w.forEach(function (k) { U.shown[k] = true; });
+      toast('అన్ని గడులూ నిండాయి — ' + w.length + ' గడుల్లో తప్పులు ఉన్నాయి.');
+    }
+    if (soft) refreshPlay(); else render();
+  }
+  function back(soft) {
+    function redraw() { if (soft) refreshPlay(); else render(); }
+    if (U.cons || U.conj) { U.cons = null; U.conj = null; render(); return; }
+    var P = CUR.P; if (P.done) return;
+    var k = key(P.r, P.c);
+    if (P.letters[k]) { delete P.letters[k]; delete U.shown[k]; save(); redraw(); return; }
+    var e = cur(), i = idxIn(e);
+    if (i > 0) { var pc = e.cells[i - 1]; delete P.letters[key(pc[0], pc[1])]; P.r = pc[0]; P.c = pc[1]; save(); }
+    redraw();
+  }
+  function doHint() {
+    var P = CUR.P, m = CUR.m; if (P.done) return;
+    if (!m.hasAns) { toast('ఈ పోస్ట్‌కు జవాబులు ఇంకా చేర్చలేదు, కాబట్టి సూచన అందుబాటులో లేదు.'); return; }
+    var empty = m.whites - filledCount();
+    if (empty > 10) { toast('సూచన చివరి 10 అక్షరాలకు మాత్రమే. ఇంకా ' + empty + ' గడులు ఖాళీగా ఉన్నాయి.'); return; }
+    var k = key(P.r, P.c), ans = m.sol(k);
+    if (P.letters[k] === ans) { toast('ఈ గడి సరైనదే. మరో ఖాళీ గడిని ఎంచుకోండి.'); return; }
+    P.hints++; put(ans);
+  }
+  function doCheck() {
+    if (!CUR.m.hasAns) { toast('ఈ పోస్ట్‌కు జవాబులు ఇంకా చేర్చలేదు.'); return; }
+    var w = wrongKeys(); U.shown = {}; w.forEach(function (k) { U.shown[k] = true; });
+    toast(w.length ? w.length + ' గడుల్లో తప్పులు ఉన్నాయి — ఎరుపులో చూపించాం.' : (filledCount() ? 'ఇప్పటివరకు నింపినవన్నీ సరైనవే!' : 'ఇంకా ఏ గడీ నింపలేదు.'));
+    render();
+  }
+  function finish() {
+    var P = CUR.P; P.done = true; P.doneTime = P.elapsed;
+    S.lastVariant = (S.lastVariant + 1) % VARIANTS.length; P.variant = S.lastVariant; U.showVariant = null; save();
+    if (CUR.id === 'draft') { toast('డ్రాఫ్ట్ పరీక్ష పూర్తయింది — అన్నీ సరిగ్గా ఉన్నాయి.'); render(); return; }
+    location.hash = '#done-' + CUR.id;
+  }
+
+  /* ================= views: reader ================= */
+  function statusPill(id) {
+    var P = S.prog[id];
+    if (P && P.done) return '<span class="pill ok">పూర్తయింది</span>';
+    if (P && P.started) return '<span class="pill mid">మధ్యలో</span>';
+    return '<span class="pill new">కొత్తది</span>';
+  }
+  function miniGrid(p) {
+    var m = model(p), P = S.prog[p.id] || {}, L = P.letters || {}, sz = Math.max(5, Math.floor(88 / m.C)), out = '';
+    for (var r = 0; r < m.R; r++) for (var c = 0; c < m.C; c++) out += m.isW(r, c) ? '<span' + (L[key(r, c)] ? ' class="on"' : '') + ' style="width:' + sz + 'px;height:' + sz + 'px"></span>' : '<span class="mb" style="width:' + sz + 'px;height:' + sz + 'px"></span>';
+    return '<div class="minigrid" aria-hidden="true" style="grid-template-columns:repeat(' + m.C + ',' + sz + 'px);gap:' + (m.C > 9 ? 1 : 2) + 'px">' + out + '</div>';
+  }
+  function puzzleRow(p) {
+    var sub = p.date ? p.date + ' · ' + weekday(p.date) : 'అభ్యాసం';
+    return '<a class="rowlink" href="#play-' + esc(p.id) + '"><span class="tile">' + I.grid + '</span><span class="t"><b>' + esc(p.title) + '</b><small>' + esc(sub) + '</small></span>' + statusPill(p.id) + '</a>';
+  }
+  function homeView() {
+    var list = sorted(), hero = list[0] || SAMPLE, m = model(hero), P = S.prog[hero.id] || freshProgress();
+    var L = P.letters || {}, filled = 0; for (var k in L) { var a = k.split(','); if (L[k] && m.isW(+a[0], +a[1])) filled++; }
+    var pct = Math.round(filled / Math.max(1, m.whites) * 100);
+    var status = P.done ? 'పూర్తయింది · ' + fmt(P.doneTime) : (P.started ? 'మధ్యలో ఉంది' : 'ఇంకా మొదలుపెట్టలేదు');
+    var cta = P.done ? 'అభినందనలు చూడండి' : (P.started ? 'కొనసాగించండి' : 'ఆడటం మొదలుపెట్టండి');
+    var months = {}, mlist = [];
+    list.forEach(function (p) { var mn = monthName(p.date); if (!months[mn]) { months[mn] = 0; mlist.push(mn); } months[mn]++; });
+    var chips = mlist.map(function (mn) { return '<button class="mchip" data-act="month" data-v="' + esc(mn) + '" style="border:0;text-align:left"><b>' + esc(mn) + '</b><small>' + months[mn] + (months[mn] === 1 ? ' పోస్టు' : ' పోస్టులు') + '</small></button>'; }).join('');
+    var recent = list.slice(1, 4).map(puzzleRow).join('');
+    var emptyMsg = DATA_STATE === 'loading' ? (IS_CLAUDE ? 'పోస్టులు లోడ్ అవుతున్నాయి…' : 'బ్లాగ్ నుంచి పోస్టులు లోడ్ అవుతున్నాయి…')
+      : (!IS_CLAUDE && BLOG_STATE === 'error') ? 'బ్లాగ్‌ను చేరుకోలేకపోయాం. ఇంటర్నెట్ కనెక్షన్ చూసి యాప్‌ను మళ్ళీ తెరవండి. అప్పటిదాకా కింది అభ్యాసం ఆడొచ్చు.'
+      : (IS_CLAUDE ? 'ఇంకా ఏ పోస్టూ ప్రచురించలేదు. తాళం గుర్తు నుంచి బ్లాగ్ పోస్టులు దిగుమతి చేయవచ్చు లేదా కొత్త పద వినోదం అప్‌లోడ్ చేయవచ్చు.' : 'బ్లాగ్‌లో ఇంకా పద వినోదం పోస్టులు లేవు.');
+    var empty = !list.length ? '<section class="sec"><h2 class="sec-h">మీ బ్లాగ్ పోస్టులు</h2><div class="box"><p class="bignote">' + emptyMsg + '</p>' + (ADMIN ? '<a class="wide-btn pri" href="#admin">నిర్వాహణకు వెళ్ళండి</a>' : '') + '</div></section>' : '';
+    return '<div class="page gutter">' +
+      '<header class="apphead"><div><h1 class="apptitle">ఈ-పద వినోదం</h1><p class="appsub">తెలుగు భాషాభిమానులకు స్వాగతం</p></div>' +
+      '<div class="hdr-btns">' + (IS_CLAUDE ? '<a class="iconbtn lockbtn' + (ADMIN ? ' is-admin' : '') + '" href="#admin" aria-label="' + (ADMIN ? 'నిర్వాహణ (తెరిచి ఉంది)' : 'నిర్వాహణ (తాళం)') + '">' + (ADMIN ? I.unlock : I.lock) + '</a>' : '') +
+      '<a class="iconbtn" href="#prefs" aria-label="అమరికలు">' + I.sliders + '</a></div></header>' +
+      '<article class="hero">' + MUGGU +
+        '<div class="hero-top"><div class="hero-txt"><span class="badge">' + (hero.id === 'sample' ? 'అభ్యాసం' : 'తాజా పద వినోదం') + '</span><h2>' + esc(hero.title) + '</h2>' +
+        '<p>' + (hero.date ? esc(hero.date) + ' · ' + weekday(hero.date) : m.R + '×' + m.C + ' · పరీక్ష కోసం') + '</p><p>అడ్డం ' + m.order.A.length + ' · నిలువు ' + m.order.D.length + '</p></div>' + miniGrid(hero) + '</div>' +
+        '<div class="prog"><div class="prog-row"><span>' + status + '</span><span>' + filled + '/' + m.whites + '</span></div><div class="bar"><i style="width:' + pct + '%"></i></div></div>' +
+        '<a class="cta" href="' + (P.done ? '#done-' : '#play-') + esc(hero.id) + '">' + cta + I.arrow + '</a>' +
+      '</article>' + empty +
+      (recent ? '<section class="sec"><h2 class="sec-h">ఇంతకు ముందువి</h2><div class="card">' + recent + '</div></section>' : '') +
+      (chips ? '<section class="sec"><div class="sec-row"><h2 class="sec-h">నెలల వారీగా</h2><a href="#archive" style="font-size:14px;font-weight:600;text-decoration:none;padding:10px 0">అన్నీ చూడండి</a></div><div class="chips">' + chips + '</div></section>' : '') +
+      '<section class="tip"><span class="ic">' + I.kb + '</span><p><b>తెలుగు కీబోర్డ్ అవసరం లేదు.</b> అక్షర కీప్యాడ్ వాడండి, లేదా abc→తె నొక్కి ఇంగ్లీష్‌లో టైప్ చేయండి: kamalam → కమలం.</p></section>' +
+    '</div>';
+  }
+  function archiveResults() {
+    var q = U.query.trim(), groups = {}, order = [];
+    sorted().forEach(function (p) {
+      var mn = monthName(p.date);
+      if (q && (p.date + ' ' + mn + ' ' + p.title).indexOf(q) < 0) return;
+      if (!groups[mn]) { groups[mn] = []; order.push(mn); } groups[mn].push(p);
+    });
+    if (!order.length) return PUZZLES.length ? '<p class="note">“' + esc(q) + '”కు సరిపడే పోస్ట్ దొరకలేదు. తేదీ (18.05.2025), నెల (మే) లేదా సంవత్సరం (2021) ప్రయత్నించండి.</p>' : '<p class="note">ఇంకా పోస్టులు లేవు.</p>';
+    return order.map(function (mn) { return '<div class="sec"><h3 class="sec-h" style="font-size:16px">' + esc(mn) + ' · ' + groups[mn].length + '</h3><div class="card">' + groups[mn].map(puzzleRow).join('') + '</div></div>'; }).join('');
+  }
+  function archiveView() {
+    return '<div class="page gutter">' +
+      '<header><h1 class="apptitle" style="font-size:38px">ఆర్కైవ్</h1><p class="appsub">' + (PUZZLES.length ? 'మొత్తం ' + PUZZLES.length + ' పద వినోదాలు' : 'ఆర్కైవ్') + '</p></header>' +
+      '<div class="search"><label for="arch-q">తేదీ లేదా నెలతో వెతకండి</label><div class="box">' + I.search + '<input id="arch-q" type="search" placeholder="ఉదా: 18.05.2025 లేదా మే" value="' + esc(U.query) + '"></div></div>' +
+      '<div id="arch-res" class="sec">' + archiveResults() + '</div>' +
+      '<section class="sec"><h2 class="sec-h">అభ్యాసం</h2><div class="card">' + puzzleRow(SAMPLE) + '</div></section>' +
+      '<p class="note">అసలు పోస్టులు బ్లాగ్‌లో: <a href="' + BLOG + '" target="_blank" rel="noopener">telugupadavinodam.blogspot.com</a></p>' +
+    '</div>';
+  }
+  function keypadHTML(acts, five) {
+    var SIGNS = ['', 'ా', 'ి', 'ీ', 'ు', 'ూ', 'ృ', 'ె', 'ే', 'ై', 'ొ', 'ో', 'ౌ', 'ం'];
+    var VOWELS = ['అ', 'ఆ', 'ఇ', 'ఈ', 'ఉ', 'ఊ', 'ఋ', 'ఎ', 'ఏ', 'ఐ', 'ఒ', 'ఓ', 'ఔ'];
+    var CONS = ['క', 'ఖ', 'గ', 'ఘ', 'చ', 'ఛ', 'జ', 'ఝ', 'ట', 'ఠ', 'డ', 'ఢ', 'ణ', 'త', 'థ', 'ద', 'ధ', 'న', 'ప', 'ఫ', 'బ', 'భ', 'మ', 'య', 'ర', 'ల', 'వ', 'శ', 'ష', 'స', 'హ', 'ళ'];
+    var strip;
+    if (U.conj && !U.cons) strip = '<div class="strip"><div class="note2">' + esc(U.conj) + '్ + రెండో హల్లు ఎంచుకోండి</div></div>';
+    else if (U.cons) strip = '<div class="strip guni">' + SIGNS.map(function (s) { var v = U.cons + s; return '<button class="k" data-act="put" data-v="' + esc(v) + '">' + esc(v) + '</button>'; }).join('') + '</div>';
+    else strip = '<div class="strip">' + VOWELS.map(function (v) { return '<button class="k" data-act="put" data-v="' + v + '">' + v + '</button>'; }).join('') + '</div>';
+    return strip + '<div class="keys">' + CONS.map(function (k) { return '<button class="k" data-act="cons" data-v="' + k + '" aria-pressed="' + (U.cons === k || U.conj === k) + '">' + k + '</button>'; }).join('') + '</div><div class="acts' + (five ? ' five' : '') + '">' + acts + '</div>';
+  }
+  function typeBoxHTML() {
+    return '<div class="typebox"><label class="lbl" for="tl-in">ఇంగ్లీష్ లేదా తెలుగులో టైప్ చేయండి</label>' +
+      '<div class="tl-row"><input id="tl-in" class="inp" type="text" lang="te" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="done" placeholder="ఉదా: kamalam → కమలం"><button class="smallbtn pri" data-act="tl-commit" data-keepfocus>పెట్టు</button></div>' +
+      '<div id="tl-cands" class="tl-cands" aria-live="polite"></div>' +
+      '<p class="note">aa ఆ · ee ఈ · oo ఊ · E ఏ · O ఓ · T ట · D డ · N ణ · L ళ · Sh ష. స్పేస్ లేదా Enter నొక్కితే గడుల్లో పడుతుంది; వేరే రూపం కావాలంటే పై వాటిలో ఒకటి నొక్కండి.</p></div>';
+  }
+  function canFix(e) { return IS_CLAUDE && ADMIN && CUR && CUR.id !== 'draft' && CUR.id !== 'sample' && e.id !== 'X' && PUZZLES.some(function (p) { return p.id === CUR.id; }); }
+  function fixHTML() {
+    var e = cur();
+    return '<div class="fixbox"><div class="sec-row"><span class="lbl">' + e.n + ' ' + dirName(e.d) + ' — ఆధారం సరిదిద్దండి</span><button class="smallbtn" data-act="edit-pub" data-id="' + esc(CUR.id) + '">పూర్తి ఎడిటర్</button></div>' +
+      '<textarea id="fix-in" class="inp tel" rows="3" lang="te" aria-label="ఆధారం వచనం">' + esc(e.text) + '</textarea>' +
+      '<p class="note">తెలుగులో నేరుగా లేదా ఇంగ్లీష్‌లో టైప్ చేయవచ్చు. ఇంగ్లీష్ పదం తర్వాత స్పేస్ నొక్కగానే తెలుగులోకి మారుతుంది (kamalam → కమలం). సేవ్ చేస్తే ఈ యాప్ తెరిచిన అందరికీ సరిదిద్దిన ఆధారం కనిపిస్తుంది.</p>' +
+      '<div class="btnrow"><button class="wide-btn ter" data-act="panel-keys">రద్దు</button><button class="wide-btn pri" data-act="fix-save"' + (U.busy ? ' disabled' : '') + '>సేవ్ చేసి ప్రచురించండి</button></div></div>';
+  }
+  function subText() { var p = CUR.p, m = CUR.m; return (p.date ? p.date + ' · ' : '') + filledCount() + '/' + m.whites + ' నిండాయి' + (m.hasAns ? '' : ' · జవాబులు లేవు'); }
+  function midHTML() {
+    var m = CUR.m, P = CUR.P, p = CUR.p, e = cur(), word = {}, hard = S.prefs.hard, nums = p.nums || {}, cells = '';
+    e.cells.forEach(function (x) { word[key(x[0], x[1])] = true; });
+    for (var r = 0; r < m.R; r++) for (var c = 0; c < m.C; c++) {
+      var k = key(r, c);
+      if (!m.isW(r, c)) { cells += '<div class="blk" aria-hidden="true"></div>'; continue; }
+      var L = P.letters[k] || '', sol = m.sol(k);
+      var wrong = U.shown[k] || (!hard && m.hasAns && L && sol && L !== sol);
+      var num = nums[k] || '';
+      cells += '<button class="cell' + (word[k] ? ' is-word' : '') + (wrong ? ' is-wrong' : '') + (r === P.r && c === P.c ? ' is-cur' : '') + '" data-act="cell" data-r="' + r + '" data-c="' + c + '" aria-label="' + esc((num ? num + ' · ' : '') + 'అడ్డు వరుస ' + (r + 1) + ', నిలువు వరుస ' + (c + 1) + (L ? ' · ' + L : ' · ఖాళీ')) + '">' + (num ? '<span class="num">' + num + '</span>' : '') + '<span class="ltr">' + esc(L) + '</span></button>';
+    }
+    return '<div class="grid" style="--n:' + m.C + (m.C > 8 ? ';--gw:min(calc(100vw - 32px),520px)' : '') + '" role="group" aria-label="పద వినోదం గడి">' + cells + '</div>' +
+      '<div class="cluebar"><button class="ghostbtn" data-act="prev" data-keepfocus aria-label="మునుపటి ఆధారం">' + I.prev + '</button><button class="mid" data-act="panel" aria-label="ఆధారాల జాబితా"><span class="tag">' + (e.n ? e.n + ' ' + dirName(e.d) : dirName(e.d)) + '</span><span class="txt">' + (e.text ? esc(e.text) + ' (' + e.cells.length + ')' : 'ఈ గడికి ఆధారం లేదు') + '</span></button>' +
+      (canFix(e) ? '<button class="ghostbtn" data-act="fix-open" aria-label="ఈ ఆధారం సరిదిద్దండి">' + I.pen + '</button>' : '') +
+      '<button class="ghostbtn" data-act="next" data-keepfocus aria-label="తదుపరి ఆధారం">' + I.next + '</button></div>' +
+      (p.url ? '<a class="note" href="' + esc(p.url) + '" target="_blank" rel="noopener" style="text-align:center">ఈ పోస్ట్‌ను బ్లాగ్‌లో తెరవండి</a>' : '');
+  }
+  function panelHTML() {
+    var m = CUR.m, P = CUR.P, e = cur();
+    if (U.panel === 'fix' && canFix(e)) return fixHTML();
+    if (U.panel === 'clues') {
+      var lst = m.order[U.tab].map(function (eid) {
+        var en = m.entries[eid], on = eid === e.id, done = en.cells.every(function (x) { return P.letters[key(x[0], x[1])]; });
+        return '<button class="clue' + (on ? ' is-on' : '') + (done && !on ? ' is-done' : '') + '" data-act="clue" data-id="' + eid + '"><span class="n">' + en.n + '</span><span class="x">' + esc(en.text) + ' (' + en.cells.length + ')</span></button>';
+      }).join('');
+      return '<div class="tabrow"><div class="seg" role="group" aria-label="ఆధారాల దిశ"><button data-act="tab" data-v="A" aria-pressed="' + (U.tab === 'A') + '">అడ్డం · ' + m.order.A.length + '</button><button data-act="tab" data-v="D" aria-pressed="' + (U.tab === 'D') + '">నిలువు · ' + m.order.D.length + '</button></div><button class="ghostbtn" style="margin-left:auto" data-act="panel" aria-label="టైపింగ్‌కు తిరిగి">' + I.kb + '</button></div><div class="cluelist" data-scroll="clues">' + lst + '</div>';
+    }
+    if (U.panel === 'type') return typeBoxHTML() + '<div class="acts"><button class="k" data-act="panel-keys">అక్షరాలు</button><button class="k" data-act="panel">' + I.list + ' ఆధారాలు</button><button class="k" data-act="flip" data-keepfocus aria-label="దిశ మార్చు">' + I.swap + dirName(P.dir) + '</button><button class="k" data-act="back" data-keepfocus aria-label="తొలగించు">' + I.del + '</button></div>';
+    return keypadHTML('<button class="k" data-act="ottu" aria-pressed="' + (!!U.conj) + '">ఒత్తు ్</button><button class="k" data-act="panel-type" aria-label="ఇంగ్లీష్‌లో టైప్ చేయండి">abc→తె</button><button class="k" data-act="panel" aria-label="ఆధారాలు">' + I.list + '</button><button class="k" data-act="flip" aria-label="దిశ మార్చు">' + I.swap + dirName(P.dir) + '</button><button class="k" data-act="back" aria-label="తొలగించు">' + I.del + '</button>', true);
+  }
+  function playView(id) {
+    setCurrent(id);
+    if (!CUR) return '<div class="page gutter"><h1 class="apptitle" style="font-size:34px">పోస్ట్ దొరకలేదు</h1><p class="note">ఈ పద వినోదం తొలగించి ఉండవచ్చు.</p><a class="wide-btn pri" href="#home">హోమ్‌కు వెళ్ళండి</a></div>';
+    var P = CUR.P, p = CUR.p, hard = S.prefs.hard, isDraft = id === 'draft';
+    var timer = S.prefs.timer ? '<div class="timer">' + I.clock + '<span id="tm">' + fmt(P.elapsed) + '</span></div>' : '<span></span>';
+    return '<section class="play">' +
+      '<header class="pbar"><a class="ghostbtn" href="' + (isDraft ? '#edit' : '#home') + '" aria-label="వెనక్కి">' + I.back + '</a>' +
+      '<div class="t"><h1>' + (isDraft ? 'డ్రాఫ్ట్ పరీక్ష · ' : '') + esc(p.title) + '</h1><p id="psub">' + esc(subText()) + '</p></div>' +
+      '<button class="ghostbtn" data-act="check" aria-label="సరిచూడు">' + I.check + '</button></header>' +
+      '<div class="ptools gutter"><div class="seg" role="group" aria-label="కష్టత"><button data-act="pref" data-k="hard" data-v="0" aria-pressed="' + !hard + '">సులభం</button><button data-act="pref" data-k="hard" data-v="1" aria-pressed="' + hard + '">కష్టం</button></div>' +
+      timer + '<button class="hint" data-act="hint">' + bulb(34) + 'సూచన</button></div>' +
+      '<div class="pmid gutter" id="pmid" data-scroll="mid">' + midHTML() + '</div>' +
+      '<div class="ppanel gutter">' + panelHTML() + '</div></section>';
+  }
+  // redraw only the grid and clue bar so the typing box keeps focus and the phone keyboard stays open
+  function refreshPlay() {
+    if (!CUR || route().indexOf('play-') !== 0) { render(); return; }
+    var el = document.getElementById('pmid');
+    if (!el) { render(); return; }
+    var st = el.scrollTop; el.innerHTML = midHTML(); el.scrollTop = st;
+    var ps = document.getElementById('psub'); if (ps) ps.textContent = subText();
+    var fl = view.querySelector('.ppanel [data-act="flip"]'); if (fl) fl.innerHTML = I.swap + dirName(CUR.P.dir);
+    updateCands();
+  }
+  function softOrFull() { if (U.panel === 'type' && route().indexOf('play-') === 0) refreshPlay(); else render(); }
+  function editRunLeft() { if (!D) return 0; var dr = U.edir === 'D' ? 1 : 0, dc = U.edir === 'A' ? 1 : 0, r = U.er, c = U.ec, n = 0; while (r < D.R && c < D.C && !D.black[r][c]) { n++; r += dr; c += dc; } return n; }
+  function editPlace(aks) {
+    var dr = U.edir === 'D' ? 1 : 0, dc = U.edir === 'A' ? 1 : 0, r = U.er, c = U.ec;
+    for (var i = 0; i < aks.length; i++) {
+      if (r >= D.R || c >= D.C || D.black[r][c]) break;
+      D.ans[r][c] = aks[i];
+      if (r + dr < D.R && c + dc < D.C && !D.black[r + dr][c + dc]) { r += dr; c += dc; } else break;
+    }
+    U.er = r; U.ec = c; saveDraft(); render();
+    var el = document.getElementById('tl-in'); if (el) el.focus();
+  }
+  function commitTyped(aks) {
+    if (!aks || !aks.length) return;
+    if (route() === 'edit') { editPlace(aks); return; }
+    if (!CUR) return;
+    var P = CUR.P;
+    if (P.done) { toast('ఈ పద వినోదం పూర్తయింది. మళ్ళీ ఆడాలంటే “మళ్ళీ ఆడండి” నొక్కండి.'); return; }
+    var e = cur(), i0 = idxIn(e), n = 0;
+    for (; n < aks.length && i0 + n < e.cells.length; n++) { var c = e.cells[i0 + n], k = key(c[0], c[1]); P.letters[k] = aks[n]; delete U.shown[k]; }
+    P.started = true;
+    if (n < aks.length) toast('ఈ పదానికి ' + (e.cells.length - i0) + ' గడులే ఉన్నాయి — మొదటి ' + n + ' అక్షరాలు పెట్టాం.');
+    var nx = null, j;
+    for (j = i0 + n; j < e.cells.length && !nx; j++) if (!P.letters[key(e.cells[j][0], e.cells[j][1])]) nx = e.cells[j];
+    for (j = 0; j < i0 && !nx; j++) if (!P.letters[key(e.cells[j][0], e.cells[j][1])]) nx = e.cells[j];
+    if (nx) { P.r = nx[0]; P.c = nx[1]; }
+    else {
+      // this word is full: move on to the next word that still has empty squares
+      var all = CUR.m.order.A.concat(CUR.m.order.D), at = all.indexOf(e.id), moved = false;
+      for (var s = 1; s <= all.length && !moved; s++) {
+        var en = CUR.m.entries[all[(Math.max(at, 0) + s) % all.length]];
+        if (en && en.cells.some(function (x) { return !P.letters[key(x[0], x[1])]; })) { goEntry(en.id); moved = true; }
+      }
+      if (!moved) { var lc = e.cells[Math.min(e.cells.length - 1, i0 + Math.max(0, n - 1))]; P.r = lc[0]; P.c = lc[1]; }
+    }
+    save(); afterInput(true);
+  }
+  function updateCands() {
+    var box = document.getElementById('tl-cands'), el = document.getElementById('tl-in');
+    if (!box || !el) return;
+    var need = route() === 'edit' ? editRunLeft() : (CUR ? cur().cells.length - idxIn(cur()) : 0);
+    var v = el.value.trim();
+    U.tlC = v ? TL.convert(v) : [];
+    box.innerHTML = U.tlC.map(function (a, i) { return '<button class="tlc' + (a.length === need ? ' fit' : '') + '" data-act="tl-pick" data-i="' + i + '" data-keepfocus>' + esc(a.join('')) + '<small>' + a.length + '</small></button>'; }).join('') +
+      '<span class="note">ఈ పదంలో మిగిలిన గడులు: ' + need + '</span>';
+  }
+  function tlInput(el) {
+    var v = el.value;
+    if (/[\s,.;]/.test(v)) {
+      var endsSep = /[\s,.;]$/.test(v), parts = v.split(/[\s,.;]+/), done = endsSep ? parts : parts.slice(0, -1);
+      el.value = endsSep ? '' : parts[parts.length - 1];
+      done.forEach(function (w) { if (!w) return; var c = TL.convert(w)[0]; if (c) commitTyped(c); });
+    }
+    updateCands();
+  }
+  function convertLatin(text) { return String(text || '').replace(/[A-Za-z]+/g, function (w) { var c = TL.convert(w)[0]; return c ? c.join('') : w; }); }
+  // in clue fields: an English word turns Telugu as soon as a space or punctuation follows it
+  function autoConvertField(el) {
+    var pos = el.selectionStart, v = el.value;
+    if (pos == null || pos < 2 || !/[\s,.;:!?()\-]/.test(v[pos - 1])) return;
+    var before = v.slice(0, pos - 1), m = before.match(/[A-Za-z]+$/);
+    if (!m) return;
+    var tel = convertLatin(m[0]);
+    if (!tel || tel === m[0]) return;
+    var start = before.length - m[0].length;
+    el.value = v.slice(0, start) + tel + v.slice(pos - 1);
+    var np = start + tel.length + 1; el.setSelectionRange(np, np);
+  }
+  function doneView(id) {
+    var p = findPuzzle(id), P = S.prog[id];
+    if (!p || !P || !P.done) return '<div class="page gutter done"><div class="art">' + congrats(0) + '</div><h1 class="cheer" style="font-size:40px">ఇంకా పూర్తి కాలేదు</h1><p class="note">అన్ని గడులూ సరిగ్గా నింపగానే ఇక్కడ అభినందనలు కనిపిస్తాయి.</p><div class="btncol"><a class="wide-btn pri" href="#play-' + esc(id) + '">పద వినోదానికి వెళ్ళండి</a></div></div>';
+    var hasAns = model(p).hasAns, vi = U.showVariant === null ? P.variant : U.showVariant;
+    var dots = VARIANTS.map(function (v, i) { return '<button data-act="variant" data-v="' + i + '" aria-label="' + v.label + '" aria-pressed="' + (i === vi) + '"><i></i></button>'; }).join('');
+    return '<div class="page gutter done">' +
+      '<div style="align-self:stretch;display:flex;justify-content:flex-end"><a class="iconbtn" href="#home" aria-label="మూసివేయి">' + I.close + '</a></div>' +
+      '<div class="art">' + congrats(vi) + '</div><div class="dots" role="group" aria-label="అభినందనల బొమ్మ">' + dots + '</div>' +
+      '<h1 class="cheer">అభినందనలు!</h1><p class="note" style="font-size:15px">' + esc(p.title) + (p.date ? ' · ' + esc(p.date) : '') + ' ' + (hasAns ? 'పూర్తి చేశారు' : 'అన్ని గడులూ నింపారు. జవాబులు చేర్చగానే సరిచూసుకోండి.') + '</p>' +
+      '<div class="stats"><div class="stat"><small>సమయం</small><b>' + fmt(P.doneTime) + '</b></div><div class="stat"><small>వాడిన సూచనలు</small><b>' + P.hints + '</b></div></div>' +
+      '<div class="btncol"><a class="wide-btn pri" href="#play-' + esc(id) + '">జవాబులు చూడండి</a>' +
+      '<button class="wide-btn sec" data-act="copy" data-id="' + esc(id) + '">' + I.copy + ' సందేశం కాపీ చేయండి</button>' +
+      '<button class="wide-btn ter" data-act="replay" data-id="' + esc(id) + '">' + (U.confirm === 'replay' ? 'ఖచ్చితమా? గడి ఖాళీ అవుతుంది — మళ్ళీ నొక్కండి' : 'మళ్ళీ ఆడండి') + '</button>' +
+      '<a class="wide-btn link" href="#home">హోమ్‌కు వెళ్ళండి ' + I.arrow + '</a></div></div>';
+  }
+  function prefsView() {
+    var p = S.prefs;
+    function seg(k, opts, label) { return '<div class="seg wide" role="group" aria-label="' + label + '">' + opts.map(function (o) { return '<button data-act="pref" data-k="' + k + '" data-v="' + o[0] + '" aria-pressed="' + (k === 'hard' ? String(+p.hard) === o[0] : String(p[k]) === o[0]) + '">' + o[1] + '</button>'; }).join('') + '</div>'; }
+    function toggle(k, title, sub, extra) { return '<button class="sw-row" data-act="toggle" data-k="' + k + '" aria-pressed="' + !!p[k] + '">' + (extra || '') + '<span class="t"><b>' + title + '</b><small>' + sub + '</small></span><span class="sw" aria-hidden="true"></span></button>'; }
+    var sw = [['#F2A93B', 'బంతిపూల పసుపు'], ['#6FA27A', 'తులసి పచ్చ'], ['#D9644A', 'కుంకుమ'], ['#A48BD6', 'ఊదా']].map(function (s) { return '<button class="swatch" style="background:' + s[0] + '" data-act="pref" data-k="accent" data-v="' + s[0] + '" aria-label="' + s[1] + '" aria-pressed="' + (p.accent === s[0]) + '"></button>'; }).join('');
+    var fonts = [['Hind Guntur', 'Hind Guntur'], ['Tenali Ramakrishna', 'Tenali Ramakrishna · మీ బ్లాగ్ ఫాంట్'], ['Ramabhadra', 'Ramabhadra · మీ బ్లాగ్ ఫాంట్'], ['Mandali', 'Mandali']].map(function (f) { return '<button class="font" data-act="pref" data-k="font" data-v="' + f[0] + '" aria-pressed="' + (p.font === f[0]) + '"><span class="dot" aria-hidden="true"></span><span class="t"><span class="s" style="font-family:' + FONTS[f[0]].replace(/"/g, '&quot;') + '">పద వినోదం</span><small>' + f[1] + '</small></span></button>'; }).join('');
+    return '<div class="page gutter"><header class="apphead"><h1 class="apptitle" style="font-size:36px">అమరికలు</h1></header>' +
+      '<section class="sec"><h2 class="sec-h">రూపం</h2><div class="box"><div class="fld"><h3>థీమ్</h3>' + seg('theme', [['auto', 'ఆటో'], ['cozy', 'హాయి'], ['night', 'రాత్రి'], ['white', 'తెలుపు']], 'థీమ్') + '<p class="note">ఆటో: మీ ఫోన్ లైట్/డార్క్ సెట్టింగ్‌ను అనుసరిస్తుంది.</p></div><div class="fld"><h3>హైలైట్ రంగు</h3><div class="swatches">' + sw + '</div></div>' + toggle('rain', 'నల్ల గడుల్లో వర్షం', 'మీ బ్లాగ్‌లోలాగే కదిలే వర్షం బొమ్మ', '<span class="blk rainsample" aria-hidden="true"></span>') + '</div></section>' +
+      '<section class="sec"><h2 class="sec-h">అక్షరాలు</h2><div class="box"><div class="fld"><h3>తెలుగు ఫాంట్</h3>' + fonts + '</div><div class="fld"><h3>గడిలో అక్షర పరిమాణం</h3>' + seg('size', [['s', 'చిన్నది'], ['m', 'మధ్యస్థం'], ['l', 'పెద్దది']], 'అక్షర పరిమాణం') + '</div></div></section>' +
+      '<section class="sec"><h2 class="sec-h">ఆట</h2><div class="box"><div class="fld"><h3>కష్టత</h3>' + seg('hard', [['0', 'సులభం'], ['1', 'కష్టం']], 'కష్టత') + '<p class="note">' + (p.hard ? 'కష్టం: “సరిచూడు” నొక్కినప్పుడే తప్పులు కనిపిస్తాయి.' : 'సులభం: తప్పు అక్షరం నింపగానే ఆ గడి ఎరుపులో కనిపిస్తుంది.') + '</p></div>' + toggle('skip', 'నిండిన గడులు దాటవేయి', 'టైప్ చేసేటప్పుడు ఇప్పటికే నింపిన గడిలోకి వెళ్ళదు') + toggle('timer', 'టైమర్ చూపించు', 'ఎంత సేపట్లో పూర్తి చేశారో రికార్డ్ అవుతుంది') + '</div></section>' +
+      '<section class="sec"><h2 class="sec-h">టైపింగ్</h2><div class="box" style="gap:0;padding-block:6px"><button class="radio" data-act="pref" data-k="keypad" data-v="app" aria-pressed="' + (p.keypad === 'app') + '"><span class="dot" aria-hidden="true"></span><span class="t"><b>యాప్ అక్షర కీప్యాడ్ (సిఫార్సు)</b><small>హల్లు + గుణింతం, ఒత్తులు — ఒక్కో గడికి ఒక అక్షరం</small></span></button><button class="radio" data-act="pref" data-k="keypad" data-v="phone" aria-pressed="' + (p.keypad === 'phone') + '"><span class="dot" aria-hidden="true"></span><span class="t"><b>టైప్ చేయడం (ఇంగ్లీష్ లేదా తెలుగు)</b><small>ఫోన్ కీబోర్డ్‌తో kamalam అని టైప్ చేస్తే కమలం అవుతుంది; తెలుగు కీబోర్డ్ కూడా పనిచేస్తుంది</small></span></button></div></section>' +
+      '<section class="sec"><h2 class="sec-h">Android యాప్‌లో రాబోయేవి</h2><div class="box"><ul class="soon"><li>కొత్త పద వినోదం వస్తే నోటిఫికేషన్</li><li>English భాషలో యాప్</li></ul>' + (IS_CLAUDE ? '' : '<p class="note">ఆఫ్‌లైన్: ఒకసారి తెరిచిన తర్వాత ఇంటర్నెట్ లేకున్నా యాప్, చివరిసారి లోడ్ అయిన పోస్టులు తెరుచుకుంటాయి.</p>') + '</div></section>' +
+      '<section class="sec"><h2 class="sec-h">ఆట పురోగతి</h2><div class="box"><p class="note">మీ అమరికలు, ఆట పురోగతి ఈ పరికరంలోనే సేవ్ అవుతాయి.</p><button class="wide-btn ter" data-act="resetall">' + (U.confirm === 'resetall' ? 'ఖచ్చితమా? అన్ని ఆటల పురోగతి పోతుంది — మళ్ళీ నొక్కండి' : 'అన్ని ఆటల పురోగతి తుడిచివేయండి') + '</button></div></section>' +
+      '<footer style="display:flex;flex-direction:column;align-items:center;gap:2px;text-align:center"><a href="' + BLOG + '" target="_blank" rel="noopener" style="font-weight:600;padding:10px 0">బ్లాగ్ తెరవండి · telugupadavinodam.blogspot.com</a><span style="font-family:var(--font-display);font-size:22px;color:var(--title)">ఈ-పద వినోదం</span><span class="note">వెర్షన్ 0.4' + (IS_CLAUDE ? ' · స్టూడియో' : '') + '</span></footer></div>';
+  }
+
+  /* ================= admin: who may manage ================= */
+  var ADMIN = null;
+  cap('user').then(function (u) {
+    if (!u) { ADMIN = false; render(); return; }
+    u.canEdit().then(function (v) { ADMIN = !!v; render(); }, function () { ADMIN = false; render(); });
+  });
+
+  /* ================= admin: blog import ================= */
+  function parsePostHTML(html) {
+    var doc = new DOMParser().parseFromString(html, 'text/html');
+    var box = doc.querySelector('.div1') || doc.body;
+    var rows = [[]], pending = null, tips = [];
+    box.querySelectorAll('input, br, label.tooltip').forEach(function (el) {
+      if (el.tagName === 'BR') { if (rows[rows.length - 1].length) rows.push([]); return; }
+      if (el.tagName === 'LABEL') {
+        var t = ''; el.childNodes.forEach(function (x) { if (x.nodeType === 3) t += x.textContent; });
+        var n = parseInt(t.trim(), 10); pending = isNaN(n) ? null : n;
+        var tip = el.querySelector('.tooltiptext'); if (tip) tips.push(tip.textContent);
+        return;
+      }
+      var type = (el.getAttribute('type') || 'text').toLowerCase();
+      if (type === 'image' && /btn-disabled/.test(el.className)) { rows[rows.length - 1].push(null); pending = null; return; }
+      if (type === 'text') { rows[rows.length - 1].push({ a: (el.getAttribute('name') || '').trim().normalize('NFC'), n: pending }); pending = null; }
+    });
+    while (rows.length && !rows[rows.length - 1].length) rows.pop();
+    if (!rows.length) return null;
+    var C = Math.max.apply(null, rows.map(function (r) { return r.length; }));
+    var p = { grid: [], nums: {}, ans: [], clues: [] };
+    rows.forEach(function (row, r) {
+      var g = '', a = [];
+      for (var c = 0; c < C; c++) { var cell = row[c]; if (!cell) { g += '#'; a.push(''); } else { g += '.'; a.push(cell.a); if (cell.n) p.nums[r + ',' + c] = cell.n; } }
+      p.grid.push(g); p.ans.push(a);
+    });
+    var seen = {};
+    tips.forEach(function (t) {
+      t.split(/(?=(?:అడ్డం|నిలువు)\s*:)/).forEach(function (chunk) {
+        var mm = chunk.match(/^(అడ్డం|నిలువు)\s*:\s*(\d+)\s*\.?\s*([\s\S]*)$/); if (!mm) return;
+        var text = mm[3].replace(/[\s⇨⇩⤷⤵→↓➜➡▶▼]+$/u, '');
+        var lm = text.match(/\(\s*(\d+)\s*\)\s*$/);
+        text = text.replace(/\s*\(\s*\d+\s*\)\s*$/, '').replace(/\s+/g, ' ').trim();
+        var d = mm[1] === 'అడ్డం' ? 'A' : 'D', id = d + mm[2];
+        if (!text || seen[id]) return; seen[id] = true;
+        p.clues.push({ d: d, n: +mm[2], len: lm ? +lm[1] : null, text: text });
+      });
+    });
+    return p;
+  }
+  function makeId(date, taken) { var base = 'e' + dateKey(date); if (base === 'e00000000') base = 'e' + Date.now().toString(36); var id = base, i = 2; while (taken[id]) id = base + '-' + i++; return id; }
+  function postFrom(title, html, url) {
+    if (!/btn-disabled/.test(html || '')) return null;
+    var p = parsePostHTML(html); if (!p) return null;
+    var dm = (title || '').match(/\d{2}\.\d{2}\.\d{4}/);
+    p.title = (title || '').replace(/\s*-\s*\d{2}\.\d{2}\.\d{4}\s*$/, '').trim() || 'ఈనాడు పద వినోదం';
+    p.date = dm ? dm[0] : ''; p.url = url || ''; p.src = 'blog';
+    return p;
+  }
+  function postsFromFeed(j) {
+    var out = [];
+    ((j && j.feed && j.feed.entry) || []).forEach(function (e) {
+      var link = (e.link || []).filter(function (l) { return l.rel === 'alternate'; })[0];
+      var p = postFrom(e.title && e.title.$t, (e.content && e.content.$t) || '', link && link.href);
+      if (p) out.push(p);
+    });
+    return out;
+  }
+  // Blogger allows its feed to be read from other websites only in this script form
+  function loadBlogFeed() {
+    return new Promise(function (res, rej) {
+      var s = document.createElement('script'), done = false;
+      var timer = setTimeout(function () { if (!done) { done = true; s.remove(); rej(new Error('timeout')); } }, 20000);
+      window.epvFeed = function (j) { if (done) return; done = true; clearTimeout(timer); s.remove(); res(j); };
+      s.onerror = function () { if (done) return; done = true; clearTimeout(timer); s.remove(); rej(new Error('feed')); };
+      s.src = BLOG + 'feeds/posts/default?alt=json-in-script&max-results=500&callback=epvFeed';
+      document.head.appendChild(s);
+    });
+  }
+  function importFromText(text) {
+    var out = [];
+    function add(title, html, url) { var p = postFrom(title, html, url); if (p) out.push(p); }
+    var t = text.replace(/^﻿/, '').trim();
+    if (t[0] === '{') {
+      out = postsFromFeed(JSON.parse(t));
+    } else if (/^<\?xml|^<feed/i.test(t)) {
+      var x = new DOMParser().parseFromString(t, 'application/xml');
+      Array.prototype.forEach.call(x.getElementsByTagName('entry'), function (e) {
+        var ttl = e.getElementsByTagName('title')[0], ct = e.getElementsByTagName('content')[0];
+        var link = Array.prototype.filter.call(e.getElementsByTagName('link'), function (l) { return l.getAttribute('rel') === 'alternate'; })[0];
+        add(ttl ? ttl.textContent : '', ct ? ct.textContent : '', link ? link.getAttribute('href') : '');
+      });
+    } else {
+      var d = new DOMParser().parseFromString(t, 'text/html');
+      var og = d.querySelector('meta[property="og:title"]'), h = d.querySelector('.post-title') || d.querySelector('title');
+      var canon = d.querySelector('link[rel="canonical"]');
+      var body = d.querySelector('.post-body') || d.body;
+      add((og && og.getAttribute('content')) || (h && h.textContent) || '', body.innerHTML, canon ? canon.getAttribute('href') : '');
+    }
+    return out;
+  }
+  function readFileText(f) { return new Promise(function (res, rej) { var r = new FileReader(); r.onload = function () { res(String(r.result)); }; r.onerror = function () { rej(r.error); }; r.readAsText(f, 'utf-8'); }); }
+  function runImport(texts) {
+    var found = [];
+    texts.forEach(function (t) { try { found = found.concat(importFromText(t)); } catch (e) { U.status = { kind: 'err', text: 'ఈ ఫైల్ చదవలేకపోయాం: ' + (e && e.message ? e.message : e) }; } });
+    var have = {}; PUZZLES.forEach(function (p) { have[p.date] = p; });
+    var taken = {}; PUZZLES.forEach(function (p) { taken[p.id] = true; });
+    found.forEach(function (p) { p.exists = !!(p.date && have[p.date]); p.id = p.exists ? have[p.date].id : makeId(p.date, taken); taken[p.id] = true; });
+    found.sort(function (a, b) { return dateKey(b.date).localeCompare(dateKey(a.date)); });
+    U.imports = found; U.importSel = {};
+    found.forEach(function (p) { if (!p.exists) U.importSel[p.id] = true; });
+    if (!found.length && !(U.status && U.status.kind === 'err')) U.status = { kind: 'err', text: 'ఈ ఫైల్‌లో పద వినోదం పోస్టులు కనిపించలేదు. బ్లాగ్ ఫీడ్ (.json), Blogger బ్యాకప్ (.xml) లేదా సేవ్ చేసిన పోస్ట్ పేజీ (.html) ఇవ్వండి.' };
+    else if (found.length) U.status = { kind: 'ok', text: found.length + ' పోస్టులు చదివాం. ప్రచురించాల్సినవి ఎంచుకుని కింది బటన్ నొక్కండి.' };
+    render();
+  }
+
+  /* ================= admin: publish ================= */
+  function cleanPuzzle(p) { return { id: p.id, title: p.title, date: p.date, src: p.src || '', url: p.url || '', grid: p.grid, nums: p.nums, ans: p.ans, clues: p.clues.map(function (c) { return { d: c.d, n: c.n, len: c.len || null, text: c.text }; }), added: p.added || new Date().toISOString() }; }
+  function savePuzzles(list, okMsg, after) {
+    U.busy = 'publish'; U.status = { kind: 'wait', text: 'ప్రచురిస్తున్నాం…' }; render();
+    cap('artifact').then(function (art) {
+      if (!art) throw { code: 'not_granted' };
+      var clean = list.map(cleanPuzzle);
+      var body = JSON.stringify({ v: 1, updated: new Date().toISOString(), puzzles: clean });
+      return art.publish({ 'puzzles.json': { content: body, contentType: 'application/json' } }).then(function () { return clean; });
+    }).then(function (clean) {
+      PUZZLES = clean; MODELS = {}; DATA_STATE = 'ready';
+      U.busy = ''; U.status = { kind: 'ok', text: okMsg }; if (after) after(); render(); toast(okMsg);
+    }, function (e) {
+      U.busy = '';
+      var code = e && e.code, msg = {
+        conflict: 'ఇంకో చోట నుంచి మార్పు ప్రచురించారు. పేజీ తాజా వెర్షన్‌కు రీలోడ్ అవుతోంది — మళ్ళీ ప్రయత్నించండి.',
+        not_writer: 'ఈ యాప్‌ను మార్చే అనుమతి మీకు లేదు.', not_granted: 'ఈ వీక్షణలో ప్రచురించడం కుదరదు. యాప్ యజమానిగా Claude లో తెరవండి.',
+        capability_disabled: 'ఈ లింక్‌లో సేవ్ చేయడం కుదరదు (పబ్లిక్‌గా షేర్ చేసిన లింక్‌లో ఇది పనిచేయదు). మీ ఖాతాలో తెరిచి ప్రయత్నించండి.',
+        too_large: 'డేటా చాలా పెద్దదైంది. కొన్ని పాత పోస్టులు తొలగించి ప్రయత్నించండి.', rate_limited: 'చాలా వేగంగా ప్రచురిస్తున్నారు. ఒక నిమిషం ఆగి ప్రయత్నించండి.'
+      }[code] || 'ప్రచురించడం కుదరలేదు (' + (code || 'error') + '). కాసేపాగి మళ్ళీ ప్రయత్నించండి.';
+      U.status = { kind: 'err', text: msg }; render();
+    });
+  }
+
+  /* ================= admin: draft editor ================= */
+  function newDraft(R, C) { var d = { id: '', title: 'ఈనాడు పద వినోదం', date: '', R: R, C: C, black: [], nums: {}, ans: [], clues: [], src: 'upload', url: '' }; for (var r = 0; r < R; r++) { d.black.push(new Array(C).fill(false)); d.ans.push(new Array(C).fill('')); } return d; }
+  function draftFromPuzzle(p) {
+    var d = newDraft(p.grid.length, p.grid[0].length);
+    d.id = p.id; d.title = p.title; d.date = p.date; d.url = p.url || ''; d.src = p.src || 'upload'; d.nums = Object.assign({}, p.nums);
+    for (var r = 0; r < d.R; r++) for (var c = 0; c < d.C; c++) { d.black[r][c] = p.grid[r][c] === '#'; d.ans[r][c] = (p.ans && p.ans[r] && p.ans[r][c]) || ''; }
+    d.clues = p.clues.map(function (c) { return { d: c.d, n: c.n, len: c.len, text: c.text }; });
+    return d;
+  }
+  function draftToPuzzle(d, forPlay) {
+    var grid = [], ans = [], nums = {};
+    for (var r = 0; r < d.R; r++) { var g = '', a = []; for (var c = 0; c < d.C; c++) { g += d.black[r][c] ? '#' : '.'; a.push(d.black[r][c] ? '' : (d.ans[r][c] || '')); } grid.push(g); ans.push(a); }
+    Object.keys(d.nums).forEach(function (k) { var x = k.split(','); if (+x[0] < d.R && +x[1] < d.C && !d.black[+x[0]][+x[1]] && d.nums[k]) nums[k] = +d.nums[k]; });
+    var clues = d.clues.filter(function (c) { return c.n && (c.text || '').trim(); }).map(function (c) { return { d: c.d, n: +c.n, len: c.len ? +c.len : null, text: c.text.trim() }; });
+    return { id: forPlay ? 'draft' : d.id, title: (d.title || '').trim() || 'ఈనాడు పద వినోదం', date: (d.date || '').trim(), src: d.src, url: d.url, grid: grid, nums: nums, ans: ans, clues: clues };
+  }
+  function saveDraft() { S.draft = D; save(); }
+  function draftAutoNumber() { var p = draftToPuzzle(D, true); autoNumber(p); D.nums = p.nums; saveDraft(); }
+  function resizeDraft(R, C) {
+    R = Math.max(3, Math.min(25, R | 0)); C = Math.max(3, Math.min(25, C | 0));
+    var nd = newDraft(R, C);
+    for (var r = 0; r < Math.min(R, D.R); r++) for (var c = 0; c < Math.min(C, D.C); c++) { nd.black[r][c] = D.black[r][c]; nd.ans[r][c] = D.ans[r][c]; }
+    Object.keys(D.nums).forEach(function (k) { var x = k.split(','); if (+x[0] < R && +x[1] < C) nd.nums[k] = D.nums[k]; });
+    nd.id = D.id; nd.title = D.title; nd.date = D.date; nd.clues = D.clues; nd.src = D.src; nd.url = D.url;
+    D = nd; saveDraft();
+  }
+  function draftFromAI(j, fallbackDate) {
+    var grid = Array.isArray(j.grid) ? j.grid.map(function (r) { return Array.isArray(r) ? r.map(function (x) { return x === '#' || x === 1 || x === true ? '#' : '.'; }).join('') : String(r || ''); }) : [];
+    var R = Math.max(3, Math.min(25, parseInt(j.rows, 10) || grid.length || 12));
+    var C = Math.max(3, Math.min(25, parseInt(j.cols, 10) || (grid[0] || '').length || 12));
+    var d = newDraft(R, C);
+    for (var r = 0; r < R; r++) for (var c = 0; c < C; c++) d.black[r][c] = ((grid[r] || '')[c] || '.') === '#';
+    (Array.isArray(j.numbers) ? j.numbers : []).forEach(function (t) { if (Array.isArray(t) && t.length >= 3) { var rr = +t[0], cc = +t[1], n = +t[2]; if (rr >= 0 && cc >= 0 && rr < R && cc < C && n > 0) d.nums[rr + ',' + cc] = n; } });
+    ['across', 'down'].forEach(function (dir) {
+      (Array.isArray(j[dir]) ? j[dir] : []).forEach(function (cl) {
+        if (!cl) return; var n = parseInt(cl.n, 10); if (!n) return;
+        var text = String(cl.text || '').replace(/\s*\(\s*\d+\s*\)\s*$/, '').trim();
+        d.clues.push({ d: dir === 'across' ? 'A' : 'D', n: n, len: parseInt(cl.len, 10) || null, text: text });
+      });
+    });
+    if (Array.isArray(j.answers)) applyAnswers(d, j.answers);
+    d.title = String(j.title || '').replace(/\s*-?\s*\d{2}\.\d{2}\.\d{4}\s*$/, '').trim() || 'ఈనాడు పద వినోదం';
+    d.date = /^\d{2}\.\d{2}\.\d{4}$/.test(j.date || '') ? j.date : (fallbackDate || '');
+    if (!Object.keys(d.nums).length) { D = d; draftAutoNumber(); d = D; }
+    return d;
+  }
+  function applyAnswers(d, answers) {
+    answers.forEach(function (row, r) {
+      if (r >= d.R) return;
+      var cells = Array.isArray(row) ? row : (String(row || '').match(AKSHARA) || []);
+      for (var c = 0; c < d.C; c++) { var v = String(cells[c] || '').trim(); if (!d.black[r][c] && v && v !== '#' && v !== '.') d.ans[r][c] = v.normalize('NFC'); }
+    });
+  }
+
+  /* ================= admin: reading images and PDFs with Claude ================= */
+  function loadScript(src) { return new Promise(function (res, rej) { var s = document.createElement('script'); s.src = src; s.onload = res; s.onerror = function () { rej(new Error('script')); }; document.head.appendChild(s); }); }
+  var PDFJS = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/';
+  function pdfToBlobs(file, maxPages) {
+    var ready = window.pdfjsLib ? Promise.resolve() : loadScript(PDFJS + 'pdf.min.js').then(function () {
+      try { window.pdfjsLib.GlobalWorkerOptions.workerPort = new Worker(URL.createObjectURL(new Blob(["importScripts('" + PDFJS + "pdf.worker.min.js');"], { type: 'application/javascript' }))); }
+      catch (e) { window.pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS + 'pdf.worker.min.js'; }
+    });
+    return ready.then(function () { return file.arrayBuffer(); }).then(function (buf) { return window.pdfjsLib.getDocument({ data: buf }).promise; }).then(function (pdf) {
+      var n = Math.min(pdf.numPages, maxPages), out = [], chain = Promise.resolve();
+      for (var i = 1; i <= n; i++) (function (i) {
+        chain = chain.then(function () { return pdf.getPage(i); }).then(function (page) {
+          var v1 = page.getViewport({ scale: 1 }), scale = Math.min(3, 2400 / Math.max(v1.width, v1.height));
+          var vp = page.getViewport({ scale: scale }), cv = document.createElement('canvas');
+          cv.width = Math.ceil(vp.width); cv.height = Math.ceil(vp.height);
+          return page.render({ canvasContext: cv.getContext('2d'), viewport: vp }).promise.then(function () { return new Promise(function (res) { cv.toBlob(function (b) { out.push(b); res(); }, 'image/jpeg', 0.92); }); });
+        });
+      })(i);
+      return chain.then(function () { return out; });
+    });
+  }
+  function blobToImage(b) { return new Promise(function (res, rej) { var u = URL.createObjectURL(b), im = new Image(); im.onload = function () { res(im); }; im.onerror = rej; im.src = u; }); }
+  // the reader sees about 1.2 megapixels per image, so a big page also goes in as four zoomed quarters
+  function withTiles(blob, budget) {
+    return blobToImage(blob).then(function (im) {
+      var W = im.naturalWidth, H = im.naturalHeight, out = [blob];
+      if (W * H <= 1.6e6 || budget < 5) return out;
+      var ov = 0.08, parts = [[0, 0], [1, 0], [0, 1], [1, 1]], jobs = parts.map(function (q) {
+        var x0 = Math.max(0, Math.floor((q[0] * 0.5 - (q[0] ? ov : 0)) * W)), y0 = Math.max(0, Math.floor((q[1] * 0.5 - (q[1] ? ov : 0)) * H));
+        var w = Math.min(W - x0, Math.ceil((0.5 + ov) * W)), h = Math.min(H - y0, Math.ceil((0.5 + ov) * H));
+        var cv = document.createElement('canvas'); cv.width = w; cv.height = h; cv.getContext('2d').drawImage(im, x0, y0, w, h, 0, 0, w, h);
+        return new Promise(function (res) { cv.toBlob(function (b) { res(b); }, 'image/jpeg', 0.92); });
+      });
+      return Promise.all(jobs).then(function (tiles) { return out.concat(tiles); });
+    });
+  }
+  function prepareImages(files, maxCount) {
+    var list = Array.prototype.slice.call(files || []), blobs = [], chain = Promise.resolve();
+    list.forEach(function (f) {
+      chain = chain.then(function () {
+        if (/pdf$/i.test(f.type) || /\.pdf$/i.test(f.name)) return pdfToBlobs(f, 3).then(function (bs) { blobs = blobs.concat(bs); });
+        if (/^image\//.test(f.type)) blobs.push(f);
+      });
+    });
+    return chain.then(function () {
+      if (blobs.length !== 1) return blobs.slice(0, maxCount);
+      return withTiles(blobs[0], maxCount).then(function (b) { return b.slice(0, maxCount); });
+    });
+  }
+  var PROMPT_PUZZLE =
+    'You are digitising a Telugu crossword (పద వినోదం) from photos or scans of a newspaper page. ' +
+    'The images show one puzzle grid and its clues: అడ్డం = across, నిలువు = down. If there is more than one image, the first is usually the whole page and the others are zoomed parts of the same page; use the zoomed parts to read small text.\n\n' +
+    'Reply with only one JSON object, no other text:\n' +
+    '{"title": "puzzle name as printed, or empty", "date": "DD.MM.YYYY or empty", "rows": <int>, "cols": <int>,\n' +
+    ' "grid": ["one string per row, exactly cols characters: # for a black or shaded square, . for a white square"],\n' +
+    ' "numbers": [[row, col, number], ...]  (every white square that carries a printed clue number; row and col start at 0 from the top-left),\n' +
+    ' "across": [{"n": <number>, "text": "the clue exactly as printed in Telugu, without the length in brackets", "len": <the number in brackets, or null>}],\n' +
+    ' "down": [same shape],\n' +
+    ' "answers": null, or, only if a solved grid with letters is visible: [[one string per square: "" for black squares, otherwise the single Telugu akshara written there, e.g. "క్ష", "మ్మ", "రం"]]}\n\n' +
+    'Count rows and columns carefully by looking at the grid lines. Copy Telugu text exactly; do not translate or correct it. Include every clue you can see. If a part is hard to read, give your best reading and continue.';
+  var PROMPT_ANSWERS =
+    'This image shows a SOLVED Telugu crossword grid (పద వినోదం జవాబులు). The grid has ROWS rows and COLS columns; black squares are marked # in this pattern, one string per row:\nPATTERN\n\n' +
+    'Reply with only one JSON object: {"answers": [[one string per square, row by row: "" for black squares, otherwise the single Telugu akshara in that square, e.g. "క్ష", "మ్మ", "రం"]]}. Keep exactly ROWS rows and COLS entries per row.';
+  function aiRead(kind, files) {
+    if (U.busy) return;
+    var date = (document.getElementById('up-date') || {}).value || '';
+    U.busy = 'ai'; U.status = { kind: 'wait', text: 'చిత్రాలు సిద్ధం చేస్తున్నాం…' }; render();
+    var sample, lim;
+    cap('sample').then(function (s) {
+      sample = s; if (!sample) throw { code: 'not_granted' };
+      return sample.limits().catch(function () { return null; });
+    }).then(function (l) {
+      lim = l; if (!lim || !lim.images) throw { code: 'images_unavailable' };
+      return prepareImages(files, lim.images.maxCount);
+    }).then(function (blobs) {
+      if (!blobs.length) throw { code: 'no_images' };
+      U.srcUrls.forEach(function (u) { URL.revokeObjectURL(u); });
+      U.srcUrls = blobs.slice(0, 1).map(function (b) { return URL.createObjectURL(b); });
+      var prompt = PROMPT_PUZZLE;
+      if (kind === 'answers') {
+        var pz = draftToPuzzle(D, true);
+        prompt = PROMPT_ANSWERS.replace(/ROWS/g, D.R).replace(/COLS/g, D.C).replace('PATTERN', pz.grid.join('\n'));
+      } else if (date) prompt += '\nThe admin says this puzzle is dated ' + date + '.';
+      U.ctl = new AbortController();
+      U.status = { kind: 'wait', text: 'Claude చదువుతోంది… (' + blobs.length + ' చిత్రాలు). పెద్ద గడికి ఒకట్రెండు నిమిషాలు పట్టవచ్చు.' }; render();
+      return sample.json(prompt, { images: blobs, modelTier: 'complex', signal: U.ctl.signal, onText: function (u) { var el = document.getElementById('ai-progress'); if (el) el.textContent = 'అందుతున్నది: ' + u.text.length + ' అక్షరాలు'; } });
+    }).then(function (j) {
+      U.busy = ''; U.ctl = null;
+      if (kind === 'answers') {
+        if (!j || !Array.isArray(j.answers)) throw { code: 'invalid_json' };
+        applyAnswers(D, j.answers); saveDraft();
+        U.status = { kind: 'ok', text: 'జవాబులు నింపాం. ప్రతి గడినీ ఒకసారి చూసి సరిదిద్దండి.' }; U.emode = 'ans'; render(); return;
+      }
+      D = draftFromAI(j || {}, date); D.src = 'upload'; saveDraft();
+      U.status = { kind: 'ok', text: 'డ్రాఫ్ట్ సిద్ధం. గడి, సంఖ్యలు, ఆధారాలు చిత్రంతో పోల్చి సరిచూడండి, తర్వాత ప్రచురించండి.' };
+      location.hash = '#edit';
+    }, function (e) {
+      U.busy = ''; U.ctl = null;
+      var code = e && e.code, msg = {
+        cancelled: 'ఆపేశాం.', not_granted: 'ఈ వీక్షణలో Claude ను ఉపయోగించడం కుదరదు, లేదా అనుమతి ఇవ్వలేదు. ఖాళీ గడితో చేతితో కూడా తయారు చేయవచ్చు.',
+        images_unavailable: 'ఈ వీక్షణలో చిత్రాలు పంపడం కుదరదు. Claude యాప్ లేదా claude.ai లో తెరిచి ప్రయత్నించండి.', no_images: 'చిత్రం (JPG/PNG) లేదా PDF ఎంచుకోండి.',
+        image_rejected: 'ఈ చిత్రాన్ని చదవలేకపోయాం. చిన్న ఫైల్ లేదా వేరే ఫోటో ప్రయత్నించండి.', rate_limited: 'చాలా అభ్యర్థనలు. కాసేపాగి ప్రయత్నించండి.',
+        invalid_json: 'చదివిన సమాచారం సరిగ్గా రాలేదు. మళ్ళీ ప్రయత్నించండి, లేదా గడి, ఆధారాలను వేర్వేరు ఫోటోలుగా ఇవ్వండి.', refused: 'ఈ చిత్రాన్ని చదవడం కుదరలేదు.',
+        session_expired: 'మళ్ళీ సైన్ ఇన్ చేయండి.'
+      }[code] || 'చదవడం కుదరలేదు (' + (code || (e && e.message) || 'error') + ').';
+      U.status = { kind: code === 'cancelled' ? 'wait' : 'err', text: msg }; render();
+    });
+  }
+
+  /* ================= views: admin ================= */
+  function statusBox() {
+    if (!U.status) return '';
+    var stop = U.busy === 'ai' ? '<button class="smallbtn" data-act="ai-stop">ఆపండి</button>' : '';
+    return '<div class="status ' + (U.status.kind === 'err' ? 'err' : U.status.kind === 'ok' ? 'ok' : '') + '" role="status"><span>' + esc(U.status.text) + '</span>' + (U.busy === 'ai' ? '<span class="note" id="ai-progress">అందుతున్నది: 0 అక్షరాలు</span>' : '') + stop + '</div>';
+  }
+  function adminView() {
+    if (!IS_CLAUDE) return '<div class="page gutter"><header class="apphead"><a class="ghostbtn" href="#home" aria-label="వెనక్కి">' + I.back + '</a></header><div class="lockscreen"><span class="big">' + I.biglock + '</span><h1 class="apptitle" style="font-size:32px">నిర్వాహణ ఇక్కడ లేదు</h1><p class="bignote">బ్లాగ్‌లో కొత్త పోస్ట్ పెట్టగానే అది ఈ యాప్‌లో తానుగా కనిపిస్తుంది. ఫోటోల నుంచి పోస్టులు తయారుచేయడం Claude లోని స్టూడియోలో జరుగుతుంది.</p><a class="wide-btn pri" href="#home">హోమ్‌కు వెళ్ళండి</a></div></div>';
+    if (ADMIN === null) return '<div class="page gutter"><div class="lockscreen"><span class="big">' + I.biglock + '</span><p class="note">అనుమతులు తనిఖీ చేస్తున్నాం…</p></div></div>';
+    if (!ADMIN) return '<div class="page gutter"><header class="apphead"><a class="ghostbtn" href="#home" aria-label="వెనక్కి">' + I.back + '</a></header><div class="lockscreen"><span class="big">' + I.biglock + '</span><h1 class="apptitle" style="font-size:34px">నిర్వాహకులకు మాత్రమే</h1><p class="bignote">కొత్త పద వినోదాలు అప్‌లోడ్ చేయడం, బ్లాగ్ పోస్టులు దిగుమతి చేయడం యాప్ యజమాని లేదా ఎడిటర్ మాత్రమే చేయగలరు.</p><a class="wide-btn pri" href="#home">హోమ్‌కు వెళ్ళండి</a></div></div>';
+    var busy = !!U.busy;
+    var imp = '';
+    if (U.imports && U.imports.length) {
+      var n = Object.keys(U.importSel).filter(function (k) { return U.importSel[k]; }).length;
+      imp = '<div class="implist">' + U.imports.map(function (p) {
+        var m = model(Object.assign({}, p, { id: 'imp-' + p.id })), on = !!U.importSel[p.id];
+        var info = p.grid.length + '×' + p.grid[0].length + ' · అడ్డం ' + m.order.A.length + ' · నిలువు ' + m.order.D.length + (m.hasAns ? '' : ' · జవాబులు ' + m.missingAns + ' లేవు') + (m.problems.length ? ' · ' + m.problems.length + ' గమనికలు' : '') + (p.exists ? ' · ఇప్పటికే ఉంది (తిరిగి రాస్తుంది)' : '');
+        return '<button class="imp" data-act="imp-toggle" data-id="' + esc(p.id) + '" aria-pressed="' + on + '"><span class="chk" aria-hidden="true">' + (on ? I.tick : '') + '</span><span class="t"><b>' + esc(p.title) + ' · ' + esc(p.date || 'తేదీ లేదు') + '</b><small>' + esc(info) + '</small></span></button>';
+      }).join('') + '</div><div class="btnrow"><button class="wide-btn ter" data-act="imp-all">' + (n === U.imports.length ? 'అన్నీ తీసివేయండి' : 'అన్నీ ఎంచుకోండి') + '</button><button class="wide-btn pri" data-act="imp-publish"' + (busy || !n ? ' disabled' : '') + '>' + n + ' పోస్టులు ప్రచురించండి</button></div>';
+    }
+    var mgr = sorted().map(function (p) {
+      var m = model(p), conf = U.confirm === 'del:' + p.id;
+      return '<div class="mgr"><span class="t"><b>' + esc(p.title) + ' · ' + esc(p.date || 'తేదీ లేదు') + '</b><small>' + m.R + '×' + m.C + ' · ' + (m.hasAns ? 'జవాబులతో' : 'జవాబులు లేవు') + ' · ' + (p.src === 'blog' ? 'బ్లాగ్ నుంచి' : 'అప్‌లోడ్') + '</small></span><button class="smallbtn" data-act="edit-pub" data-id="' + esc(p.id) + '"' + (busy ? ' disabled' : '') + '>మార్చు</button><button class="smallbtn danger" data-act="del-pub" data-id="' + esc(p.id) + '"' + (busy ? ' disabled' : '') + '>' + (conf ? 'ఖచ్చితమా?' : 'తొలగించు') + '</button></div>';
+    }).join('');
+    return '<div class="page gutter">' +
+      '<header class="apphead"><div style="display:flex;align-items:center;gap:6px"><a class="ghostbtn" href="#home" aria-label="వెనక్కి">' + I.back + '</a><h1 class="apptitle" style="font-size:34px">నిర్వాహణ</h1></div><span class="iconbtn lockbtn is-admin" aria-hidden="true">' + I.unlock + '</span></header>' +
+      statusBox() +
+      '<section class="sec"><h2 class="sec-h">కొత్త పద వినోదం అప్‌లోడ్</h2><div class="box">' +
+        '<p class="bignote">పేపర్‌లోని పద వినోదం ఫోటో లేదా PDF ఇవ్వండి. Claude గడి, సంఖ్యలు, ఆధారాలు చదివి డ్రాఫ్ట్ తయారు చేస్తుంది. మీరు సరిచూసి ప్రచురిస్తే అది యాప్‌లో కొత్త పోస్ట్ అవుతుంది.</p>' +
+        '<div class="file"><label class="lbl" for="up-files">ఫోటో(లు) లేదా PDF</label><input id="up-files" type="file" accept="image/jpeg,image/png,image/webp,application/pdf" multiple></div>' +
+        '<div class="fld"><label class="lbl" for="up-date">తేదీ (ఐచ్ఛికం)</label><input id="up-date" class="inp" type="text" inputmode="numeric" placeholder="DD.MM.YYYY" value=""></div>' +
+        '<p class="note">గడి, ఆధారాలు వేర్వేరు ఫోటోలుగా దగ్గరగా తీస్తే బాగా చదువుతుంది. ఒక్కో చదువుకు మీ Claude వినియోగం ఖర్చవుతుంది.</p>' +
+        '<div class="btnrow"><button class="wide-btn pri" data-act="ai-read"' + (busy ? ' disabled' : '') + '>Claude తో చదివి డ్రాఫ్ట్ చేయండి</button><button class="wide-btn ter" data-act="blank"' + (busy ? ' disabled' : '') + '>ఖాళీ గడితో మొదలుపెట్టండి</button></div>' +
+        (D ? '<a class="wide-btn sec" href="#edit">సేవ్ చేసిన డ్రాఫ్ట్ కొనసాగించండి' + (D.date ? ' · ' + esc(D.date) : '') + '</a>' : '') +
+      '</div></section>' +
+      '<section class="sec"><h2 class="sec-h">బ్లాగ్ నుంచి దిగుమతి</h2><div class="box">' +
+        '<ol class="steps"><li>కంప్యూటర్‌లో ఈ ఫీడ్ లింక్ తెరవండి.</li><li>Ctrl+S తో ఫైల్‌గా సేవ్ చేయండి (లేదా Ctrl+A, Ctrl+C తో కాపీ చేయండి).</li><li>ఆ ఫైల్ ఇక్కడ ఎంచుకోండి, లేదా కింది పెట్టెలో అతికించండి.</li></ol>' +
+        '<div class="copyline"><code id="feed-url">' + esc(FEED) + '</code><button class="smallbtn" data-act="copy-feed">కాపీ</button></div>' +
+        '<a href="' + esc(FEED) + '" target="_blank" rel="noopener" style="font-size:14px;font-weight:600">ఫీడ్ లింక్ తెరవండి</a>' +
+        '<div class="file"><label class="lbl" for="imp-files">ఫీడ్ (.json), Blogger బ్యాకప్ (.xml) లేదా పోస్ట్ పేజీలు (.html)</label><input id="imp-files" type="file" accept=".json,.xml,.html,.htm,.txt,application/json,text/xml,text/html" multiple></div>' +
+        '<div class="fld"><label class="lbl" for="imp-paste">లేదా ఇక్కడ అతికించండి</label><textarea id="imp-paste" class="inp" placeholder="{&quot;version&quot;:&quot;1.0&quot;, &quot;feed&quot;: …"></textarea><button class="wide-btn ter" data-act="imp-read"' + (busy ? ' disabled' : '') + '>అతికించినది చదవండి</button></div>' +
+        imp +
+      '</div></section>' +
+      '<section class="sec"><h2 class="sec-h">ప్రచురించిన పోస్టులు · ' + PUZZLES.length + '</h2><div class="box" style="gap:0;padding-block:6px">' + (mgr || '<p class="note" style="padding:10px 0">ఇంకా ఏ పోస్టూ లేదు.</p>') + '</div></section>' +
+      '<section class="sec"><h2 class="sec-h">మీ వెబ్‌సైట్‌కు పంపడం</h2><div class="box"><p class="bignote">వెబ్‌సైట్ యాప్ బ్లాగ్ పోస్టులను తానుగా చదువుతుంది. ఇక్కడ అప్‌లోడ్ చేసినవి, సరిదిద్దినవి అక్కడ కనిపించాలంటే ఈ ఫైల్ సేవ్ చేసి, సైట్‌లోని పాత puzzles.json స్థానంలో పెట్టండి.</p><button class="wide-btn ter" data-act="export"' + (busy || !PUZZLES.length ? ' disabled' : '') + '>puzzles.json సేవ్ చేయండి</button></div></section>' +
+      '<p class="note">ప్రచురించిన మార్పులు ఈ యాప్ తెరిచిన అందరికీ వెంటనే కనిపిస్తాయి. ఈనాడు పద వినోదం హక్కులు ఈనాడువి — పబ్లిక్‌గా పంచే ముందు అనుమతి సంగతి చూసుకోండి.</p>' +
+    '</div>';
+  }
+  function draftChecks() {
+    var p = draftToPuzzle(D, true), m = model(p), out = m.problems.slice();
+    var noClue = []; Object.keys(p.nums).forEach(function (k) { var n = p.nums[k]; if (!p.clues.some(function (c) { return c.n === n; })) noClue.push(n); });
+    if (noClue.length) out.push('ఆధారం లేని సంఖ్యలు: ' + noClue.sort(function (a, b) { return a - b; }).slice(0, 12).join(', ') + (noClue.length > 12 ? '…' : ''));
+    var info = m.whites + ' తెల్ల గడులు · అడ్డం ' + m.order.A.length + ' · నిలువు ' + m.order.D.length + ' · ' + (m.hasAns ? 'అన్ని జవాబులూ ఉన్నాయి' : 'జవాబులు లేని గడులు ' + m.missingAns);
+    return '<div class="status ' + (out.length ? '' : 'ok') + '"><span>' + esc(info) + '</span>' + (out.length ? '<ul class="problems">' + out.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>' : '<span>సమస్యలేమీ కనిపించలేదు.</span>') + '</div>';
+  }
+  function editView() {
+    if (!ADMIN) return adminView();
+    if (!D) return '<div class="page gutter"><p class="note">డ్రాఫ్ట్ లేదు.</p><a class="wide-btn pri" href="#admin">నిర్వాహణకు వెళ్ళండి</a></div>';
+    var p = draftToPuzzle(D, true), m = model(p), busy = !!U.busy;
+    var runs = {};
+    if (U.emode === 'ans') { var dr = U.edir === 'D' ? 1 : 0, dc = U.edir === 'A' ? 1 : 0, r0 = U.er, c0 = U.ec; while (m.isW(r0 - dr, c0 - dc)) { r0 -= dr; c0 -= dc; } while (m.isW(r0, c0)) { runs[key(r0, c0)] = true; r0 += dr; c0 += dc; } }
+    var cells = '';
+    for (var r = 0; r < D.R; r++) for (var c = 0; c < D.C; c++) {
+      var k = key(r, c), b = D.black[r][c], n = p.nums[k] || '', a = b ? '' : D.ans[r][c] || '', sel = r === U.er && c === U.ec;
+      cells += '<button class="ecell' + (b ? ' b' : '') + (sel ? ' sel' : '') + (runs[k] && !sel ? ' run' : '') + '" data-act="ecell" data-r="' + r + '" data-c="' + c + '" aria-label="' + esc('అడ్డు వరుస ' + (r + 1) + ', నిలువు వరుస ' + (c + 1) + (b ? ' · నలుపు' : '') + (n ? ' · సంఖ్య ' + n : '') + (a ? ' · ' + a : '')) + '">' + (n ? '<span class="num">' + n + '</span>' : '') + '<span class="ltr">' + esc(a) + '</span></button>';
+    }
+    var tool = '';
+    if (U.emode === 'black') tool = '<p class="note">గడిని నొక్కితే నలుపు ↔ తెలుపు మారుతుంది.</p><button class="wide-btn ter" data-act="auto-num">సంఖ్యలు ఆటోగా వేయండి</button>';
+    if (U.emode === 'num') tool = '<div class="numedit"><span class="lbl">ఎంచుకున్న గడి (' + (U.er + 1) + ', ' + (U.ec + 1) + ') సంఖ్య</span><input id="num-in" class="inp sm" type="number" inputmode="numeric" min="1" value="' + esc(D.nums[key(U.er, U.ec)] || '') + '"><button class="smallbtn" data-act="num-set">సరే</button><button class="smallbtn danger" data-act="num-clear">తీసివేయి</button></div><button class="wide-btn ter" data-act="auto-num">అన్ని సంఖ్యలూ ఆటోగా వేయండి</button>';
+    if (U.emode === 'ans') tool = '<div class="btnrow"><button class="wide-btn ter" data-act="eflip">' + I.swap + ' దిశ: ' + dirName(U.edir) + '</button><label class="wide-btn ter" for="ans-files" style="cursor:pointer">జవాబుల చిత్రం నుంచి నింపండి</label></div><input id="ans-files" type="file" accept="image/jpeg,image/png,image/webp,application/pdf" style="position:absolute;width:1px;height:1px;opacity:0">' + typeBoxHTML() +
+      '<div class="ppanel" style="border-top:0;padding-top:0">' + keypadHTML('<button class="k" data-act="ottu" aria-pressed="' + (!!U.conj) + '">ఒత్తు ్</button><button class="k" data-act="vowels">అచ్చులు</button><button class="k" data-act="eflip">' + I.swap + dirName(U.edir) + '</button><button class="k" data-act="back" aria-label="తొలగించు">' + I.del + '</button>') + '</div>';
+    var clueRows = D.clues.map(function (cl, i) {
+      if (cl.d !== U.etab) return '';
+      return '<div class="cluerow"><input class="inp sm" type="number" inputmode="numeric" aria-label="సంఖ్య" data-ci="' + i + '" data-f="n" value="' + esc(cl.n || '') + '"><input class="inp" style="min-height:40px;padding:6px 10px;font-size:15px" type="text" aria-label="ఆధారం" data-ci="' + i + '" data-f="text" value="' + esc(cl.text || '') + '"><input class="inp sm" type="number" inputmode="numeric" aria-label="పొడవు" data-ci="' + i + '" data-f="len" value="' + esc(cl.len || '') + '"><button class="x" data-act="clue-del" data-i="' + i + '" aria-label="ఈ ఆధారం తొలగించు">×</button></div>';
+    }).join('');
+    var nA = D.clues.filter(function (c) { return c.d === 'A'; }).length, nD = D.clues.length - nA;
+    return '<section class="play" style="overflow-y:auto">' +
+      '<header class="ebar"><a class="ghostbtn" href="#admin" aria-label="నిర్వాహణకు వెనక్కి">' + I.back + '</a><h1>' + (D.id ? 'పోస్ట్ మార్పు' : 'కొత్త పోస్ట్ డ్రాఫ్ట్') + '</h1></header>' +
+      '<div class="page gutter" style="gap:18px">' + statusBox() +
+        (U.srcUrls.length ? '<details><summary class="lbl" style="cursor:pointer">మూల చిత్రం చూడండి</summary><div class="srcimgs">' + U.srcUrls.map(function (u) { return '<img src="' + u + '" alt="అప్‌లోడ్ చేసిన పద వినోదం చిత్రం">'; }).join('') + '</div></details>' : '') +
+        '<div class="box"><div class="row2"><div class="fld"><label class="lbl" for="d-title">శీర్షిక</label><input id="d-title" class="inp" data-df="title" value="' + esc(D.title) + '"></div><div class="fld"><label class="lbl" for="d-date">తేదీ</label><input id="d-date" class="inp" data-df="date" inputmode="numeric" placeholder="DD.MM.YYYY" value="' + esc(D.date) + '"></div></div>' +
+        '<div class="row3"><div class="fld"><label class="lbl" for="d-rows">వరుసలు</label><input id="d-rows" class="inp sm" type="number" min="3" max="25" value="' + D.R + '"></div><div class="fld"><label class="lbl" for="d-cols">నిలువు వరుసలు</label><input id="d-cols" class="inp sm" type="number" min="3" max="25" value="' + D.C + '"></div><div class="fld"><span class="lbl">&nbsp;</span><button class="smallbtn" style="min-height:40px" data-act="resize">పరిమాణం మార్చు</button></div></div></div>' +
+        '<div class="seg wide" role="group" aria-label="మార్పు రకం"><button data-act="emode" data-v="black" aria-pressed="' + (U.emode === 'black') + '">నలుపు గడులు</button><button data-act="emode" data-v="num" aria-pressed="' + (U.emode === 'num') + '">సంఖ్యలు</button><button data-act="emode" data-v="ans" aria-pressed="' + (U.emode === 'ans') + '">జవాబులు</button></div>' +
+        '<div class="egrid" style="--n:' + D.C + '">' + cells + '</div>' + tool +
+        '<section class="sec"><div class="sec-row"><h2 class="sec-h">ఆధారాలు</h2><div class="seg" role="group" aria-label="ఆధారాల దిశ"><button data-act="etab" data-v="A" aria-pressed="' + (U.etab === 'A') + '">అడ్డం · ' + nA + '</button><button data-act="etab" data-v="D" aria-pressed="' + (U.etab === 'D') + '">నిలువు · ' + nD + '</button></div></div>' +
+          '<div class="cluerow" style="font-size:12px;color:var(--muted)"><span>సంఖ్య</span><span>ఆధారం</span><span>పొడవు</span><span></span></div>' + clueRows +
+          '<button class="wide-btn ter" data-act="clue-add">' + dirName(U.etab) + ' ఆధారం జోడించండి</button></section>' +
+        '<div id="checks">' + draftChecks() + '</div>' +
+        '<div class="btnrow"><a class="wide-btn ter" href="#play-draft" data-act="try">పరీక్షగా ఆడండి</a><button class="wide-btn pri" data-act="publish-draft"' + (busy ? ' disabled' : '') + '>' + (D.id ? 'మార్పులు ప్రచురించండి' : 'పోస్ట్‌గా ప్రచురించండి') + '</button></div>' +
+        '<button class="wide-btn link" data-act="draft-drop">' + (U.confirm === 'drop' ? 'ఖచ్చితమా? డ్రాఫ్ట్ పోతుంది — మళ్ళీ నొక్కండి' : 'డ్రాఫ్ట్ వదిలేయండి') + '</button>' +
+      '</div></section>';
+  }
+  function editPut(v) {
+    if (D.black[U.er][U.ec]) return;
+    D.ans[U.er][U.ec] = v.normalize('NFC'); U.cons = null; U.conj = null;
+    var dr = U.edir === 'D' ? 1 : 0, dc = U.edir === 'A' ? 1 : 0, nr = U.er + dr, nc = U.ec + dc;
+    if (nr < D.R && nc < D.C && !D.black[nr][nc]) { U.er = nr; U.ec = nc; }
+    saveDraft(); render();
+  }
+  function editBack() {
+    if (U.cons || U.conj) { U.cons = null; U.conj = null; render(); return; }
+    if (D.ans[U.er][U.ec]) { D.ans[U.er][U.ec] = ''; }
+    else { var dr = U.edir === 'D' ? 1 : 0, dc = U.edir === 'A' ? 1 : 0, pr = U.er - dr, pc = U.ec - dc; if (pr >= 0 && pc >= 0 && !D.black[pr][pc]) { U.er = pr; U.ec = pc; D.ans[pr][pc] = ''; } }
+    saveDraft(); render();
+  }
+
+  /* ================= render & routing ================= */
+  function route() { var h = location.hash.replace('#', ''); return h || 'home'; }
+  function render() {
+    var r = route(), keep = {};
+    view.querySelectorAll('[data-scroll]').forEach(function (el) { keep[el.getAttribute('data-scroll')] = el.scrollTop; });
+    var html;
+    if (r.indexOf('play-') === 0) html = playView(r.slice(5));
+    else if (r.indexOf('done-') === 0) html = doneView(r.slice(5));
+    else if (r === 'archive') html = archiveView();
+    else if (r === 'prefs') html = prefsView();
+    else if (r === 'admin') html = adminView();
+    else if (r === 'edit') html = editView();
+    else html = homeView();
+    view.innerHTML = html;
+    var fixed = r.indexOf('play-') === 0 && !!CUR;
+    view.classList.toggle('is-fixed', fixed);
+    view.querySelectorAll('[data-scroll]').forEach(function (el) { var v = keep[el.getAttribute('data-scroll')]; if (v) el.scrollTop = v; });
+    tabs.hidden = r.indexOf('play-') === 0 || r.indexOf('done-') === 0 || r === 'edit';
+    var tab = r === 'archive' || r === 'prefs' ? r : (r === 'home' ? 'home' : '');
+    tabs.querySelectorAll('a').forEach(function (a) { if (a.getAttribute('data-tab') === tab) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
+    if (document.getElementById('tl-cands')) updateCands();
+  }
+  var lastRoute = null;
+  function onRoute() {
+    var r = route();
+    if (r !== lastRoute) {
+      view.scrollTop = 0; U.confirm = '';
+      if (r.indexOf('done-') === 0) U.showVariant = null;
+      if (r.indexOf('play-') === 0) { U.panel = S.prefs.keypad === 'phone' ? 'type' : 'keys'; U.cons = null; U.conj = null; U.shown = {}; var P = S.prog[r.slice(5)]; U.tab = P ? P.dir : 'A'; }
+      if (r === 'play-draft' && S.prog.draft) { S.prog.draft = freshProgress(); }
+      if ((r === 'admin' || r === 'edit') && lastRoute && lastRoute !== 'admin' && lastRoute !== 'edit' && lastRoute !== 'play-draft') U.status = null;
+    }
+    lastRoute = r; render();
+  }
+
+  /* ================= events ================= */
+  view.addEventListener('click', function (ev) {
+    var t = ev.target.closest('[data-act]'); if (!t) return;
+    var a = t.getAttribute('data-act'), v = t.getAttribute('data-v'), r = route(), inEdit = r === 'edit';
+    switch (a) {
+      case 'cell':
+        pickCell(+t.getAttribute('data-r'), +t.getAttribute('data-c'));
+        if (U.panel === 'type') { refreshPlay(); var tin = document.getElementById('tl-in'); if (tin) tin.focus(); } else render();
+        break;
+      case 'put': if (inEdit) editPut(v); else put(v); break;
+      case 'cons': if (U.conj) { U.cons = U.conj + '్' + v; U.conj = null; } else U.cons = U.cons === v ? null : v; render(); break;
+      case 'ottu': if (U.cons) { U.conj = U.cons; U.cons = null; render(); } else toast('ముందు ఒక హల్లు నొక్కండి, తర్వాత ఒత్తు.'); break;
+      case 'vowels': U.cons = null; U.conj = null; render(); break;
+      case 'flip':
+        var m = CUR.m, P = CUR.P, k = key(P.r, P.c), o = P.dir === 'A' ? 'D' : 'A';
+        if (o === 'A' ? m.cellA[k] : m.cellD[k]) { P.dir = o; U.tab = o; save(); softOrFull(); } else toast('ఈ గడి నుంచి ' + dirName(o) + ' పదం లేదు.');
+        break;
+      case 'back': if (inEdit) editBack(); else back(U.panel === 'type'); break;
+      case 'prev': step(-1); softOrFull(); break;
+      case 'next': step(1); softOrFull(); break;
+      case 'panel': U.panel = U.panel === 'clues' ? (S.prefs.keypad === 'phone' ? 'type' : 'keys') : 'clues'; U.tab = CUR ? CUR.P.dir : 'A'; render(); break;
+      case 'tab': U.tab = v; render(); break;
+      case 'clue': goEntry(t.getAttribute('data-id')); render(); break;
+      case 'hint': doHint(); break;
+      case 'check': doCheck(); break;
+      case 'panel-type': U.panel = 'type'; U.cons = null; U.conj = null; render(); var tpi = document.getElementById('tl-in'); if (tpi) tpi.focus(); break;
+      case 'panel-keys': U.panel = 'keys'; render(); break;
+      case 'tl-commit': case 'tl-pick':
+        var tli = document.getElementById('tl-in'); if (!tli) break;
+        var cand = a === 'tl-pick' ? (U.tlC || [])[+t.getAttribute('data-i')] : TL.convert(tli.value)[0];
+        tli.value = '';
+        if (cand) commitTyped(cand); else updateCands();
+        var tli2 = document.getElementById('tl-in'); if (tli2) { tli2.focus(); updateCands(); }
+        break;
+      case 'fix-open': U.panel = 'fix'; render(); var fxi = document.getElementById('fix-in'); if (fxi) { fxi.focus(); fxi.setSelectionRange(fxi.value.length, fxi.value.length); } break;
+      case 'fix-save':
+        var fe = cur(), fx = document.getElementById('fix-in'); if (!fx || !canFix(fe)) break;
+        var nt = convertLatin(fx.value).replace(/\s+/g, ' ').trim();
+        if (!nt) { toast('ఆధారం ఖాళీగా ఉండకూడదు.'); break; }
+        var orig = PUZZLES.filter(function (p) { return p.id === CUR.id; })[0];
+        var np = JSON.parse(JSON.stringify(orig)), hit = np.clues.filter(function (c) { return c.d === fe.d && +c.n === +fe.n; })[0];
+        if (!hit) { toast('ఈ ఆధారం పోస్ట్‌లో దొరకలేదు.'); break; }
+        if (hit.text === nt) { U.panel = 'keys'; render(); break; }
+        hit.text = nt;
+        savePuzzles(PUZZLES.map(function (p) { return p.id === np.id ? np : p; }), fe.n + ' ' + dirName(fe.d) + ' ఆధారం సరిదిద్దాం.', function () { U.panel = S.prefs.keypad === 'phone' ? 'type' : 'keys'; });
+        break;
+      case 'pref': var pk = t.getAttribute('data-k'); S.prefs[pk] = pk === 'hard' ? v === '1' : v; if (pk === 'hard') U.shown = {}; applyPrefs(); save(); render(); break;
+      case 'toggle': var tk = t.getAttribute('data-k'); S.prefs[tk] = !S.prefs[tk]; applyPrefs(); save(); render(); break;
+      case 'variant': U.showVariant = +v; render(); break;
+      case 'month': U.query = v; location.hash = '#archive'; break;
+      case 'replay':
+        if (U.confirm !== 'replay') { U.confirm = 'replay'; render(); break; }
+        S.prog[t.getAttribute('data-id')] = freshProgress(); U.confirm = ''; save(); location.hash = '#play-' + t.getAttribute('data-id'); break;
+      case 'resetall':
+        if (U.confirm !== 'resetall') { U.confirm = 'resetall'; render(); break; }
+        S.prog = {}; U.confirm = ''; save(); toast('అన్ని ఆటల పురోగతి తుడిచివేశాం.'); render(); break;
+      case 'copy':
+        var cp = findPuzzle(t.getAttribute('data-id')), CP = S.prog[t.getAttribute('data-id')];
+        var msg = 'నేను ఈ-పద వినోదంలో “' + cp.title + (cp.date ? ' ' + cp.date : '') + '” ' + fmt(CP.doneTime) + 'లో పూర్తి చేశాను! వాడిన సూచనలు: ' + CP.hints + '. ' + BLOG;
+        try { navigator.clipboard.writeText(msg).then(function () { toast('సందేశం కాపీ అయింది. ఎక్కడైనా పేస్ట్ చేయండి.'); }, function () { toast(msg); }); } catch (e) { toast(msg); }
+        break;
+      case 'copy-feed':
+        try { navigator.clipboard.writeText(FEED).then(function () { toast('ఫీడ్ లింక్ కాపీ అయింది.'); }, function () { selectText('feed-url'); }); } catch (e) { selectText('feed-url'); }
+        break;
+      // admin
+      case 'ai-read': var fl = document.getElementById('up-files'); if (!fl || !fl.files.length) { toast('ముందు ఫోటో లేదా PDF ఎంచుకోండి.'); break; } aiRead('puzzle', fl.files); break;
+      case 'ai-stop': if (U.ctl) U.ctl.abort(); break;
+      case 'blank': D = newDraft(12, 12); var ud = document.getElementById('up-date'); D.date = ud ? ud.value.trim() : ''; U.er = 0; U.ec = 0; U.emode = 'black'; U.srcUrls = []; saveDraft(); location.hash = '#edit'; break;
+      case 'imp-read': var ta = document.getElementById('imp-paste'); if (!ta || !ta.value.trim()) { toast('ముందు ఫీడ్ టెక్స్ట్ అతికించండి.'); break; } runImport([ta.value]); break;
+      case 'imp-toggle': var iid = t.getAttribute('data-id'); U.importSel[iid] = !U.importSel[iid]; render(); break;
+      case 'imp-all': var all = U.imports.every(function (p) { return U.importSel[p.id]; }); U.imports.forEach(function (p) { U.importSel[p.id] = !all; }); render(); break;
+      case 'imp-publish':
+        var chosen = U.imports.filter(function (p) { return U.importSel[p.id]; }); if (!chosen.length) break;
+        var ids = {}; chosen.forEach(function (p) { ids[p.id] = true; });
+        var merged = PUZZLES.filter(function (p) { return !ids[p.id]; }).concat(chosen.map(function (p) { var c = Object.assign({}, p); delete c.exists; return c; }));
+        savePuzzles(merged, chosen.length + ' పోస్టులు ప్రచురించాం. అవి ఇప్పుడు హోమ్, ఆర్కైవ్‌లో ఉన్నాయి.', function () { U.imports = null; U.importSel = {}; });
+        break;
+      case 'edit-pub': var ep = findPuzzle(t.getAttribute('data-id')); if (!ep) break; D = draftFromPuzzle(ep); U.er = 0; U.ec = 0; U.emode = 'black'; U.srcUrls = []; saveDraft(); location.hash = '#edit'; break;
+      case 'del-pub':
+        var did = t.getAttribute('data-id');
+        if (U.confirm !== 'del:' + did) { U.confirm = 'del:' + did; render(); break; }
+        U.confirm = ''; savePuzzles(PUZZLES.filter(function (p) { return p.id !== did; }), 'పోస్ట్ తొలగించాం.'); break;
+      // editor
+      case 'ecell':
+        var er = +t.getAttribute('data-r'), ec = +t.getAttribute('data-c');
+        if (U.emode === 'black') { D.black[er][ec] = !D.black[er][ec]; if (D.black[er][ec]) { D.ans[er][ec] = ''; delete D.nums[key(er, ec)]; } saveDraft(); }
+        else if (U.emode === 'ans' && er === U.er && ec === U.ec) U.edir = U.edir === 'A' ? 'D' : 'A';
+        U.er = er; U.ec = ec; render();
+        if (U.emode === 'num') { var ni = document.getElementById('num-in'); if (ni) ni.focus(); }
+        break;
+      case 'emode': U.emode = v; U.cons = null; U.conj = null; render(); break;
+      case 'eflip': U.edir = U.edir === 'A' ? 'D' : 'A'; render(); break;
+      case 'auto-num': draftAutoNumber(); toast('సంఖ్యలు ఆటోగా వేశాం. ఈనాడు సంఖ్యల వరుస వేరుగా ఉంటే చేతితో సరిదిద్దండి.'); render(); break;
+      case 'num-set': var nv = parseInt((document.getElementById('num-in') || {}).value, 10); if (nv > 0 && !D.black[U.er][U.ec]) { D.nums[key(U.er, U.ec)] = nv; saveDraft(); render(); } else toast('తెల్ల గడి ఎంచుకుని సంఖ్య ఇవ్వండి.'); break;
+      case 'num-clear': delete D.nums[key(U.er, U.ec)]; saveDraft(); render(); break;
+      case 'resize': resizeDraft(+(document.getElementById('d-rows') || {}).value, +(document.getElementById('d-cols') || {}).value); U.er = 0; U.ec = 0; render(); break;
+      case 'etab': U.etab = v; render(); break;
+      case 'clue-add': D.clues.push({ d: U.etab, n: '', len: null, text: '' }); saveDraft(); render(); break;
+      case 'clue-del': D.clues.splice(+t.getAttribute('data-i'), 1); saveDraft(); render(); break;
+      case 'try': S.prog.draft = freshProgress(); save(); break;
+      case 'publish-draft':
+        var pz = draftToPuzzle(D, false);
+        if (!pz.date) { toast('ముందు తేదీ (DD.MM.YYYY) ఇవ్వండి.'); break; }
+        if (!/^\d{2}\.\d{2}\.\d{4}$/.test(pz.date)) { toast('తేదీ DD.MM.YYYY రూపంలో ఉండాలి, ఉదా: 25.05.2025.'); break; }
+        var taken = {}; PUZZLES.forEach(function (p) { if (p.id !== D.id) taken[p.id] = true; });
+        pz.id = D.id || makeId(pz.date, taken); pz.added = new Date().toISOString();
+        var list = PUZZLES.filter(function (p) { return p.id !== pz.id; }).concat([pz]);
+        savePuzzles(list, (D.id ? 'మార్పులు ప్రచురించాం.' : 'కొత్త పోస్ట్ ప్రచురించాం — ' + pz.date), function () { D = null; S.draft = null; delete S.prog.draft; save(); location.hash = '#admin'; });
+        break;
+      case 'export':
+        var body = JSON.stringify({ v: 1, updated: new Date().toISOString(), puzzles: PUZZLES.map(cleanPuzzle) });
+        cap('downloads').then(function (dl) {
+          if (!dl) throw { code: 'unavailable' };
+          return dl.save({ filename: 'puzzles.json', data: body });
+        }).then(function () { toast('puzzles.json సేవ్ అయింది. దాన్ని మీ సైట్ ఫోల్డర్‌లో పెట్టి మళ్ళీ ప్రచురించండి.'); }, function (e) {
+          if (e && e.code === 'declined') return;
+          try { navigator.clipboard.writeText(body).then(function () { toast('ఇక్కడ సేవ్ కుదరలేదు — ఫైల్ విషయాన్ని కాపీ చేశాం. puzzles.json పేరుతో అతికించి సేవ్ చేయండి.'); }, function () { toast('ఈ వీక్షణలో ఫైల్ సేవ్ చేయడం కుదరదు.'); }); } catch (x) { toast('ఈ వీక్షణలో ఫైల్ సేవ్ చేయడం కుదరదు.'); }
+        });
+        break;
+      case 'draft-drop':
+        if (U.confirm !== 'drop') { U.confirm = 'drop'; render(); break; }
+        D = null; S.draft = null; U.confirm = ''; save(); location.hash = '#admin'; break;
+    }
+  });
+  function selectText(id) { var el = document.getElementById(id); if (!el) return; var rg = document.createRange(); rg.selectNodeContents(el); var sl = window.getSelection(); sl.removeAllRanges(); sl.addRange(rg); toast('లింక్‌ను ఎంచుకున్నాం — కాపీ చేయండి.'); }
+  view.addEventListener('input', function (ev) {
+    var t = ev.target;
+    if (t.id === 'tl-in') { if (!ev.isComposing) tlInput(t); else updateCands(); return; }
+    if (t.id === 'fix-in') { if (!ev.isComposing) autoConvertField(t); return; }
+    if (t.id === 'arch-q') { U.query = t.value; var res = document.getElementById('arch-res'); if (res) res.innerHTML = archiveResults(); return; }
+    if (!D) return;
+    if (t.hasAttribute('data-df')) { D[t.getAttribute('data-df')] = t.value; saveDraft(); return; }
+    if (t.hasAttribute('data-ci')) {
+      var f = t.getAttribute('data-f'); if (f === 'text') autoConvertField(t);
+      var cl = D.clues[+t.getAttribute('data-ci')];
+      if (cl) { cl[f] = f === 'text' ? t.value : (parseInt(t.value, 10) || ''); saveDraft(); var ch = document.getElementById('checks'); if (ch) ch.innerHTML = draftChecks(); }
+    }
+  });
+  view.addEventListener('change', function (ev) {
+    var t = ev.target;
+    if (t.id === 'imp-files' && t.files.length) { Promise.all(Array.prototype.map.call(t.files, readFileText)).then(runImport, function () { U.status = { kind: 'err', text: 'ఫైల్ తెరవలేకపోయాం.' }; render(); }); }
+    if (t.id === 'ans-files' && t.files.length) aiRead('answers', t.files);
+  });
+
+  view.addEventListener('compositionend', function (ev) {
+    var t = ev.target;
+    if (t.id === 'tl-in') tlInput(t);
+    else if (t.id === 'fix-in' || t.getAttribute('data-f') === 'text') autoConvertField(t);
+  });
+  view.addEventListener('keydown', function (ev) {
+    var t = ev.target;
+    if (t.id !== 'tl-in') return;
+    if (ev.key === 'Enter') { ev.preventDefault(); var c = TL.convert(t.value)[0]; t.value = ''; if (c) commitTyped(c); var n = document.getElementById('tl-in'); if (n) { n.focus(); updateCands(); } }
+    else if (ev.key === 'Backspace' && !t.value) { ev.preventDefault(); if (route() === 'edit') editBack(); else back(true); var n2 = document.getElementById('tl-in'); if (n2) n2.focus(); }
+  });
+  // buttons beside the typing box must not steal its focus (that would close the phone keyboard)
+  view.addEventListener('pointerdown', function (ev) {
+    var a = document.activeElement;
+    if (a && a.id === 'tl-in' && ev.target.closest('[data-keepfocus]')) ev.preventDefault();
+  });
+
+  document.addEventListener('keydown', function (ev) {
+    var r = route(); if (r.indexOf('play-') !== 0 || !CUR || (ev.target && /INPUT|TEXTAREA/.test(ev.target.tagName))) return;
+    if (/^[a-zA-Z]$/.test(ev.key) && !ev.ctrlKey && !ev.metaKey && !ev.altKey && U.panel !== 'fix') {
+      ev.preventDefault();
+      if (U.panel !== 'type') { U.panel = 'type'; render(); }
+      var ti = document.getElementById('tl-in'); if (ti) { ti.focus(); ti.value += ev.key; tlInput(ti); }
+      return;
+    }
+    var mv = { ArrowUp: [-1, 0, 'D'], ArrowDown: [1, 0, 'D'], ArrowLeft: [0, -1, 'A'], ArrowRight: [0, 1, 'A'] }[ev.key];
+    if (mv) {
+      ev.preventDefault(); var m = CUR.m, P = CUR.P, rr = P.r + mv[0], cc = P.c + mv[1];
+      while (rr >= 0 && cc >= 0 && rr < m.R && cc < m.C && !m.isW(rr, cc)) { rr += mv[0]; cc += mv[1]; }
+      if (m.isW(rr, cc)) { P.r = rr; P.c = cc; var k = key(rr, cc); if (mv[2] === 'A' ? m.cellA[k] : m.cellD[k]) P.dir = mv[2]; save(); render(); }
+    } else if (ev.key === 'Backspace') { ev.preventDefault(); back(); }
+  });
+
+  setInterval(function () {
+    if (!CUR || route().indexOf('play-') !== 0 || CUR.P.done || document.visibilityState !== 'visible' || !CUR.P.started) return;
+    CUR.P.elapsed++; var tm = document.getElementById('tm'); if (tm) tm.textContent = fmt(CUR.P.elapsed);
+    if (CUR.P.elapsed % 10 === 0) save();
+  }, 1000);
+  document.addEventListener('visibilitychange', save);
+  window.addEventListener('hashchange', onRoute);
+
+  // Posts = everything on the blog (website only) + puzzles.json (studio uploads and corrections, which win on the same date)
+  var extraP = fetch('puzzles.json', { cache: 'no-store' }).then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); }).then(function (j) {
+    return Array.isArray(j.puzzles) ? j.puzzles.filter(function (p) { return p && p.id && Array.isArray(p.grid) && p.grid.length; }) : [];
+  }).catch(function () { return []; });
+  var blogP = IS_CLAUDE ? Promise.resolve([]) : loadBlogFeed().then(function (j) { BLOG_STATE = 'ready'; return postsFromFeed(j); }, function () { BLOG_STATE = 'error'; return []; });
+  Promise.all([extraP, blogP]).then(function (res) {
+    var extra = res[0], blog = res[1], byDate = {}, taken = {};
+    extra.forEach(function (p) { taken[p.id] = true; if (p.date) byDate[p.date] = true; });
+    var list = extra.slice();
+    blog.forEach(function (p) { if (p.date && byDate[p.date]) return; p.id = makeId(p.date, taken); taken[p.id] = true; list.push(p); });
+    PUZZLES = list; MODELS = {}; DATA_STATE = 'ready'; render();
+  });
+  if (!IS_CLAUDE && 'serviceWorker' in navigator && location.protocol === 'https:') {
+    window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () {}); });
+  }
+
+  applyPrefs();
+  onRoute();
+})();
+</script>
+</body>
+</html>

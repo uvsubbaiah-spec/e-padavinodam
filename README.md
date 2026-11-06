@@ -1,0 +1,56 @@
+# ఈ-పద వినోదం — website and phone app
+
+A phone-first web app for **telugupadavinodam.blogspot.com**. It reads every padavinodam post straight from the blog's feed, turns it into a playable crossword with a Telugu akshara keypad, and works offline after the first visit. It can be installed on Android from Chrome like a normal app.
+
+No server, database or payment card is needed: these are plain static files.
+
+## What's in the folder
+
+| File | Purpose |
+|---|---|
+| `index.html` | The whole app (layout, styles and code in one file) |
+| `puzzles.json` | Extra posts made in the Claude studio (uploads, corrections). Starts empty. |
+| `rain.webp` | Animated rain for the black squares (from the blog's GIF, compressed) |
+| `sw.js` | Offline support |
+| `manifest.webmanifest`, `icon-*.png`, `apple-touch-icon.png` | App name and icons for "Install app" |
+| `.nojekyll` | Tells GitHub Pages to serve the files as they are |
+
+## Put it online with GitHub Pages (free, no card)
+
+1. Sign in to github.com and create a new **public** repository, for example `padavinodam`.
+2. On the repository page choose **Add file → Upload files**, drag in **every file from this folder** (not the folder itself), and press **Commit changes**.
+3. Open **Settings → Pages**. Under *Build and deployment* choose **Deploy from a branch**, branch **main**, folder **/ (root)**, and press **Save**.
+4. After a minute or two the site is live at `https://<your-github-name>.github.io/padavinodam/`.
+
+Other no-card options that work the same way: **Netlify Drop** (app.netlify.com/drop — drag the folder in) and **Cloudflare Pages** (upload the folder as a project).
+
+The site must be served over **https** for offline support and installing; all three hosts above do that automatically.
+
+## Install on an Android phone
+
+Open the site in **Chrome** → menu (⋮) → **Install app** (or **Add to Home screen**). It opens full-screen with its own icon, like any other app.
+
+## Typing answers
+
+Players can use the in-app Telugu akshara keypad, or tap **abc→తె** and type in English on any phone keyboard: `kamalam` → కమలం, `sankraanti` → సంక్రాంతి, `amma` → అమ్మ. Capitals give the harder sounds (T ట, D డ, N ణ, L ళ, Sh ష, E ఏ, O ఓ) and `aa`/`ee`/`oo` give long vowels; the app also offers the likely alternatives to tap. A Telugu keyboard works in the same box. On a computer, just start typing letters while a puzzle is open.
+
+## Keeping posts up to date
+
+- **New blog posts appear on their own.** Every time the app opens it reads the blog's feed (the blog must stay public).
+- **Posts made in the Claude studio** (from a newspaper photo or PDF, or a corrected blog post) live in `puzzles.json`. In the studio's admin page press **puzzles.json సేవ్ చేయండి**, then upload that file to the repository in place of the old one. A post in `puzzles.json` replaces the blog post with the same date.
+- **Correcting a clue's Telugu text:** in the Claude studio, open the puzzle, select the clue and tap the pencil on the clue bar (or use **మార్చు** in the admin list for the full editor). Type the fix in Telugu, or in English and it converts. Save publishes it in the studio at once; export `puzzles.json` as above to update the website. For blog posts, import them into the studio first (admin page → బ్లాగ్ నుంచి దిగుమతి) so there is a copy to correct.
+
+## Putting it on the Play Store (optional)
+
+Go to **pwabuilder.com**, enter your site's address and choose **Package for stores → Android**. It produces:
+- an **APK** you can install directly or share with people, with no store and no fee, and
+- an **AAB** for the Play Store. Publishing there needs a Google Play developer account, which has a one-time registration fee paid by card.
+
+## Try it on your computer first (optional)
+
+From this folder run `python -m http.server 8000` and open `http://localhost:8000`. Offline support works on localhost too.
+
+## Notes
+
+- Puzzle content comes from the blog; the crosswords themselves are Eenadu's. Check permission before publishing the app widely or on a store.
+- Progress, settings and the chosen theme are kept on each phone only.
