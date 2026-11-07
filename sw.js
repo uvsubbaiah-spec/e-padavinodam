@@ -1,6 +1,6 @@
 // ఈ-పద వినోదం — offline support.
 // The app shell is served from cache; the blog feed and puzzles.json are fetched fresh and the last copy is kept for offline use.
-const VERSION = 'epv-0.14';
+const VERSION = 'epv-0.15';
 const SHELL = ['./', 'index.html', 'rain.webp', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png'];
 
 self.addEventListener('install', (e) => {
@@ -27,6 +27,8 @@ self.addEventListener('fetch', (e) => {
   const req = e.request;
   if (req.method !== 'GET') return;
   const url = new URL(req.url);
+  // the Android app file is always fetched fresh and never kept in the offline store
+  if (url.pathname.endsWith('.apk')) return;
   const isFeed = url.hostname === 'telugupadavinodam.blogspot.com' && url.pathname.startsWith('/feeds/');
   const isData = url.origin === self.location.origin && url.pathname.endsWith('/puzzles.json');
   const isFont = url.hostname === 'fonts.googleapis.com' || url.hostname === 'fonts.gstatic.com';

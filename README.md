@@ -58,6 +58,15 @@ The magnifier buttons on the puzzle's top bar zoom the grid from 100% to 200% (i
 - **Posts made in the Claude studio** (from a newspaper photo or PDF, or a corrected blog post) live in `puzzles.json`. In the studio's admin page press **puzzles.json సేవ్ చేయండి**, then upload that file to the repository in place of the old one. A post in `puzzles.json` replaces the blog post with the same date.
 - **Correcting a clue's Telugu text:** in the Claude studio, open the puzzle, select the clue and tap the pencil on the clue bar (or use **మార్చు** in the admin list for the full editor). Type the fix in Telugu, or in English and it converts. Save publishes it in the studio at once; export `puzzles.json` as above to update the website. For blog posts, import them into the studio first (admin page → బ్లాగ్ నుంచి దిగుమతి) so there is a copy to correct.
 
+## The Android app (APK)
+
+The APK built in Android Studio opens this site full-screen. Name the signed release file **`e-padavinodam.apk`** and upload it to this repository next to `index.html`. It is then always the latest one at `https://uvsubbaiah-spec.github.io/e-padavinodam/e-padavinodam.apk`:
+- the site shows an **Android యాప్ డౌన్‌లోడ్ (APK)** card on Android phones (home page and Settings), and never inside the app itself;
+- the blog shows a **⬇ Android యాప్** button in its phone bar and a download pill on computers;
+- both appear only once the file is really there.
+
+For an update, raise `versionCode` (and `versionName`) in `app/build.gradle.kts`, build with the **same keystore**, and upload with the same file name. Content changes never need a new APK: the app always shows the live site.
+
 ## Putting it on the Play Store (optional)
 
 Go to **pwabuilder.com**, enter your site's address and choose **Package for stores → Android**. It produces:
