@@ -1050,10 +1050,12 @@ html.vv-short #view.typing .tlc{min-height:38px}
       P.r = t[0]; P.c = t[1]; k = key(P.r, P.c);
     }
     P.letters[k] = val.normalize('NFC'); P.started = true; delete U.shown[k];
-    var nx = nextCell(e, idxIn(e)); if (nx) { P.r = nx[0]; P.c = nx[1]; }
+    if (isWrong(k)) U.stay = k;
+    else { U.stay = null; var nx = nextCell(e, idxIn(e)); if (nx) { P.r = nx[0]; P.c = nx[1]; } }
     U.cons = null; U.conj = null; U.follow = true; save();
     if (!quiet) afterInput();
   }
+  function isWrong(k) { var m = CUR.m, sol = m.sol(k), L = CUR.P.letters[k]; return !!(m.hasAns && sol && L && L !== sol); }
   function afterInput(soft) {
     if (filledCount() === CUR.m.whites) {
       if (!CUR.m.hasAns) { finish(); return; }
@@ -1409,6 +1411,8 @@ html.vv-short #view.typing .tlc{min-height:38px}
     P.started = true; U.pre = {};
     if (n < aks.length) toast('ఈ పదానికి ' + e.cells.length + ' గడులే ఉన్నాయి — మీరు ' + aks.length + ' అక్షరాలు టైప్ చేశారు. మొదటి ' + n + ' పెట్టాం.');
     var nx = null, j;
+    for (j = 0; j < e.cells.length && !nx; j++) if (isWrong(key(e.cells[j][0], e.cells[j][1]))) nx = e.cells[j];
+    if (nx) { P.r = nx[0]; P.c = nx[1]; U.follow = true; save(); afterInput(true); toast('పసుపు రంగు గడిలో అక్షరం తప్పు — అక్కడే సరిదిద్దండి.'); return; }
     for (j = i0 + n; j < e.cells.length && !nx; j++) if (!P.letters[key(e.cells[j][0], e.cells[j][1])]) nx = e.cells[j];
     for (j = 0; j < i0 && !nx; j++) if (!P.letters[key(e.cells[j][0], e.cells[j][1])]) nx = e.cells[j];
     if (nx) { P.r = nx[0]; P.c = nx[1]; }
@@ -1562,7 +1566,7 @@ html.vv-short #view.typing .tlc{min-height:38px}
       (apkCardHTML(false) ? '<section class="sec"><h2 class="sec-h">Android యాప్</h2>' + apkCardHTML(false) + '</section>' : '') +
       '<section class="sec"><h2 class="sec-h">Android యాప్‌లో రాబోయేవి</h2><div class="box"><ul class="soon"><li>కొత్త పద వినోదం వస్తే నోటిఫికేషన్</li><li>English భాషలో యాప్</li></ul>' + (IS_CLAUDE ? '' : '<p class="note">ఆఫ్‌లైన్: ఒకసారి తెరిచిన తర్వాత ఇంటర్నెట్ లేకున్నా యాప్, చివరిసారి లోడ్ అయిన పోస్టులు తెరుచుకుంటాయి.</p>') + '</div></section>' +
       '<section class="sec"><h2 class="sec-h">ఆట పురోగతి</h2><div class="box"><p class="note">మీ అమరికలు, ఆట పురోగతి ఈ పరికరంలోనే సేవ్ అవుతాయి.</p><button class="wide-btn ter" data-act="resetall">' + (U.confirm === 'resetall' ? 'ఖచ్చితమా? అన్ని ఆటల పురోగతి పోతుంది — మళ్ళీ నొక్కండి' : 'అన్ని ఆటల పురోగతి తుడిచివేయండి') + '</button></div></section>' +
-      '<footer style="display:flex;flex-direction:column;align-items:center;gap:2px;text-align:center"><a href="' + BLOG + '" target="_blank" rel="noopener" style="font-weight:600;padding:10px 0">బ్లాగ్ తెరవండి · telugupadavinodam.blogspot.com</a><span style="font-family:var(--font-display);font-size:22px;color:var(--title)">ఈ-పద వినోదం</span><span class="note">వెర్షన్ 0.16' + (IS_CLAUDE ? ' · స్టూడియో' : '') + '</span></footer></div>';
+      '<footer style="display:flex;flex-direction:column;align-items:center;gap:2px;text-align:center"><a href="' + BLOG + '" target="_blank" rel="noopener" style="font-weight:600;padding:10px 0">బ్లాగ్ తెరవండి · telugupadavinodam.blogspot.com</a><span style="font-family:var(--font-display);font-size:22px;color:var(--title)">ఈ-పద వినోదం</span><span class="note">వెర్షన్ 0.17' + (IS_CLAUDE ? ' · స్టూడియో' : '') + '</span></footer></div>';
   }
 
   /* ================= admin: who may manage ================= */
