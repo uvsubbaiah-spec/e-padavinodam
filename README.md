@@ -38,6 +38,8 @@ In ENG, type the complete answer and press space, Enter or **పెట్టు*
 
 Answer colours follow the blog: a right letter turns grey with a green border and blue letter, a wrong one gold with a red border and red letter. A right letter is frozen: typing and delete pass over it. The selected square has a blue frame.
 
+**ఆటో** (next to సులభం / కష్టం, on puzzles that have answers) fills the answers by itself, one clue at a time: it selects each clue, shows it on the clue bar and writes its answer letter by letter, so the player learns every answer. Pause, next clue, stop and three speeds are under the board. Auto-filled letters count as hints; afterwards **గడి ఖాళీ చేసి మీరే ఆడండి** empties the grid to play it yourself.
+
 A puzzle opens at the biggest zoom (200%) with the keyboard hidden; the first tap on a square brings the keyboard back. The bar above the clue scrolls the board sideways (drag it or use its arrows). On a computer the arrow keys move the selected square across and down, and the board scrolls along.
 
 ## Look
