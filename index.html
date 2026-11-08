@@ -240,7 +240,7 @@ body.no-rain .blk{background-image:none}
 .phonekb{display:flex;flex-direction:column;gap:8px;padding:6px 0}
 .wide-btn{display:flex;align-items:center;justify-content:center;gap:8px;min-height:52px;border:0;border-radius:16px;font-size:16px;font-weight:700;text-decoration:none;padding:0 18px}
 .wide-btn.pri{background:var(--primary);color:var(--on-primary)}
-.wide-btn.sec{background:var(--gold);color:#2A1F17;box-shadow:inset 0 -3px 0 rgba(0,0,0,.12)}
+.wide-btn.sec{flex-direction:row;background:var(--gold);color:#2A1F17;box-shadow:inset 0 -3px 0 rgba(0,0,0,.12)}
 .wide-btn.ter{background:var(--chip);color:var(--ink)}
 .wide-btn.link{background:transparent;color:var(--primary);min-height:44px}
 
@@ -684,11 +684,55 @@ html.vv-short #view.typing .tlc{min-height:38px}
 .finpic img{display:block;max-width:min(92vw,560px);max-height:68vh;width:auto;height:auto;border-radius:10px;box-shadow:0 12px 40px rgba(0,0,0,.45)}
 .finart{display:block;width:min(78vw,320px);border-radius:50%;background:var(--bg)}
 .finart svg{display:block;width:100%;height:auto}
-.finx{position:absolute;top:calc(env(safe-area-inset-top,0px) + 12px);right:max(12px,env(safe-area-inset-right,0px));width:44px;height:44px;border-radius:50%;border:0;background:var(--card,#fff);color:var(--ink);display:grid;place-items:center;box-shadow:0 2px 10px rgba(0,0,0,.25);cursor:pointer}
+.finx{position:absolute;top:calc(env(safe-area-inset-top,0px) + 12px);right:max(12px,env(safe-area-inset-right,0px));width:44px;height:44px;border-radius:50%;border:0;background:var(--surface);color:var(--ink);display:grid;place-items:center;box-shadow:0 2px 10px rgba(0,0,0,.25);cursor:pointer}
 .finnote{margin:0;color:#fff;font-size:15px;line-height:1.5;text-align:center;max-width:30em;text-shadow:0 1px 3px rgba(0,0,0,.6)}
 @keyframes finshow{from{transform:scale(.05);opacity:0}to{transform:scale(1);opacity:1}}
 @keyframes finfade{from{opacity:0}to{opacity:1}}
 @media (prefers-reduced-motion:reduce){.finpop,.finpic{animation:none}}
+/* English → Telugu typing in correction boxes */
+.tehint{display:flex;flex-wrap:wrap;align-items:flex-start;gap:8px 10px;padding:10px 12px;border-radius:12px;background:var(--surface);border:1px dashed var(--line)}
+.tehint small{flex:1 1 220px;min-width:0;font-size:13px;line-height:1.55;color:var(--muted);text-align:left}
+.tehint small b{color:var(--ink);font-family:system-ui,sans-serif;font-weight:600}
+.tehint .smallbtn[aria-pressed="true"]{background:var(--ok-bg);border-color:var(--ok-bd);color:var(--ok-ink)}
+.tlalts{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:4px 0 6px}
+.tlalts small{font-size:12px;color:var(--muted)}
+.tlalts button{min-height:36px;padding:4px 12px;border-radius:18px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;font-size:16px;cursor:pointer}
+.tlalts button[aria-pressed="true"]{border-color:var(--ok-bd);background:var(--ok-bg);color:var(--ok-ink);font-weight:600}
+/* saved drafts */
+.savebar{display:flex;flex-direction:column;gap:6px}
+.savebar small{font-size:12.5px;color:var(--muted);text-align:center}
+.kept{display:flex;flex-direction:column;gap:8px;margin-top:4px}
+.keptrow{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:12px;background:var(--surface);border:1px solid var(--line)}
+.keptrow .t{flex:1;min-width:0;display:flex;flex-direction:column}
+.keptrow .t b{font-size:16px}
+.keptrow .t small{font-size:12px;color:var(--muted)}
+/* answers as a sheet: type straight into each square */
+.papergrid{margin:0;display:flex;flex-direction:column;gap:4px;align-items:center}
+.papergrid img{display:block;width:var(--gw,min(calc(100vw - 32px),488px));max-width:100%;height:auto;border-radius:8px;border:1px solid var(--line)}
+.papergrid figcaption{font-size:12.5px;color:var(--muted);text-align:center}
+.egrid.sheet .scell{position:relative;aspect-ratio:1;min-width:0;margin:0;background:var(--cell);border-radius:2px;display:block;cursor:text}
+.egrid.sheet .scell i{position:absolute;top:1px;left:2px;font-style:normal;font-family:var(--font-ui);font-weight:700;font-size:max(8px,calc(var(--gw) / var(--n) * .2));color:var(--num);pointer-events:none;line-height:1}
+.egrid.sheet .scell input{position:absolute;inset:0;width:100%;height:100%;margin:0;padding:.3em 0 0;border:0;border-radius:2px;background:transparent;color:var(--ink);text-align:center;font-family:var(--font-grid);font-weight:600;font-size:16px;line-height:1;outline:none;-webkit-appearance:none;appearance:none}
+.egrid.sheet .scell input:focus{box-shadow:inset 0 0 0 3px var(--accent);background:var(--word)}
+.egrid.sheet .scell.low,.ecell.low{background:#FFE9A8}
+.egrid.sheet .scell.chg{background:#D9F2D5}
+.lowkey{background:#FFE9A8;color:#5A4300;padding:0 4px;border-radius:4px}
+.chgkey{background:#D9F2D5;color:#1F4D1A;padding:0 4px;border-radius:4px}
+.egrid.sheet .scell.low input,.egrid.sheet .scell.chg input,.ecell.low{color:#1E1714}
+/* post pictures */
+.pics{gap:14px}
+.picrow{display:flex;flex-direction:column;gap:8px}
+.pichead{display:flex;gap:12px;align-items:center}
+.picnow{flex:0 0 64px;width:64px;height:64px;border-radius:10px;overflow:hidden;background:var(--grid-line);display:grid;place-items:center}
+.picnow img{width:100%;height:100%;object-fit:cover}
+.picnow i{font-style:normal;font-size:11px;color:#F5EBDD;text-align:center;padding:4px}
+.pichead .t{display:flex;flex-direction:column;min-width:0}
+.pichead .t small{font-size:12.5px;color:var(--muted)}
+.picpick{display:flex;flex-direction:column;gap:10px;padding:10px;border-radius:12px;border:1px dashed var(--line)}
+.picgal{display:grid;grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:8px}
+.picbtn{padding:0;border:2px solid transparent;border-radius:10px;overflow:hidden;aspect-ratio:1;background:var(--grid-line);cursor:pointer}
+.picbtn img{width:100%;height:100%;object-fit:cover;display:block}
+.picbtn[aria-pressed="true"]{border-color:var(--accent)}
 /* black squares: animated nature and animal scenes (generated by scenes.py) */
 .blk.sc0,.scsample.sc0{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='xMidYMid slice'%3E%3Cdefs%3E%3ClinearGradient id='b' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%230D3436'/%3E%3Cstop offset='1' stop-color='%231E5A45'/%3E%3C/linearGradient%3E%3ClinearGradient id='n' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%2329B6F6'/%3E%3Cstop offset='1' stop-color='%230D47A1'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cstyle%3E.fan%7Banimation:fan 2.4s ease-in-out infinite;transform-origin:50px 64px%7D@keyframes fan%7B0%25,100%25%7Btransform:rotate(0) scale(1)%7D25%25%7Btransform:rotate(-4deg) scale(1.03)%7D50%25%7Btransform:rotate(0) scale(.96)%7D75%25%7Btransform:rotate(4deg) scale(1.03)%7D%7D.q%7Banimation:q .18s ease-in-out infinite alternate;transform-origin:50px 64px%7D@keyframes q%7Bto%7Btransform:rotate(1.6deg)%7D%7D.bd%7Banimation:bd 2.4s ease-in-out infinite;transform-origin:50px 86px%7D@keyframes bd%7B0%25,100%25%7Btransform:rotate(0)%7D25%25%7Btransform:rotate(-5deg) translateX(-1px)%7D75%25%7Btransform:rotate(5deg) translateX(1px)%7D%7D.hd%7Banimation:hd 1.2s ease-in-out infinite;transform-origin:51px 46px%7D@keyframes hd%7B50%25%7Btransform:rotate(-8deg)%7D%7D.sp%7Banimation:sp 2.4s ease-in-out infinite%7D@keyframes sp%7B0%25,100%25%7Bopacity:.15%7D50%25%7Bopacity:1%7D%7D%3C/style%3E%3Crect width='100' height='100' fill='url(%23b)'/%3E%3Ccircle class='sp' cx='12' cy='14' r='.9' fill='%23E0F2F1'/%3E%3Ccircle class='sp' cx='88' cy='12' r='.8' fill='%23E0F2F1' style='animation-delay:-1.2s'/%3E%3Cellipse cx='50' cy='92' rx='46' ry='7' fill='%23123A2C'/%3E%3Cg class='fan'%3E%3Cg transform='rotate(-80 50 64)'%3E%3Cg class='q' style='animation-delay:-0.00s'%3E%3Cpath d='M50 64 Q43 44 50 18 Q57 44 50 64Z' fill='%232F7D3B' opacity='.75'/%3E%3Cpath d='M50 64 V24' stroke='%239CCC65' stroke-width='.6'/%3E%3Cellipse cx='50' cy='22' rx='5.6' ry='7.4' fill='%231B5E20'/%3E%3Cellipse cx='50' cy='22.6' rx='4.2' ry='5.6' fill='%23F9A825'/%3E%3Cellipse cx='50' cy='23.2' rx='2.9' ry='3.9' fill='%231565C0'/%3E%3Cellipse cx='50' cy='23.6' rx='1.5' ry='2' fill='%230A1F44'/%3E%3C/g%3E%3C/g%3E%3Cg transform='rotate(-64 50 64)'%3E%3Cg class='q' style='animation-delay:-0.07s'%3E%3Cpath d='M50 64 Q43 44 50 18 Q57 44 50 64Z' fill='%232F7D3B' opacity='.75'/%3E%3Cpath d='M50 64 V24' stroke='%239CCC65' stroke-width='.6'/%3E%3Cellipse cx='50' cy='22' rx='5.6' ry='7.4' fill='%231B5E20'/%3E%3Cellipse cx='50' cy='22.6' rx='4.2' ry='5.6' fill='%23F9A825'/%3E%3Cellipse cx='50' cy='23.2' rx='2.9' ry='3.9' fill='%231565C0'/%3E%3Cellipse cx='50' cy='23.6' rx='1.5' ry='2' fill='%230A1F44'/%3E%3C/g%3E%3C/g%3E%3Cg transform='rotate(-48 50 64)'%3E%3Cg class='q' style='animation-delay:-0.14s'%3E%3Cpath d='M50 64 Q43 44 50 18 Q57 44 50 64Z' fill='%232F7D3B' opacity='.75'/%3E%3Cpath d='M50 64 V24' stroke='%239CCC65' stroke-width='.6'/%3E%3Cellipse cx='50' cy='22' rx='5.6' ry='7.4' fill='%231B5E20'/%3E%3Cellipse cx='50' cy='22.6' rx='4.2' ry='5.6' fill='%23F9A825'/%3E%3Cellipse cx='50' cy='23.2' rx='2.9' ry='3.9' fill='%231565C0'/%3E%3Cellipse cx='50' cy='23.6' rx='1.5' ry='2' fill='%230A1F44'/%3E%3C/g%3E%3C/g%3E%3Cg transform='rotate(-32 50 64)'%3E%3Cg class='q' style='animation-delay:-0.21s'%3E%3Cpath d='M50 64 Q43 44 50 18 Q57 44 50 64Z' fill='%232F7D3B' opacity='.75'/%3E%3Cpath d='M50 64 V24' stroke='%239CCC65' stroke-width='.6'/%3E%3Cellipse cx='50' cy='22' rx='5.6' ry='7.4' fill='%231B5E20'/%3E%3Cellipse cx='50' cy='22.6' rx='4.2' ry='5.6' fill='%23F9A825'/%3E%3Cellipse cx='50' cy='23.2' rx='2.9' ry='3.9' fill='%231565C0'/%3E%3Cellipse cx='50' cy='23.6' rx='1.5' ry='2' fill='%230A1F44'/%3E%3C/g%3E%3C/g%3E%3Cg transform='rotate(-16 50 64)'%3E%3Cg class='q' style='animation-delay:-0.00s'%3E%3Cpath d='M50 64 Q43 44 50 18 Q57 44 50 64Z' fill='%232F7D3B' opacity='.75'/%3E%3Cpath d='M50 64 V24' stroke='%239CCC65' stroke-width='.6'/%3E%3Cellipse cx='50' cy='22' rx='5.6' ry='7.4' fill='%231B5E20'/%3E%3Cellipse cx='50' cy='22.6' rx='4.2' ry='5.6' fill='%23F9A825'/%3E%3Cellipse cx='50' cy='23.2' rx='2.9' ry='3.9' fill='%231565C0'/%3E%3Cellipse cx='50' cy='23.6' rx='1.5' ry='2' fill='%230A1F44'/%3E%3C/g%3E%3C/g%3E%3Cg transform='rotate(0 50 64)'%3E%3Cg class='q' style='animation-delay:-0.07s'%3E%3Cpath d='M50 64 Q43 44 50 18 Q57 44 50 64Z' fill='%232F7D3B' opacity='.75'/%3E%3Cpath d='M50 64 V24' stroke='%239CCC65' stroke-width='.6'/%3E%3Cellipse cx='50' cy='22' rx='5.6' ry='7.4' fill='%231B5E20'/%3E%3Cellipse cx='50' cy='22.6' rx='4.2' ry='5.6' fill='%23F9A825'/%3E%3Cellipse cx='50' cy='23.2' rx='2.9' ry='3.9' fill='%231565C0'/%3E%3Cellipse cx='50' cy='23.6' rx='1.5' ry='2' fill='%230A1F44'/%3E%3C/g%3E%3C/g%3E%3Cg transform='rotate(16 50 64)'%3E%3Cg class='q' style='animation-delay:-0.14s'%3E%3Cpath d='M50 64 Q43 44 50 18 Q57 44 50 64Z' fill='%232F7D3B' opacity='.75'/%3E%3Cpath d='M50 64 V24' stroke='%239CCC65' stroke-width='.6'/%3E%3Cellipse cx='50' cy='22' rx='5.6' ry='7.4' fill='%231B5E20'/%3E%3Cellipse cx='50' cy='22.6' rx='4.2' ry='5.6' fill='%23F9A825'/%3E%3Cellipse cx='50' cy='23.2' rx='2.9' ry='3.9' fill='%231565C0'/%3E%3Cellipse cx='50' cy='23.6' rx='1.5' ry='2' fill='%230A1F44'/%3E%3C/g%3E%3C/g%3E%3Cg transform='rotate(32 50 64)'%3E%3Cg class='q' style='animation-delay:-0.21s'%3E%3Cpath d='M50 64 Q43 44 50 18 Q57 44 50 64Z' fill='%232F7D3B' opacity='.75'/%3E%3Cpath d='M50 64 V24' stroke='%239CCC65' stroke-width='.6'/%3E%3Cellipse cx='50' cy='22' rx='5.6' ry='7.4' fill='%231B5E20'/%3E%3Cellipse cx='50' cy='22.6' rx='4.2' ry='5.6' fill='%23F9A825'/%3E%3Cellipse cx='50' cy='23.2' rx='2.9' ry='3.9' fill='%231565C0'/%3E%3Cellipse cx='50' cy='23.6' rx='1.5' ry='2' fill='%230A1F44'/%3E%3C/g%3E%3C/g%3E%3Cg transform='rotate(48 50 64)'%3E%3Cg class='q' style='animation-delay:-0.00s'%3E%3Cpath d='M50 64 Q43 44 50 18 Q57 44 50 64Z' fill='%232F7D3B' opacity='.75'/%3E%3Cpath d='M50 64 V24' stroke='%239CCC65' stroke-width='.6'/%3E%3Cellipse cx='50' cy='22' rx='5.6' ry='7.4' fill='%231B5E20'/%3E%3Cellipse cx='50' cy='22.6' rx='4.2' ry='5.6' fill='%23F9A825'/%3E%3Cellipse cx='50' cy='23.2' rx='2.9' ry='3.9' fill='%231565C0'/%3E%3Cellipse cx='50' cy='23.6' rx='1.5' ry='2' fill='%230A1F44'/%3E%3C/g%3E%3C/g%3E%3Cg transform='rotate(64 50 64)'%3E%3Cg class='q' style='animation-delay:-0.07s'%3E%3Cpath d='M50 64 Q43 44 50 18 Q57 44 50 64Z' fill='%232F7D3B' opacity='.75'/%3E%3Cpath d='M50 64 V24' stroke='%239CCC65' stroke-width='.6'/%3E%3Cellipse cx='50' cy='22' rx='5.6' ry='7.4' fill='%231B5E20'/%3E%3Cellipse cx='50' cy='22.6' rx='4.2' ry='5.6' fill='%23F9A825'/%3E%3Cellipse cx='50' cy='23.2' rx='2.9' ry='3.9' fill='%231565C0'/%3E%3Cellipse cx='50' cy='23.6' rx='1.5' ry='2' fill='%230A1F44'/%3E%3C/g%3E%3C/g%3E%3Cg transform='rotate(80 50 64)'%3E%3Cg class='q' style='animation-delay:-0.14s'%3E%3Cpath d='M50 64 Q43 44 50 18 Q57 44 50 64Z' fill='%232F7D3B' opacity='.75'/%3E%3Cpath d='M50 64 V24' stroke='%239CCC65' stroke-width='.6'/%3E%3Cellipse cx='50' cy='22' rx='5.6' ry='7.4' fill='%231B5E20'/%3E%3Cellipse cx='50' cy='22.6' rx='4.2' ry='5.6' fill='%23F9A825'/%3E%3Cellipse cx='50' cy='23.2' rx='2.9' ry='3.9' fill='%231565C0'/%3E%3Cellipse cx='50' cy='23.6' rx='1.5' ry='2' fill='%230A1F44'/%3E%3C/g%3E%3C/g%3E%3Cg transform='rotate(-72 50 64)'%3E%3Cpath d='M50 64 Q45 50 50 36 Q55 50 50 64Z' fill='%2343A047' opacity='.8'/%3E%3Cellipse cx='50' cy='38' rx='3.4' ry='4.4' fill='%23F9A825'/%3E%3Cellipse cx='50' cy='38.5' rx='2.2' ry='3' fill='%231976D2'/%3E%3Cellipse cx='50' cy='38.8' rx='1' ry='1.4' fill='%230A1F44'/%3E%3C/g%3E%3Cg transform='rotate(-56 50 64)'%3E%3Cpath d='M50 64 Q45 50 50 36 Q55 50 50 64Z' fill='%2343A047' opacity='.8'/%3E%3Cellipse cx='50' cy='38' rx='3.4' ry='4.4' fill='%23F9A825'/%3E%3Cellipse cx='50' cy='38.5' rx='2.2' ry='3' fill='%231976D2'/%3E%3Cellipse cx='50' cy='38.8' rx='1' ry='1.4' fill='%230A1F44'/%3E%3C/g%3E%3Cg transform='rotate(-40 50 64)'%3E%3Cpath d='M50 64 Q45 50 50 36 Q55 50 50 64Z' fill='%2343A047' opacity='.8'/%3E%3Cellipse cx='50' cy='38' rx='3.4' ry='4.4' fill='%23F9A825'/%3E%3Cellipse cx='50' cy='38.5' rx='2.2' ry='3' fill='%231976D2'/%3E%3Cellipse cx='50' cy='38.8' rx='1' ry='1.4' fill='%230A1F44'/%3E%3C/g%3E%3Cg transform='rotate(-24 50 64)'%3E%3Cpath d='M50 64 Q45 50 50 36 Q55 50 50 64Z' fill='%2343A047' opacity='.8'/%3E%3Cellipse cx='50' cy='38' rx='3.4' ry='4.4' fill='%23F9A825'/%3E%3Cellipse cx='50' cy='38.5' rx='2.2' ry='3' fill='%231976D2'/%3E%3Cellipse cx='50' cy='38.8' rx='1' ry='1.4' fill='%230A1F44'/%3E%3C/g%3E%3Cg transform='rotate(-8 50 64)'%3E%3Cpath d='M50 64 Q45 50 50 36 Q55 50 50 64Z' fill='%2343A047' opacity='.8'/%3E%3Cellipse cx='50' cy='38' rx='3.4' ry='4.4' fill='%23F9A825'/%3E%3Cellipse cx='50' cy='38.5' rx='2.2' ry='3' fill='%231976D2'/%3E%3Cellipse cx='50' cy='38.8' rx='1' ry='1.4' fill='%230A1F44'/%3E%3C/g%3E%3Cg transform='rotate(8 50 64)'%3E%3Cpath d='M50 64 Q45 50 50 36 Q55 50 50 64Z' fill='%2343A047' opacity='.8'/%3E%3Cellipse cx='50' cy='38' rx='3.4' ry='4.4' fill='%23F9A825'/%3E%3Cellipse cx='50' cy='38.5' rx='2.2' ry='3' fill='%231976D2'/%3E%3Cellipse cx='50' cy='38.8' rx='1' ry='1.4' fill='%230A1F44'/%3E%3C/g%3E%3Cg transform='rotate(24 50 64)'%3E%3Cpath d='M50 64 Q45 50 50 36 Q55 50 50 64Z' fill='%2343A047' opacity='.8'/%3E%3Cellipse cx='50' cy='38' rx='3.4' ry='4.4' fill='%23F9A825'/%3E%3Cellipse cx='50' cy='38.5' rx='2.2' ry='3' fill='%231976D2'/%3E%3Cellipse cx='50' cy='38.8' rx='1' ry='1.4' fill='%230A1F44'/%3E%3C/g%3E%3Cg transform='rotate(40 50 64)'%3E%3Cpath d='M50 64 Q45 50 50 36 Q55 50 50 64Z' fill='%2343A047' opacity='.8'/%3E%3Cellipse cx='50' cy='38' rx='3.4' ry='4.4' fill='%23F9A825'/%3E%3Cellipse cx='50' cy='38.5' rx='2.2' ry='3' fill='%231976D2'/%3E%3Cellipse cx='50' cy='38.8' rx='1' ry='1.4' fill='%230A1F44'/%3E%3C/g%3E%3Cg transform='rotate(56 50 64)'%3E%3Cpath d='M50 64 Q45 50 50 36 Q55 50 50 64Z' fill='%2343A047' opacity='.8'/%3E%3Cellipse cx='50' cy='38' rx='3.4' ry='4.4' fill='%23F9A825'/%3E%3Cellipse cx='50' cy='38.5' rx='2.2' ry='3' fill='%231976D2'/%3E%3Cellipse cx='50' cy='38.8' rx='1' ry='1.4' fill='%230A1F44'/%3E%3C/g%3E%3Cg transform='rotate(72 50 64)'%3E%3Cpath d='M50 64 Q45 50 50 36 Q55 50 50 64Z' fill='%2343A047' opacity='.8'/%3E%3Cellipse cx='50' cy='38' rx='3.4' ry='4.4' fill='%23F9A825'/%3E%3Cellipse cx='50' cy='38.5' rx='2.2' ry='3' fill='%231976D2'/%3E%3Cellipse cx='50' cy='38.8' rx='1' ry='1.4' fill='%230A1F44'/%3E%3C/g%3E%3C/g%3E%3Cg class='bd'%3E%3Cpath d='M47 84 L46 92 M53 84 L54 92' stroke='%23B0957A' stroke-width='1.3' stroke-linecap='round'/%3E%3Cellipse cx='50' cy='76' rx='7.5' ry='9' fill='%230D47A1'/%3E%3Cpath d='M44 74 C46 82 54 84 57 78 C55 86 46 88 44 74Z' fill='%238D6E63'/%3E%3Cpath d='M47 72 C45 62 47 52 50 47 C53 52 54 62 53 72Z' fill='url(%23n)'/%3E%3Cg class='hd'%3E%3Ccircle cx='51' cy='45' r='3.6' fill='%231E88E5'/%3E%3Cellipse cx='52.2' cy='44.2' rx='1.5' ry='.9' fill='%23FFF'/%3E%3Ccircle cx='52.4' cy='44.3' r='.5' fill='%23111'/%3E%3Cpath d='M54.3 45 L57.5 45.8 L54.3 46.6Z' fill='%23C9A26B'/%3E%3Cpath d='M50 41.6 L48.6 36.4 M51 41.4 L51 36 M52 41.6 L53.4 36.4' stroke='%231E88E5' stroke-width='.5'/%3E%3Ccircle cx='48.6' cy='36.2' r='.9' fill='%231E88E5'/%3E%3Ccircle cx='51' cy='35.8' r='.9' fill='%231E88E5'/%3E%3Ccircle cx='53.4' cy='36.2' r='.9' fill='%231E88E5'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}
 .blk.sc1,.scsample.sc1{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='xMidYMid slice'%3E%3Cdefs%3E%3ClinearGradient id='b' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%232E4A66'/%3E%3Cstop offset='.55' stop-color='%237E9DB4'/%3E%3Cstop offset='.56' stop-color='%231C6E92'/%3E%3Cstop offset='1' stop-color='%230B3A55'/%3E%3C/linearGradient%3E%3Cpath id='w' d='M0 0 Q12.5 -7 25 0 T50 0 T75 0 T100 0 T125 0 T150 0 T175 0 T200 0 V60 H0Z'/%3E%3C/defs%3E%3Cstyle%3E.w1%7Banimation:mv 5s linear infinite%7D.w2%7Banimation:mv 3.6s linear infinite%7D.w3%7Banimation:mv 2.6s linear infinite%7D@keyframes mv%7Bfrom%7Btransform:translateX(0)%7Dto%7Btransform:translateX(-50px)%7D%7D.bob%7Banimation:bob 2.6s ease-in-out infinite%7D@keyframes bob%7B50%25%7Btransform:translateY(-2.5px)%7D%7D.dr%7Banimation:dr 2.6s ease-out infinite;opacity:0%7D@keyframes dr%7B0%25,40%25%7Bopacity:0;transform:translate(0,0)%7D50%25%7Bopacity:1%7D100%25%7Bopacity:0;transform:translate(var(--x),-18px)%7D%7D.cl%7Banimation:cl 14s linear infinite%7D@keyframes cl%7Bfrom%7Btransform:translateX(-30px)%7Dto%7Btransform:translateX(110px)%7D%7D.gl%7Banimation:gl 9s linear infinite%7D@keyframes gl%7Bfrom%7Btransform:translate(-20px,0)%7Dto%7Btransform:translate(120px,-6px)%7D%7D.wg%7Banimation:wg .45s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:center%7D@keyframes wg%7Bto%7Btransform:scaleY(-.5)%7D%7D%3C/style%3E%3Crect width='100' height='100' fill='url(%23b)'/%3E%3Cg class='cl'%3E%3Cellipse cx='10' cy='18' rx='12' ry='4' fill='%239FB4C6' opacity='.7'/%3E%3Cellipse cx='18' cy='15' rx='8' ry='4' fill='%23B5C7D5' opacity='.7'/%3E%3C/g%3E%3Cg class='gl'%3E%3Cpath class='wg' d='M10 30 q3 -3 6 0 q3 -3 6 0' fill='none' stroke='%23F2F5F8' stroke-width='1.2' stroke-linecap='round'/%3E%3C/g%3E%3Cg class='bob'%3E%3Cg transform='translate(0 58)'%3E%3Cuse class='w1' href='%23w' fill='%2322769A'/%3E%3C/g%3E%3C/g%3E%3Cpath d='M74 100 L78 68 L86 62 L94 66 L100 64 V100Z' fill='%232B2F36'/%3E%3Cpath d='M78 68 L86 62 L90 66 L82 72Z' fill='%233C424B'/%3E%3Cg class='bob' style='animation-delay:-1s'%3E%3Cg transform='translate(0 70)'%3E%3Cuse class='w2' href='%23w' fill='%23155F84'/%3E%3Cuse class='w2' href='%23w' fill='none' stroke='%23D7EEF7' stroke-width='1.2' opacity='.8'/%3E%3C/g%3E%3C/g%3E%3Cg transform='translate(84 66)'%3E%3Ccircle class='dr' r='1.6' fill='%23EAF6FB' style='--x:-8px'/%3E%3Ccircle class='dr' r='1.2' fill='%23EAF6FB' style='--x:-3px;animation-delay:-.2s'/%3E%3Ccircle class='dr' r='1.4' fill='%23EAF6FB' style='--x:4px;animation-delay:-.4s'/%3E%3Ccircle class='dr' r='1' fill='%23EAF6FB' style='--x:-12px;animation-delay:-.6s'/%3E%3Ccircle class='dr' r='1.8' fill='%23FFFFFF' style='--x:1px;animation-delay:-.1s'/%3E%3C/g%3E%3Cg class='bob' style='animation-delay:-2s'%3E%3Cg transform='translate(0 82)'%3E%3Cuse class='w3' href='%23w' fill='%230C4A6B'/%3E%3Cuse class='w3' href='%23w' fill='none' stroke='%23FFFFFF' stroke-width='1.6' stroke-dasharray='6 4' opacity='.85'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}
@@ -846,7 +890,7 @@ html.vv-short #view.typing .tlc{min-height:38px}
   var PREF_DEFAULTS = JSON.parse(JSON.stringify(S.prefs));
   try {
     var raw = localStorage.getItem(LS);
-    if (raw) { var o = JSON.parse(raw); if (o.prefs) Object.assign(S.prefs, o.prefs); if (o.prog) S.prog = o.prog; if (o.profile && o.profile.id) S.profile = o.profile; if (typeof o.lastVariant === 'number') S.lastVariant = o.lastVariant; if (o.draft) S.draft = o.draft; }
+    if (raw) { var o = JSON.parse(raw); if (o.prefs) Object.assign(S.prefs, o.prefs); if (o.prog) S.prog = o.prog; if (o.profile && o.profile.id) S.profile = o.profile; if (typeof o.lastVariant === 'number') S.lastVariant = o.lastVariant; if (o.draft) S.draft = o.draft; if (Array.isArray(o.drafts)) S.drafts = o.drafts; }
     else {
       var old = localStorage.getItem('e-padavinodam-v1');
       if (old) { var oo = JSON.parse(old); if (oo.prefs) Object.assign(S.prefs, oo.prefs); if (oo.prog) S.prog.sample = Object.assign(freshProgress(), oo.prog); }
@@ -1056,6 +1100,7 @@ html.vv-short #view.typing .tlc{min-height:38px}
     search: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>',
     copy: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"></rect><path d="M5 15V5a1 1 0 0 1 1-1h10"></path></svg>',
     grid: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"></rect><path d="M9 3v18M15 3v18M3 9h18M3 15h18"></path></svg>',
+    save: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3h11l3 3v13a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2z"/><path d="M8 3v5h7V3"/><path d="M8 21v-7h8v7"/></svg>',
     close: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg>',
     down: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>',
     zin: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5M11 8v6M8 11h6"></path></svg>',
@@ -1181,13 +1226,18 @@ html.vv-short #view.typing .tlc{min-height:38px}
   }
   // ---- ఆటో: fills only the empty and wrong squares, from the first clue on the board, one letter at a time ----
   var AUTO_SPEED = { slow: [900, 2600], mid: [520, 1700], fast: [260, 900] };
+  function autoCan() { return !!CUR && (CUR.m.hasAns || (CUR.id === 'draft' && CUR.m.whites > CUR.m.missingAns)); }
   function autoOn() { return !!(U.auto && U.auto.on && CUR && U.auto.id === CUR.id); }
   function autoList() { var m = CUR.m; return m.order.A.concat(m.order.D); }
   function autoNeed(k) { var s = CUR.m.sol(k); return !!s && CUR.P.letters[k] !== s; }
-  function autoLeft() { var m = CUR.m, seen = {}, n = 0; autoList().forEach(function (id) { m.entries[id].cells.forEach(function (x) { var k = key(x[0], x[1]); if (!seen[k]) { seen[k] = 1; if (autoNeed(k)) n++; } }); }); return n; }
+  // squares that have an answer but belong to no clue (a clue is missing): ఆటో fills them last
+  function autoStrays() { var m = CUR.m, out = []; for (var r = 0; r < m.R; r++) for (var c = 0; c < m.C; c++) { var k = key(r, c); if (m.isW(r, c) && !m.cellA[k] && !m.cellD[k] && autoNeed(k)) out.push([r, c]); } return out; }
+  function autoLeft() { var m = CUR.m, seen = {}, n = 0; autoList().forEach(function (id) { m.entries[id].cells.forEach(function (x) { var k = key(x[0], x[1]); if (!seen[k]) { seen[k] = 1; if (autoNeed(k)) n++; } }); }); return n + autoStrays().length; }
+  // numbers on the board with no clue in either direction
+  function cluelessNums() { var p = CUR.p, has = {}, out = []; (p.clues || []).forEach(function (c) { has[c.n] = 1; }); Object.keys(p.nums || {}).forEach(function (k) { var n = p.nums[k]; if (!has[n]) out.push(n); }); return out.sort(function (a, b) { return a - b; }); }
   function autoWordLeft(e) { return e.cells.some(function (x) { return autoNeed(key(x[0], x[1])); }); }
   function autoStart() {
-    if (!CUR || !CUR.m.hasAns) return;
+    if (!autoCan()) return;
     autoStop(true);
     var left = autoLeft();
     if (!left) { toast('అన్ని గడులూ ఇప్పటికే సరైనవే — ఆటో చేయాల్సింది ఏమీ లేదు.'); return; }
@@ -1206,7 +1256,14 @@ html.vv-short #view.typing .tlc{min-height:38px}
     var m = CUR.m, P = CUR.P, sp = AUTO_SPEED[A.speed] || AUTO_SPEED.mid;
     if (A.j < 0) {   // next word that still has an empty or wrong square
       while (A.i < A.list.length && !autoWordLeft(m.entries[A.list[A.i]])) A.i++;
-      if (A.i >= A.list.length || !autoLeft()) { autoDone(); return; }
+      if (A.i >= A.list.length) {   // all clues done: squares that belong to no clue (missing clue) last
+        var st = autoStrays();
+        if (!st.length) { autoDone(); return; }
+        var sk = key(st[0][0], st[0][1]); P.r = st[0][0]; P.c = st[0][1];
+        P.letters[sk] = m.sol(sk); delete U.shown[sk]; P.started = true; P.hints = (P.hints || 0) + 1; P.auto = true; A.shown++; A.strays = (A.strays || 0) + 1;
+        U.follow = true; save(); refreshPlay(); A.t = setTimeout(autoTick, sp[1]); return;
+      }
+      if (!autoLeft()) { autoDone(); return; }
       var e0 = m.entries[A.list[A.i]], first = e0.cells.filter(function (x) { return autoNeed(key(x[0], x[1])); })[0];
       P.dir = e0.d; U.tab = e0.d; P.r = first[0]; P.c = first[1]; A.j = 0; A.words++; U.follow = true; refreshPlay();
       A.t = setTimeout(autoTick, sp[0]); return;
@@ -1226,6 +1283,9 @@ html.vv-short #view.typing .tlc{min-height:38px}
   function autoDone() {
     var A = U.auto; A.on = false; if (!autoLeft()) CUR.P.revealed = true; save();
     U.panel = 'none'; U.autoHidden = false; render();
+    var cn = A.strays ? cluelessNums() : [];
+    if (cn.length) { toast('ఆటో పూర్తయింది — ' + A.shown + ' గడులు నింపాం. ఆధారం లేని సంఖ్యలు: ' + cn.join(', ') + ' — వాటి గడులు (' + A.strays + ') ఏ ఆధారానికీ చెందవు, కాబట్టి చివర్లో నింపాం. ' + (CUR.id === 'draft' ? 'డ్రాఫ్ట్‌లో ఆ ఆధారాలు చేర్చండి.' : 'పోస్ట్‌లో ఆ ఆధారాలు లేవు.')); return; }
+    if (CUR.id === 'draft' && CUR.m.missingAns) { toast('ఆటో పూర్తయింది — ' + A.shown + ' గడులు నింపాం. ' + CUR.m.missingAns + ' గడులకు డ్రాఫ్ట్‌లో జవాబు లేదు (ఖాళీగా ఉన్నాయి): డ్రాఫ్ట్‌కు వెళ్ళి “జవాబులు” లో నింపండి.'); return; }
     toast(A.shown ? 'ఆటో పూర్తయింది — ఖాళీగా లేదా తప్పుగా ఉన్న ' + A.shown + ' గడులు (' + A.words + ' పదాల్లో) నింపాం; మీరు సరిగ్గా వేసినవి అలాగే ఉంచాం. మీరే మళ్ళీ ఆడాలంటే “గడి ఖాళీ చేసి మీరే ఆడండి” నొక్కండి.' : 'అన్ని గడులూ సరైనవే.');
   }
   function autoPanelHTML() {
@@ -1482,7 +1542,7 @@ html.vv-short #view.typing .tlc{min-height:38px}
       '<div class="t"><h1>' + (isDraft ? 'డ్రాఫ్ట్ పరీక్ష · ' : '') + esc(p.title) + '</h1><p id="psub">' + esc(subText()) + '</p></div>' +
       '<button class="ghostbtn" data-act="zoom-out" aria-label="గడి చిన్నగా"' + (zoomLevel() <= 1 ? ' disabled' : '') + '>' + I.zout + '</button><button class="ghostbtn" data-act="zoom-in" aria-label="గడి పెద్దగా"' + (zoomLevel() >= 2 ? ' disabled' : '') + '>' + I.zin + '</button>' +
       recBtnHTML() + '<button class="ghostbtn" data-act="check" aria-label="సరిచూడు">' + I.check + '</button></header>' +
-      '<div class="ptools gutter"><div class="seg" role="group" aria-label="కష్టత"><button data-act="pref" data-k="hard" data-v="0" aria-pressed="' + (!hard && !autoOn()) + '">సులభం</button><button data-act="pref" data-k="hard" data-v="1" aria-pressed="' + (hard && !autoOn()) + '">కష్టం</button>' + (CUR.m.hasAns ? '<button data-act="auto-start" aria-pressed="' + autoOn() + '">ఆటో</button>' : '') + '</div>' +
+      '<div class="ptools gutter"><div class="seg" role="group" aria-label="కష్టత"><button data-act="pref" data-k="hard" data-v="0" aria-pressed="' + (!hard && !autoOn()) + '">సులభం</button><button data-act="pref" data-k="hard" data-v="1" aria-pressed="' + (hard && !autoOn()) + '">కష్టం</button>' + (autoCan() ? '<button data-act="auto-start" aria-pressed="' + autoOn() + '">ఆటో</button>' : '') + '</div>' +
       timer + '<span id="hintslot">' + hintSlotHTML() + '</span></div>' +
       '<div class="pmid gutter" id="pmid">' + midHTML() + '</div>' +
       '<div class="pbottom"><div class="hbar gutter" id="hbar"' + (zoomLevel() > 1 ? '' : ' hidden') + '><button class="ghostbtn" data-act="hs" data-v="-1" data-keepfocus aria-label="గడిని ఎడమకు జరుపు">' + I.prev + '</button><div class="htrack" id="htrack" role="scrollbar" aria-orientation="horizontal" aria-label="గడిని పక్కకు జరుపు"><div class="hthumb" id="hthumb"></div></div><button class="ghostbtn" data-act="hs" data-v="1" data-keepfocus aria-label="గడిని కుడికి జరుపు">' + I.next + '</button></div><div class="gutter" id="cbar">' + clueBarHTML() + '</div><div class="ppanel gutter">' + panelHTML() + '</div></div></section>';
@@ -1621,7 +1681,52 @@ html.vv-short #view.typing .tlc{min-height:38px}
     var start = before.length - m[0].length;
     el.value = v.slice(0, start) + tel + v.slice(pos - 1);
     var np = start + tel.length + 1; el.setSelectionRange(np, np);
+    var alts = []; TL.convert(m[0]).forEach(function (c) { var t2 = c.join(''); if (alts.indexOf(t2) < 0) alts.push(t2); });
+    showAlts(el, start, tel, alts.slice(0, 6));
   }
+  // the other likely spellings of the word just turned Telugu (ధ / ద, ల / ళ …): one tap swaps it in
+  function showAlts(el, start, tel, alts) {
+    var bar = document.getElementById('tlalts');
+    if (alts.length < 2) { if (bar) bar.remove(); U.tlAlt = null; return; }
+    U.tlAlt = { el: el, start: start, len: tel.length, alts: alts };
+    if (!bar) { bar = document.createElement('div'); bar.id = 'tlalts'; bar.className = 'tlalts'; bar.addEventListener('pointerdown', function (ev) { ev.preventDefault(); }); bar.addEventListener('mousedown', function (ev) { ev.preventDefault(); }); }
+    var host = el.closest('.cluerow') || el;
+    host.parentNode.insertBefore(bar, host.nextSibling);
+    bar.innerHTML = '<small>వేరే రూపం?</small>' + alts.map(function (a, i) { return '<button type="button" data-act="tl-alt" data-v="' + i + '"' + (a === tel ? ' aria-pressed="true"' : '') + '>' + esc(a) + '</button>'; }).join('');
+  }
+  function pickAlt(i) {
+    var A = U.tlAlt; if (!A || !A.el || !document.body.contains(A.el)) return;
+    var el = A.el, cur = el.value.slice(A.start, A.start + A.len), alt = A.alts[i]; if (alt == null) return;
+    if (cur !== A.alts.filter(function (x) { return x === cur; })[0]) return;   // the text has moved on since
+    el.value = el.value.slice(0, A.start) + alt + el.value.slice(A.start + A.len); A.len = alt.length;
+    var np = A.start + alt.length + 1; try { el.focus(); el.setSelectionRange(np, np); } catch (e) {}
+    el.dispatchEvent(new Event('input', { bubbles: true }));
+    var bar = document.getElementById('tlalts'); if (bar) bar.querySelectorAll('button').forEach(function (b, j) { b.setAttribute('aria-pressed', String(A.alts[j] === alt)); });
+  }
+  // fields where English typing turns Telugu: clue text (draft and reading screen), title, the fix box
+  function setPic(k, url) { if (!D) return; if (k === 'blk') D.blkImg = url; else D.finImg = url; U.picOpen = ''; saveDraft(); render(); toast((k === 'blk' ? 'నలుపు గడుల' : 'అభినందనల') + ' బొమ్మ మార్చాం — ప్రచురించినప్పుడు / సరిదిద్దినప్పుడు పోస్ట్‌లోకి వెళ్తుంది.'); }
+  // a picture from the phone goes to the admin's Google Drive (through the admin script) and the post shows it from there
+  function uploadPic(k, file) {
+    if (!file || U.busy) return;
+    if (!/^image\/(gif|png|jpeg|webp)$/.test(file.type)) { toast('GIF, PNG, JPG లేదా WEBP బొమ్మ ఇవ్వండి.'); return; }
+    if (file.size > 6 * 1024 * 1024) { toast('బొమ్మ 6 MB లోపు ఉండాలి.'); return; }
+    U.busy = 'upload'; U.status = { kind: 'wait', text: 'బొమ్మను Google Drive కు పంపుతున్నాం… (' + Math.round(file.size / 1024) + ' KB)' }; render();
+    blobToB64(file).then(function (b64) { return svc('upload', { name: file.name, mime: file.type, data: b64 }); }).then(function (r) {
+      U.busy = ''; S.myPics = [{ kind: k, url: r.url }].concat((S.myPics || []).filter(function (x) { return x.url !== r.url; })).slice(0, 20);
+      U.status = { kind: 'ok', text: 'బొమ్మ Drive లో పెట్టాం. కింద చూడండి — కదలాల్సిన GIF కదలకపోతే, ఆ GIF ను Blogger లో ఏదైనా పోస్ట్‌లో పెట్టి దాని లింక్ ఇక్కడ “లింక్” లో ఇవ్వండి.' };
+      setPic(k, r.url);
+    }, function (e) {
+      U.busy = '';
+      U.status = { kind: 'err', text: e && (e.code === 'drive_off' || e.code === 'bad_request') ? 'అడ్మిన్ స్క్రిప్ట్‌కు Google Drive అనుమతి ఇంకా లేదు: (1) Cloud console → APIs & Services → Library → “Google Drive API” → Enable; (2) script లో కొత్త Code.gs, appsscript.json అతికించి, setup ని ఒకసారి Run చేసి Drive కు Allow నొక్కండి; (3) Deploy → Manage deployments → ✏️ → New version. అప్పటివరకు “లింక్” లేదా బ్లాగ్ బొమ్మల నుంచి ఎంచుకోవచ్చు.' + (e.error ? ' (' + e.error + ')' : '') : svcErr(e) };
+      render();
+    });
+  }
+  function teHintHTML() {
+    var on = S.prefs.teType !== false;
+    return '<div class="tehint"><button class="smallbtn" data-act="te-type" aria-pressed="' + on + '">' + (on ? '✓ ' : '') + 'English → తెలుగు</button><small>' +
+      (on ? 'ఆంగ్ల అక్షరాలతో టైప్ చేసి స్పేస్ నొక్కితే తెలుగు అవుతుంది: <b>dhanam</b> → ధనం, <b>vennela</b> → వెన్నెల, <b>Sh</b>=ష, <b>T</b>=ట, <b>D</b>=డ, <b>N</b>=ణ, <b>L</b>=ళ, <b>aa ee oo</b> దీర్ఘాలు. పదం కింద వేరే రూపాలు వస్తాయి — సరైనది నొక్కండి.' : 'ఆఫ్‌లో ఉంది — ఫోన్ తెలుగు కీబోర్డ్‌తో టైప్ చేయవచ్చు.') + '</small></div>';
+  }
+  function teField(t) { return t && (t.id === 'fix-in' || (t.getAttribute && (t.getAttribute('data-f') === 'text' || t.hasAttribute('data-ocr') || t.getAttribute('data-df') === 'title'))); }
   function doneView(id) {
     var p = findPuzzle(id), P = S.prog[id];
     if (!p && DATA_STATE === 'loading') return '<div class="page gutter">' + loaderHTML() + '</div>';
@@ -1728,7 +1833,7 @@ html.vv-short #view.typing .tlc{min-height:38px}
       '<section class="sec"><h2 class="sec-h">Android యాప్‌లో రాబోయేవి</h2><div class="box"><ul class="soon"><li>కొత్త పద వినోదం వస్తే నోటిఫికేషన్</li><li>English భాషలో యాప్</li></ul>' + (IS_CLAUDE ? '' : '<p class="note">ఆఫ్‌లైన్: ఒకసారి తెరిచిన తర్వాత ఇంటర్నెట్ లేకున్నా యాప్, చివరిసారి లోడ్ అయిన పోస్టులు తెరుచుకుంటాయి.</p>') + '</div></section>' +
       '<section class="sec"><h2 class="sec-h">ఆట పురోగతి</h2><div class="box"><p class="note">మీ అమరికలు, ఆట పురోగతి ఈ పరికరంలోనే సేవ్ అవుతాయి.</p><button class="wide-btn ter" data-act="resetall">' + (U.confirm === 'resetall' ? 'ఖచ్చితమా? అన్ని ఆటల పురోగతి పోతుంది — మళ్ళీ నొక్కండి' : 'అన్ని ఆటల పురోగతి తుడిచివేయండి') + '</button></div></section>' +
       (!IS_CLAUDE ? '<section class="sec"><h2 class="sec-h">నిర్వాహణ</h2><div class="box"><p class="note">' + (ADMIN ? 'ఈ పరికరంలో నిర్వాహకుడిగా ప్రవేశించారు: కొత్త పద వినోదం (ఫోటో / PDF నుంచి కూడా), మార్పులు, ప్రచురణ.' : 'బ్లాగ్ నిర్వాహకుడి కోసం మాత్రమే: కొత్త పద వినోదం చేర్చడం, ఆధారాలు సరిదిద్దడం.') + '</p><a class="wide-btn ' + (ADMIN ? 'pri' : 'ter') + '" href="#admin">' + I.lock + (ADMIN ? ' నిర్వాహణ పేజీ తెరవండి' : ' నిర్వాహకుడి ప్రవేశం') + '</a></div></section>' : '') +
-      '<footer style="display:flex;flex-direction:column;align-items:center;gap:2px;text-align:center"><a href="' + BLOG + '" target="_blank" rel="noopener" style="font-weight:600;padding:10px 0">బ్లాగ్ తెరవండి · telugupadavinodam.blogspot.com</a><span style="font-family:var(--font-display);font-size:22px;color:var(--title)">ఈ-పద వినోదం</span><span class="note">వెర్షన్ 0.22.1' + (IS_CLAUDE ? ' · స్టూడియో' : '') + '</span></footer></div>';
+      '<footer style="display:flex;flex-direction:column;align-items:center;gap:2px;text-align:center"><a href="' + BLOG + '" target="_blank" rel="noopener" style="font-weight:600;padding:10px 0">బ్లాగ్ తెరవండి · telugupadavinodam.blogspot.com</a><span style="font-family:var(--font-display);font-size:22px;color:var(--title)">ఈ-పద వినోదం</span><span class="note">వెర్షన్ 0.23' + (IS_CLAUDE ? ' · స్టూడియో' : '') + '</span></footer></div>';
   }
 
   /* ================= admin: who may manage ================= */
@@ -1773,14 +1878,16 @@ html.vv-short #view.typing .tlc{min-height:38px}
     return {
       no_service: 'అడ్మిన్ సర్వీస్ లింక్ ఇంకా ఇవ్వలేదు.',
       network: 'అడ్మిన్ సర్వీస్‌ను చేరుకోలేకపోయాం. ఇంటర్నెట్ చూడండి. మొదటిసారైతే: స్క్రిప్ట్‌ను Who has access: Anyone తో డిప్లాయ్ చేశారో, లింక్ /exec తో ముగుస్తుందో చూడండి.',
-      svc_html: 'అడ్మిన్ సర్వీస్ నుంచి సరైన జవాబు రాలేదు. లింక్ సరిగ్గా ఉందో, స్క్రిప్ట్‌కు అనుమతి (Authorize) ఇచ్చారో చూడండి.',
+      svc_html: 'అడ్మిన్ సర్వీస్ నుంచి సరైన జవాబు రాలేదు. కొత్త Code.gs / appsscript.json అతికించాక script లో setup ని ఒకసారి Run చేసి Allow నొక్కారో (కొత్త అనుమతి కోసం), తర్వాత Deploy → Manage deployments → ✏️ → New version చేశారో చూడండి.',
       session: 'మళ్ళీ ప్రవేశించండి.', cancelled: 'ఆపేశాం.',
       blogger_api_off: 'Google Cloud ప్రాజెక్ట్‌లో Blogger API ఆన్ కాలేదు. సెటప్ దశ 1 చూడండి (README).',
       self_check: 'తయారుచేసిన పోస్ట్ మళ్ళీ చదివితే గడి సరిపోలలేదు — అందుకే ప్రచురించలేదు. డ్రాఫ్ట్ చూసి మళ్ళీ ప్రయత్నించండి.',
-      template: 'బ్లాగ్ పోస్ట్ రూపం అర్థం కాలేదు, ప్రచురించలేదు.',
+      template: 'బ్లాగ్ పోస్ట్ రూపం అర్థం కాలేదు, ప్రచురించలేదు.' + (e && e.why ? ' [v0.24: ' + e.why + ']' : ''),
       no_images: 'చిత్రం (JPG/PNG) లేదా PDF ఎంచుకోండి.', invalid_json: 'చదివిన సమాచారం సరిగ్గా రాలేదు. మళ్ళీ ప్రయత్నించండి.',
       no_gemini: 'Gemini కీ ఇంకా సేవ్ చేయలేదు — కింది సెట్టింగ్‌లలో ఇవ్వండి, లేదా “ఫోన్‌లోనే చదవండి” వాడండి.',
       rate_limited: 'Gemini ఉచిత పరిమితి ఈ నిమిషానికి అయిపోయింది. ఒక నిమిషం ఆగి ప్రయత్నించండి.',
+      old_script: 'అడ్మిన్ స్క్రిప్ట్ (Code.gs) పాతది — దానితో ప్రచురిస్తే పోస్ట్ లోపలి భాగం పోతోంది. కొత్త Code.gs ను అతికించి Deploy → Manage deployments → ✏️ → New version చేశాక మళ్ళీ ప్రచురించండి.',
+      empty_post: 'పోస్ట్ వెళ్ళింది కానీ Blogger లో దాని గడి కనిపించడం లేదు. “బ్లాగ్ పోస్ట్ సరిదిద్దండి” తో మళ్ళీ పంపండి.',
       gemini_timeout: 'Gemini 2 నిమిషాల్లో జవాబు ఇవ్వలేదు (Google వైపు రద్దీ కావచ్చు). కాసేపాగి మళ్ళీ ప్రయత్నించండి, లేదా “ఫోన్‌లోనే చదవండి” వాడండి.'
     }[code] || (e && e.error) || ('కుదరలేదు (' + (code || (e && e.message) || 'error') + ').');
   }
@@ -1840,6 +1947,8 @@ html.vv-short #view.typing .tlc{min-height:38px}
     // the post's congratulation picture (the image inside its btn-finish2 / finish box)
     var fm = html.match(/id\s*=\s*"finish\d*"[^>]*?\ssrc\s*=\s*"([^"]+)"/i) || html.match(/<(?:input|img)[^>]*\ssrc\s*=\s*"([^"]+)"[^>]*id\s*=\s*"finish\d*"/i) || html.match(/btn-finish2[\s\S]{0,400}?\ssrc\s*=\s*"([^"]+)"/i);
     p.fin = fm ? fm[1].replace(/&amp;/g, '&') : '';
+    var bm = html.match(/<input[^>]*class="btn-disabled2?"[^>]*\ssrc\s*=\s*"([^"]+)"/i) || html.match(/<input[^>]*\ssrc\s*=\s*"([^"]+)"[^>]*class="btn-disabled2?"/i);
+    p.blk = bm ? bm[1].replace(/&amp;/g, '&') : '';
     return p;
   }
   // a puzzle's congratulation picture: its own, else the newest blog post's
@@ -1921,7 +2030,34 @@ html.vv-short #view.typing .tlc{min-height:38px}
   // A blog post in the blog's own layout: the latest post is the pattern (its scripts, toggle, hint bulb,
   // congratulation picture, record button); only the squares, clues, numbers and links change.
   function escAttr(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
-  function postSuffix(html) { var m = (html || '').match(/class="input(\d+)"/); return m ? m[1] : ''; }
+  function postSuffix(html) {
+    html = html || '';
+    var m = html.match(/class\s*=\s*["']input(\d+)["']/) || html.match(/\b(?:congrats|hint|finish|theme|recording-toggle)(\d+)\b/) || html.match(/\binput(\d+)\b/);
+    return m ? m[1] : '';
+  }
+  // no usable div1 box: take everything from the first square (or number label) to the last square
+  function findGridRegion(tpl) {
+    tpl = tpl || '';
+    var re = /<input\b[^>]*>/gi, x, first = -1, last = -1, n = 0;
+    while ((x = re.exec(tpl))) {
+      if (/btn-disabled|type\s*=\s*["']?text/i.test(x[0]) && !/btn-(?:finish|next|prev)|recording|theme|hint/i.test(x[0])) {
+        if (first < 0) first = x.index; last = x.index + x[0].length; n++;
+      }
+    }
+    if (n < 2) return null;
+    var lab = tpl.slice(0, first).match(/<label\b[^>]*>(?:(?!<\/label>)[\s\S])*<\/label>\s*$/i);
+    if (lab) first -= lab[0].length;
+    var br = /^(?:\s*<br\s*\/?>)+/i.exec(tpl.slice(last)); if (br) last += br[0].length;
+    return { start: first, end: last, after: last };
+  }
+  // the grid box of a blog post: its opening tag (any spacing, quotes or extra attributes) and its matching </div>
+  function findGridBox(tpl) {
+    var m = /<div\b[^>]*\bclass\s*=\s*["'][^"']*\bdiv1\b[^"']*["'][^>]*>/i.exec(tpl || '');
+    if (!m) return null;
+    var re = /<(\/?)div\b[^>]*>/gi, depth = 1, x; re.lastIndex = m.index + m[0].length;
+    while ((x = re.exec(tpl))) { depth += x[1] ? -1 : 1; if (!depth) return { start: m.index, open: m.index + m[0].length, end: x.index, after: x.index + x[0].length }; }
+    return null;
+  }
   function shortDate(d) { var m = /^(\d{2})\.(\d{2})\.\d{2}(\d{2})$/.exec(d || ''); return m ? m[1] + m[2] + m[3] : ''; }
   function slugDate(d) { var m = /^(\d{2})\.(\d{2})\.(\d{4})$/.exec(d || ''); return m ? m[1] + m[2] + m[3] : ''; }
   function blogGridHTML(p, suf, idp, img) {
@@ -1949,16 +2085,27 @@ html.vv-short #view.typing .tlc{min-height:38px}
     return out.join('\n');
   }
   function blogPostHTML(tpl, p, o) {
-    var old = postSuffix(tpl), g0 = tpl.indexOf('<div class="div1">'), g1 = g0 < 0 ? -1 : tpl.indexOf('</div>', g0);
-    if (!old || g1 < 0) throw { code: 'template' };
-    var suf = o.suffix || old, grid = tpl.slice(g0, g1);
-    var img = o.img || (grid.match(/<input type="image"[^>]*?src="([^"]+)"[^>]*class="btn-disabled2"/) || grid.match(/class="btn-disabled2"[^>]*?src="([^"]+)"/) || [])[1] || '';
+    var old = postSuffix(tpl), box = findGridBox(tpl);
+    if (!box) box = findGridRegion(tpl);
+    if (!box) throw { code: 'template', why: 'గడి భాగం కనిపించలేదు · ' + String(tpl || '').length + ' అక్షరాలు · div1: ' + (/div1/.test(tpl || '') ? 'ఉంది' : 'లేదు') + ' · ' + String(tpl || '').replace(/\s+/g, ' ').slice(0, 120) };
+    var suf = old ? (o.suffix || old) : '', grid = tpl.slice(box.start, box.end);
+    var img = o.img || p.blkImg || (grid.match(/<input type="image"[^>]*?src="([^"]+)"[^>]*class="btn-disabled2"/) || grid.match(/class="btn-disabled2"[^>]*?src="([^"]+)"/) || grid.match(/<input[^>]*\ssrc\s*=\s*["']([^"']+)["'][^>]*btn-disabled/i) || grid.match(/btn-disabled[^>]*\ssrc\s*=\s*["']([^"']+)["']/i) || [])[1] || '';
     var idp = shortDate(p.date) || (grid.match(/id\s*=\s*"(\d{6})-\d+"/) || [])[1] || 'epv';
-    var html = tpl.slice(0, g0) + '<div class="div1">\n' + blogGridHTML(p, suf, idp, img) + '\n\n</div>' + tpl.slice(g1 + 6);
-    if (suf !== old) html = html.replace(new RegExp('\\b(input|hint|theme|recording-toggle|congrats|finish)' + old + '\\b', 'g'), '$1' + suf);
+    var html = tpl.slice(0, box.start) + '<div class="div1">\n' + blogGridHTML(p, suf, idp, img) + '\n\n</div>' + tpl.slice(box.after);
+    if (old && suf !== old) html = html.replace(new RegExp('\\b(input|hint|theme|recording-toggle|congrats|finish)' + old + '\\b', 'g'), '$1' + suf);
     if (o.prevUrl) html = html.replace(/(<a href=")[^"]*("[^>]*class="btn-prev")/, '$1' + o.prevUrl + '$2');
-    if (o.newPost) html = html.replace(/(window\.prompt\("File Name",\s*")\d{6}(")/, '$1' + idp + '$2');
+    if (p.finImg) html = html.replace(/(id\s*=\s*"finish\d*"[^>]*?\ssrc\s*=\s*")[^"]*(")/, '$1' + escAttr(p.finImg) + '$2').replace(/(<(?:input|img)[^>]*\ssrc\s*=\s*")[^"]*("[^>]*id\s*=\s*"finish\d*")/, '$1' + escAttr(p.finImg) + '$2');
+    if (o.newPost) html = html.replace(/(window\.prompt\(\s*["']File Name["'],\s*["'])\d{6}(["'])/, '$1' + idp + '$2');
     return html;
+  }
+  // the latest blog post is the pattern; if its markup cannot be used, the next older posts are tried
+  function buildFromTemplates(t, pz, mk) {
+    var list = [t].concat((t && t.more) || []), last = null;
+    for (var i = 0; i < list.length; i++) {
+      try { var html = mk(list[i]); if (html && sameAsBlog(html, pz)) return { html: html, tpl: list[i] }; last = { code: 'self_check' }; }
+      catch (e) { if (!e || e.code !== 'template') throw e; last = e; }
+    }
+    throw last || { code: 'template' };
   }
   // read the made post back with the app's own blog reader: the squares, answers and clues must come out the same
   function sameAsBlog(html, pz) {
@@ -1975,12 +2122,27 @@ html.vv-short #view.typing .tlc{min-height:38px}
     });
     return exp > 0 && b.clues.length === exp;
   }
-  function blogPublish(pz, draft) {
-    U.busy = 'publish'; U.status = { kind: 'wait', text: 'బ్లాగ్‌లోని తాజా పోస్ట్ రూపం తీసుకుంటున్నాం…' }; render();
+  // after publishing, the draft stays in the saved drafts (marked) — nothing is lost if the blog side goes wrong
+  function keepPublished(d, url) { if (!d) return; d.published = Date.now(); d.pubUrl = url || ''; keepDraft(d, true); }
+  function blogPublish(pz, draft, noFind) {
+    U.busy = 'publish'; U.status = { kind: 'wait', text: 'ఈ తేదీ పోస్ట్ బ్లాగ్‌లో ఇప్పటికే ఉందో చూస్తున్నాం…' }; render();
     var title = (pz.title || 'ఈనాడు పద వినోదం') + ' - ' + pz.date;
-    svc('template').then(function (t) {
-      var html = blogPostHTML(t.content, pz, { suffix: String((+postSuffix(t.content) || 0) + 1), prevUrl: t.url, newPost: true });
-      if (!sameAsBlog(html, pz)) throw { code: 'self_check' };
+    // an older admin script (before version 5) lost post bodies: do not publish through it
+    (noFind ? Promise.resolve({ items: [] }) : svc('find', { date: pz.date })).then(function (f) {
+      var same = (f.items || [])[0];
+      if (same && !draft) {   // already there (perhaps empty): correct that post instead of making a second one
+        U.busy = ''; blogUpdate(Object.assign({}, pz, { postId: same.id, publishDraft: same.status === 'draft' }), pz.date + ' పోస్ట్ బ్లాగ్‌లో ఇప్పటికే ఉంది — దాన్నే సరిచేశాం.', function () { keepPublished(D, same.url); D = null; S.draft = null; delete S.prog.draft; save(); location.hash = '#admin'; });
+        return null;
+      }
+      U.status = { kind: 'wait', text: 'బ్లాగ్‌లోని తాజా పోస్ట్ రూపం తీసుకుంటున్నాం…' }; render();
+      return svc('template').then(publishWith);
+    }, function (e) {
+      if (e && e.code === 'bad_request') throw { code: 'old_script' };
+      throw e;
+    }).catch(function (e) { U.busy = ''; U.status = { kind: 'err', text: svcErr(e) }; render(); });
+    function publishWith(t) {
+      return Promise.resolve(t).then(function (t) {
+      var built = buildFromTemplates(t, pz, function (tp) { return blogPostHTML(tp.content, pz, { suffix: String((+postSuffix(tp.content) || 0) + 1), prevUrl: t.url, newPost: true }); }), html = built.html;
       U.status = { kind: 'wait', text: draft ? 'బ్లాగ్‌లో డ్రాఫ్ట్‌గా సేవ్ చేస్తున్నాం…' : 'బ్లాగ్‌లో ప్రచురిస్తున్నాం…' }; render();
       return svc('publish', { title: title, slug: slugDate(pz.date), html: html, draft: !!draft, prevPostId: t.id });
     }).then(function (r) {
@@ -1990,24 +2152,42 @@ html.vv-short #view.typing .tlc{min-height:38px}
         np.id = 'e' + dateKey(pz.date);
         BLOGPOSTS = BLOGPOSTS.filter(function (p) { return p.date !== pz.date; }); BLOGPOSTS.unshift(np); mergePuzzles();
       }
-      D = null; S.draft = null; delete S.prog.draft; save();
+      keepPublished(D, r.url); D = null; S.draft = null; delete S.prog.draft; save();
       U.status = { kind: 'ok', text: draft ? 'బ్లాగ్‌లో డ్రాఫ్ట్‌గా సేవ్ చేశాం. Blogger లో తెరిచి చూసి Publish నొక్కండి; అప్పుడు యాప్‌లోనూ కనిపిస్తుంది.' : title + ' బ్లాగ్‌లో ప్రచురించాం' + (r.linkedPrev ? '; ముందటి పోస్ట్‌లో “తర్వాత »” బటన్ దీనికి కలిపాం' : '') + '. యాప్‌లో ఇప్పటికే ఉంది.', link: r.url || '' };
       location.hash = '#admin'; render(); toast(draft ? 'డ్రాఫ్ట్ సేవ్ అయింది.' : 'బ్లాగ్‌లో ప్రచురించాం!');
-    }, function (e) { U.busy = ''; U.status = { kind: 'err', text: svcErr(e) }; render(); });
+    });
+    }
   }
-  function blogUpdate(pz, okMsg, after) {
+  function blogUpdate(pz, okMsg, after, retried) {
     if (!pz.postId) { toast('ఇది బ్లాగ్ పోస్ట్ కాదు. డ్రాఫ్ట్‌గా తెరిచి బ్లాగ్‌లో కొత్తగా ప్రచురించండి.'); return; }
     U.busy = 'publish'; U.status = { kind: 'wait', text: 'బ్లాగ్ పోస్ట్ తెచ్చుకుంటున్నాం…' }; render();
     svc('get', { postId: pz.postId }).then(function (t) {
-      var html = blogPostHTML(t.content, pz, {});
-      if (!sameAsBlog(html, pz)) throw { code: 'self_check' };
+      if (/class\s*=\s*["'][^"']*\bdiv1\b/.test(t.content || '')) { try { var h0 = blogPostHTML(t.content, pz, {}); if (sameAsBlog(h0, pz)) return h0; } catch (e) { if (!e || e.code !== 'template') throw e; } }
+      // the post has lost its body (or its layout cannot be read): build it again on the latest post's layout
+      return svc('template').then(function (tp) { return buildFromTemplates(tp, pz, function (x) { return blogPostHTML(x.content, pz, { suffix: String((+postSuffix(x.content) || 0) + 1), prevUrl: tp.id !== pz.postId ? tp.url : '', newPost: true }); }).html; });
+    }).then(function (html) {
       U.status = { kind: 'wait', text: 'బ్లాగ్ పోస్ట్ సరిదిద్దుతున్నాం…' }; render();
-      return svc('update', { postId: pz.postId, html: html });
+      return svc('update', { postId: pz.postId, html: html, title: (pz.title || 'ఈనాడు పద వినోదం') + ' - ' + pz.date, publish: !!pz.publishDraft });
     }).then(function (r) {
       BLOGPOSTS = BLOGPOSTS.map(function (p) { return p.postId === pz.postId ? Object.assign({}, p, pz, { src: 'blog', url: r.url || p.url }) : p; }); mergePuzzles();
       U.busy = ''; U.status = { kind: 'ok', text: okMsg + ' పాత రూపం Blogger డ్రాఫ్ట్‌లలో “బ్యాకప్ ·” పేరుతో ఉంది.', link: r.url || '' };
       if (after) after(); render(); toast(okMsg);
-    }, function (e) { U.busy = ''; U.status = { kind: 'err', text: svcErr(e) }; render(); });
+    }, function (e) {
+      // the post number no longer exists on the blog (deleted, or a draft that cannot be opened): look the date up
+      // once more; if no other post is there, publish it as a new post (without looking the date up again)
+      if (e && /Blogger 404/.test(e.error || '')) {
+        var fresh = function () { U.busy = ''; blogPublish(Object.assign({}, pz, { postId: '' }), false, true); };
+        if (retried) { fresh(); return; }
+        U.status = { kind: 'wait', text: 'ఈ పోస్ట్ నంబర్ బ్లాగ్‌లో లేదు. తేదీతో మళ్ళీ వెతుకుతున్నాం…' }; render();
+        svc('find', { date: pz.date }).then(function (f) {
+          var same = (f.items || []).filter(function (x) { return x.id !== pz.postId; })[0];
+          if (same) { U.busy = ''; blogUpdate(Object.assign({}, pz, { postId: same.id, publishDraft: same.status === 'draft' }), okMsg, after, true); }
+          else fresh();
+        }, function (e2) { U.busy = ''; U.status = { kind: 'err', text: svcErr(e2) }; render(); });
+        return;
+      }
+      U.busy = ''; U.status = { kind: 'err', text: svcErr(e) }; render();
+    });
   }
   function blogUnpublish(p) {
     U.busy = 'publish'; U.status = { kind: 'wait', text: 'బ్లాగ్‌లో డ్రాఫ్ట్‌గా మారుస్తున్నాం…' }; render();
@@ -2052,6 +2232,7 @@ html.vv-short #view.typing .tlc{min-height:38px}
   function draftFromPuzzle(p) {
     var d = newDraft(p.grid.length, p.grid[0].length);
     d.id = p.id; d.title = p.title; d.date = p.date; d.url = p.url || ''; d.postId = p.postId || ''; d.src = p.src || 'upload'; d.nums = Object.assign({}, p.nums);
+    d.curBlk = p.blk || ''; d.curFin = p.fin || '';   // the post's pictures now (kept unless another is chosen)
     for (var r = 0; r < d.R; r++) for (var c = 0; c < d.C; c++) { d.black[r][c] = p.grid[r][c] === '#'; d.ans[r][c] = (p.ans && p.ans[r] && p.ans[r][c]) || ''; }
     d.clues = p.clues.map(function (c) { return { d: c.d, n: c.n, len: c.len, text: c.text }; });
     return d;
@@ -2061,9 +2242,38 @@ html.vv-short #view.typing .tlc{min-height:38px}
     for (var r = 0; r < d.R; r++) { var g = '', a = []; for (var c = 0; c < d.C; c++) { g += d.black[r][c] ? '#' : '.'; a.push(d.black[r][c] ? '' : (d.ans[r][c] || '')); } grid.push(g); ans.push(a); }
     Object.keys(d.nums).forEach(function (k) { var x = k.split(','); if (+x[0] < d.R && +x[1] < d.C && !d.black[+x[0]][+x[1]] && d.nums[k]) nums[k] = +d.nums[k]; });
     var clues = d.clues.filter(function (c) { return c.n && (c.text || '').trim(); }).map(function (c) { return { d: c.d, n: +c.n, len: c.len ? +c.len : null, text: c.text.trim() }; });
-    return { id: forPlay ? 'draft' : d.id, title: (d.title || '').trim() || 'ఈనాడు పద వినోదం', date: (d.date || '').trim(), src: d.src, url: d.url, postId: d.postId || '', grid: grid, nums: nums, ans: ans, clues: clues };
+    return { id: forPlay ? 'draft' : d.id, blkImg: d.blkImg || '', finImg: d.finImg || '', title: (d.title || '').trim() || 'ఈనాడు పద వినోదం', date: (d.date || '').trim(), src: d.src, url: d.url, postId: d.postId || '', grid: grid, nums: nums, ans: ans, clues: clues };
   }
-  function saveDraft() { S.draft = D; save(); }
+  function forgetDraft() { if (D && D.uid) dropKept(D.uid); }
+  function saveDraft() { if (D) { if (!D.uid) D.uid = Date.now().toString(36); D.edited = Date.now(); } S.draft = D; save(); }
+  // drafts the admin keeps on this phone (a list), besides the one open now
+  function draftHasWork(d) {
+    if (!d) return false;
+    return (d.clues || []).some(function (c) { return (c.text || '').trim(); }) || (d.ans || []).some(function (r) { return r.some(function (x) { return x; }); });
+  }
+  function draftLabel(d) { return (d.title || 'పద వినోదం') + (d.date ? ' · ' + d.date : ''); }
+  function keepDraft(d, quiet) {
+    if (!d) return;
+    if (!d.uid) d.uid = Date.now().toString(36);
+    var copy = JSON.parse(JSON.stringify(d)); copy.saved = Date.now();
+    S.drafts = (S.drafts || []).filter(function (x) { return x.uid !== copy.uid; });
+    S.drafts.unshift(copy); S.drafts = S.drafts.slice(0, 15); save();
+    if (!quiet) toast('డ్రాఫ్ట్ సేవ్ అయింది (ఈ ఫోన్‌లో) — నిర్వాహణ పేజీలో “సేవ్ చేసిన డ్రాఫ్ట్‌లు” నుంచి ఎప్పుడైనా మళ్ళీ తెరవవచ్చు.');
+  }
+  // before a new upload or post replaces the open draft, keep the old one so nothing is lost
+  function stashDraft() { if (D && draftHasWork(D)) keepDraft(D, true); }
+  function dropKept(uid) { S.drafts = (S.drafts || []).filter(function (x) { return x.uid !== uid; }); save(); }
+  function hhmm(t) { var d = new Date(t), p2 = function (n) { return (n < 10 ? '0' : '') + n; }; return p2(d.getDate()) + '.' + p2(d.getMonth() + 1) + ' · ' + p2(d.getHours()) + ':' + p2(d.getMinutes()); }
+  function keptDraftsHTML() {
+    var list = (S.drafts || []).filter(function (x) { return !D || x.uid !== D.uid; });
+    if (!list.length) return '';
+    return '<div class="kept"><h3 class="lbl">సేవ్ చేసిన డ్రాఫ్ట్‌లు (ఈ ఫోన్‌లో)</h3>' + list.map(function (x) {
+      var n = (x.clues || []).filter(function (c) { return (c.text || '').trim(); }).length;
+      return '<div class="keptrow"><div class="t"><b>' + esc(x.date || 'తేదీ లేదు') + (x.published ? ' · ప్రచురించింది' : '') + '</b><small>' + esc(x.title || 'పద వినోదం') + ' · ' + n + ' ఆధారాలు · ' + (x.published ? 'ప్రచురణ: ' + hhmm(x.published) : 'సేవ్: ' + hhmm(x.saved)) + '</small></div>' +
+        '<button class="smallbtn" data-act="draft-open" data-v="' + esc(x.uid) + '">తెరవండి</button>' +
+        '<button class="smallbtn danger" data-act="draft-del" data-v="' + esc(x.uid) + '">' + (U.confirm === 'ddel-' + x.uid ? 'ఖచ్చితమా?' : 'తీసివేయి') + '</button></div>';
+    }).join('') + '</div>';
+  }
   function draftAutoNumber() { var p = draftToPuzzle(D, true); autoNumber(p); D.nums = p.nums; saveDraft(); }
   function resizeDraft(R, C) {
     R = Math.max(3, Math.min(25, R | 0)); C = Math.max(3, Math.min(25, C | 0));
@@ -2093,12 +2303,45 @@ html.vv-short #view.typing .tlc{min-height:38px}
     if (!Object.keys(d.nums).length) { D = d; draftAutoNumber(); d = D; }
     return d;
   }
-  function applyAnswers(d, answers) {
-    answers.forEach(function (row, r) {
-      if (r >= d.R) return;
-      var cells = Array.isArray(row) ? row : (String(row || '').match(AKSHARA) || []);
-      for (var c = 0; c < d.C; c++) { var v = String(cells[c] || '').trim(); if (!d.black[r][c] && v && v !== '#' && v !== '.') d.ans[r][c] = v.normalize('NFC'); }
-    });
+  // a reader's rows → a full grid of letters. A row that does not line up with the draft's squares (a square skipped or
+  // added, which would shift every later letter) is put back on the row's open squares in order; if even that does not fit, the row is doubtful.
+  function gridFromRows(d, answers) {
+    var g = [], bad = {};
+    for (var r = 0; r < d.R; r++) {
+      var row = answers[r], cells = Array.isArray(row) ? row.map(function (x) { return String(x == null ? '' : x).trim(); }) : (String(row || '').match(AKSHARA) || []);
+      var out = []; for (var c = 0; c < d.C; c++) out.push('');
+      var opens = []; for (c = 0; c < d.C; c++) if (!d.black[r][c]) opens.push(c);
+      var fits = cells.length === d.C && opens.every(function (c2) { var v = cells[c2]; return v && v !== '#' && v !== '.'; });
+      if (fits) opens.forEach(function (c2) { out[c2] = cells[c2]; });
+      else {
+        var letters = cells.filter(function (v) { return v && v !== '#' && v !== '.'; });
+        if (letters.length === opens.length) opens.forEach(function (c2, i) { out[c2] = letters[i]; });
+        else { opens.forEach(function (c2) { var v = cells[c2]; if (v && v !== '#' && v !== '.') out[c2] = v; bad[key(r, c2)] = 1; }); }
+      }
+      g.push(out.map(function (v) { return String(v || '').normalize('NFC'); }));
+    }
+    return { grid: g, bad: bad };
+  }
+  function applyAnswers(d, answers) { mergeAnswers(d, gridFromRows(d, answers), 'gemini'); }
+  // put a reader's letters in; squares you corrected stay as they are. If the other reader already filled the grid,
+  // squares where the two agree are very likely right; where they differ the square turns yellow (Gemini's letter is kept).
+  function mergeAnswers(d, res, by) {
+    var prevBy = d.ansBy, prev = d.ans.map(function (row) { return row.slice(); }), chg = d.chg || {}, low = {}, same = 0, diff = 0;
+    var cmp = prevBy && prevBy !== by && prevBy !== 'mixed';
+    for (var r = 0; r < d.R; r++) for (var c = 0; c < d.C; c++) {
+      if (d.black[r][c]) continue;
+      var k = key(r, c), v = res.grid[r][c] || '', o = prev[r][c] || '';
+      if (chg[k]) continue;                                   // the admin's own correction wins
+      if (cmp && o && v) {
+        if (o === v) { same++; d.ans[r][c] = v; }
+        else { diff++; low[k] = 1; d.ans[r][c] = by === 'gemini' ? v : o; }
+      } else {
+        if (v) d.ans[r][c] = v;
+        if (!v || res.bad[k] || (res.low && res.low[k])) low[k] = 1;
+      }
+    }
+    d.low = low; d.ansBy = cmp ? 'mixed' : by; d.ansCmp = cmp ? { same: same, diff: diff } : null;
+    return d.ansCmp;
   }
 
   /* ================= admin: reading images and PDFs with Claude ================= */
@@ -2195,7 +2438,7 @@ html.vv-short #view.typing .tlc{min-height:38px}
         applyAnswers(D, j.answers); saveDraft();
         U.status = { kind: 'ok', text: 'జవాబులు నింపాం. ప్రతి గడినీ ఒకసారి చూసి సరిదిద్దండి.' }; U.emode = 'ans'; render(); return;
       }
-      D = draftFromAI(j || {}, date); D.src = 'upload'; saveDraft();
+      stashDraft(); D = draftFromAI(j || {}, date); D.src = 'upload'; saveDraft();
       setTimeout(function () { readPendingAnswers(aiRead); }, 0);
       U.status = { kind: 'ok', text: 'డ్రాఫ్ట్ సిద్ధం. గడి, సంఖ్యలు, ఆధారాలు చిత్రంతో పోల్చి సరిచూడండి, తర్వాత ప్రచురించండి.' };
       location.hash = '#edit';
@@ -2349,12 +2592,34 @@ html.vv-short #view.typing .tlc{min-height:38px}
         if (g && g.R >= 8 && g.C >= 8 && !(g.R === 9 && g.C === 9)) {
           var st = cellStats(d, W, H, rectPt(g), g.R, g.C), v = st.map(function (s) { return Math.max(s.col, s.dark); }), t = otsu(v);
           var white = st.filter(function (s, k) { return v[k] < t; }), ink = white.length ? white.reduce(function (a, s) { return a + s.dark; }, 0) / white.length : 0;
-          it.grid = g; it.ink = ink; it.filled = ink > 0.04; it.area = (g.x1 - g.x0) * (g.y1 - g.y0);
+          it.grid = g; it.ink = ink; it.filled = ink > 0.04; it.area = (g.x1 - g.x0) * (g.y1 - g.y0); it.pat = blockedFrom(st, it.filled);
         }
         info.push(it);
       });
     });
     return chain.then(function () { return info; });
+  }
+  // which squares are blocked: in an empty grid the coloured or dark ones; in a solved grid only the coloured ones
+  // (stars, leaves, flowers) — its letters are dark too. null when a solved grid has no coloured blocks to go by.
+  function blockedFrom(st, filled) {
+    if (!filled) { var v = st.map(function (x) { return Math.max(x.col, x.dark); }), t = otsu(v); return v.map(function (x) { return x >= t; }); }
+    var c = st.map(function (x) { return x.col; }), tc = otsu(c); if (tc > 1) return null;
+    return c.map(function (x) { return x >= tc; });
+  }
+  function patDiff(pat, R, C, black) {
+    if (!pat || !black || pat.length !== R * C) return null;
+    var n = 0; for (var r = 0; r < R; r++) for (var c = 0; c < C; c++) if (!!pat[r * C + c] !== !!(black[r] && black[r][c])) n++;
+    return n;
+  }
+  function plusWeek(d) { var m = /^(\d{2})\.(\d{2})\.(\d{4})$/.exec(d || ''); if (!m) return ''; var t = new Date(+m[3], +m[2] - 1, +m[1] + 7), p2 = function (x) { return (x < 10 ? '0' : '') + x; }; return p2(t.getDate()) + '.' + p2(t.getMonth() + 1) + '.' + t.getFullYear(); }
+  function fileDate(files) { var out = ''; Array.prototype.forEach.call(files || [], function (f) { var m = String(f.name || '').match(/(\d{2})[.\-_](\d{2})[.\-_](\d{4})/); if (m && !out) out = m[1] + '.' + m[2] + '.' + m[3]; }); return out; }
+  // answers of a puzzle are printed in the NEXT week's paper; a grid of another week has its blocked squares elsewhere
+  function wrongWeekText(diff, files) {
+    var fd = fileDate(files), nx = plusWeek(D && D.date);
+    return 'ఈ జవాబుల గడి మీ డ్రాఫ్ట్ గడితో సరిపోలలేదు (' + diff + ' గడుల్లో నలుపు / తెలుపు తేడా) — ఇది వేరే వారం పద వినోదం జవాబులు.' +
+      (D && D.date ? ' ' + D.date + ' పద వినోదం జవాబులు తర్వాతి వారం' + (nx ? ' (' + nx + ')' : '') + ' పేపర్‌లోని “గతవారం సమాధానాలు” లో ఉంటాయి.' : '') +
+      (fd && D && fd === D.date ? ' మీరు ఇచ్చిన ఫైల్ ' + fd + ' దే — అందులో ఉన్నవి అంతకు ముందు వారం జవాబులు.' : '') +
+      ' లేదా డ్రాఫ్ట్ గడే తప్పుగా ఉంటే, పద వినోదం ఫైల్ నుంచి డ్రాఫ్ట్ మళ్ళీ తయారు చేయండి.';
   }
   function pickGridPage(info, kind) {
     var c = info.filter(function (x) { return x.grid && (kind === 'answers' ? x.filled : !x.filled); });
@@ -2373,7 +2638,8 @@ html.vv-short #view.typing .tlc{min-height:38px}
     U.busy = 'scan'; U.status = { kind: 'wait', text: 'ఫైల్ తెరుస్తున్నాం…' }; render();
     loadPages(files).then(function (p) {
       pages = p; if (!pages.length) throw { code: 'no_images' };
-      SC = { kind: kind, pages: pages, page: -1, gridPage: -1, mode: 'grid', zoom: 1, quad: null, boxes: [], R: kind === 'answers' && D ? D.R : 12, C: kind === 'answers' && D ? D.C : 12, vals: null, thr: 1, flip: {}, ocr: { A: '', D: '' }, date: date, srcs: {} };
+      if (kind === 'answers' && D) { var fk2 = Array.prototype.map.call(files || [], function (f) { return f.name + ':' + f.size; }).join('|'); if (D.ansFile && D.ansFile !== fk2) D.ansBy = null; D.ansFile = fk2; }
+      SC = { files: Array.prototype.slice.call(files || []), kind: kind, pages: pages, page: -1, gridPage: -1, mode: 'grid', zoom: 1, quad: null, boxes: [], R: kind === 'answers' && D ? D.R : 12, C: kind === 'answers' && D ? D.C : 12, vals: null, thr: 1, flip: {}, ocr: { A: '', D: '' }, date: date, srcs: {} };
       return analysePages(pages, function (i) { scanMsg('పేజీలు చూస్తున్నాం… ' + (i + 1) + ' / ' + pages.length); });
     }).then(function (info) {
       SC.info = info;
@@ -2463,9 +2729,11 @@ html.vv-short #view.typing .tlc{min-height:38px}
       var whites = 0, inked = 0;
       for (var r = 0; r < D.R; r++) for (var c = 0; c < D.C; c++) if (!D.black[r][c]) { whites++; var s = st[r * D.C + c]; if (s.dark > 0.03 || s.col > 0.3) inked++; }
       SC.match = whites ? inked / whites : 0;
+      var ap = blockedFrom(st, true); SC.patDiff = patDiff(ap, D.R, D.C, D.black);
+      if (SC.patDiff != null && SC.patDiff > Math.max(2, 0.03 * D.R * D.C)) SC.match = 0;   // another week's grid
     }
   }
-  function matchNote() { return SC.match == null ? '' : ' · డ్రాఫ్ట్‌లోని ' + Math.round(SC.match * 100) + '% తెల్ల గడుల్లో అక్షరాలు కనిపించాయి' + (SC.match >= 0.85 ? ' — సరిపోయింది, చదువుతున్నాం…' : ' — ఇది సరైన గడేనా? గడి పెట్టె సరిచూసి “జవాబులు చదవండి” నొక్కండి'); }
+  function matchNote() { if (SC.patDiff != null && SC.patDiff > Math.max(2, 0.03 * SC.R * SC.C)) return '. ' + wrongWeekText(SC.patDiff, SC.files).replace(/\.\s*$/, ''); return SC.match == null ? '' : ' · డ్రాఫ్ట్‌లోని ' + Math.round(SC.match * 100) + '% తెల్ల గడుల్లో అక్షరాలు కనిపించాయి' + (SC.match >= 0.85 ? ' — సరిపోయింది, చదువుతున్నాం…' : ' — ఇది సరైన గడేనా? గడి పెట్టె సరిచూసి “జవాబులు చదవండి” నొక్కండి'); }
   function scanBlack(r, c) {
     if (SC.kind === 'answers' && D && D.black[r]) return !!D.black[r][c];
     if (!SC.vals) return false; var b = SC.vals[r * SC.C + c] >= SC.thr; return SC.flip[r + ',' + c] ? !b : b;
@@ -2502,9 +2770,9 @@ html.vv-short #view.typing .tlc{min-height:38px}
     var ocr = ans ? '' : '<section class="sec"><h2 class="sec-h">ఆధారాలు</h2><div class="box">' +
       '<p class="note">' + (SC.boxes.some(function (b) { return b.auto; }) ? 'ఆధారాలు ఉండే భాగాలు తానుగా గుర్తించాం (బూడిద చుక్కల పెట్టెలు) — పైన “అడ్డం / నిలువు పెట్టె” ఎంచుకుని వాటిని జరపవచ్చు, మూలలు లాగి పెంచవచ్చు, × తో తీసివేయవచ్చు. ' : '') + 'చదివినవి కింద ఉన్నాయి — ప్రతి ఆధారం “సంఖ్య. ఆధారం (పొడవు)” అని ఒక్కో లైన్‌లో. సంఖ్యలు, పొడవులు గడి నుంచి వేశాం; తెలుగు అక్షరాల్లో తప్పులు ఉంటే ఇక్కడే సరిదిద్దండి.</p>' +
       '<div class="btnrow"><button class="wide-btn ter" data-act="scan-ocr"' + (busy ? ' disabled' : '') + '>' + (SC.ocr.A || SC.ocr.D ? 'మళ్ళీ చదవండి' : 'ఆధారాలు చదవండి') + '</button>' + (SC.boxes.length ? '<button class="wide-btn link" data-act="scan-clear"' + (busy ? ' disabled' : '') + '>గీసిన ఆధారాల పెట్టెలు తీసివేయండి</button>' : '') + '</div>' +
-      ['A', 'D'].map(function (d) { var n = parseClueText(SC.ocr[d], d).length, want = exp ? exp[d].length : 0; return '<div class="fld"><label class="lbl" for="ocr-' + d + '">' + (d === 'A' ? 'అడ్డం' : 'నిలువు') + ' · <span id="ocr-n-' + d + '">' + n + '</span>' + (want ? ' / ' + want : '') + ' ఆధారాలు</label><textarea id="ocr-' + d + '" class="inp ocrbox" data-ocr="' + d + '" placeholder="1. ఆధారం (3)">' + esc(SC.ocr[d]) + '</textarea></div>'; }).join('') +
+      teHintHTML() + ['A', 'D'].map(function (d) { var n = parseClueText(SC.ocr[d], d).length, want = exp ? exp[d].length : 0; return '<div class="fld"><label class="lbl" for="ocr-' + d + '">' + (d === 'A' ? 'అడ్డం' : 'నిలువు') + ' · <span id="ocr-n-' + d + '">' + n + '</span>' + (want ? ' / ' + want : '') + ' ఆధారాలు</label><textarea id="ocr-' + d + '" class="inp ocrbox" data-ocr="' + d + '" placeholder="1. ఆధారం (3)">' + esc(SC.ocr[d]) + '</textarea></div>'; }).join('') +
       '</div></section>';
-    return '<section class="play" style="overflow-y:auto">' +
+    return '<section class="play" style="overflow-y:auto" data-scroll="scan">' +
       '<header class="ebar"><a class="ghostbtn" href="' + (ans ? '#edit' : '#admin') + '" aria-label="వెనక్కి">' + I.back + '</a><h1>' + (ans ? 'జవాబులు · ఫోన్‌లోనే చదవడం' : 'ఫోన్‌లోనే చదవడం') + '</h1></header>' +
       '<div class="page gutter" style="gap:14px">' + statusBox() + pages +
         '<div class="seg wide" role="group" aria-label="గీసే పెట్టె">' + modes.map(function (m) { return '<button data-act="scan-mode" data-v="' + m[0] + '" aria-pressed="' + (SC.mode === m[0]) + '">' + m[1] + '</button>'; }).join('') + '</div>' +
@@ -2862,7 +3130,7 @@ html.vv-short #view.typing .tlc{min-height:38px}
     for (var r = 0; r < SC.R; r++) for (var c = 0; c < SC.C; c++) d.black[r][c] = scanBlack(r, c);
     d.date = String(SC.date || '').trim(); d.src = 'upload';
     d.clues = parseClueText(SC.ocr.A, 'A').concat(parseClueText(SC.ocr.D, 'D')).map(function (c) { return { d: c.d, n: c.n, len: c.len, text: c.text }; });
-    D = d; draftAutoNumber(); U.er = 0; U.ec = 0; U.emode = 'ans'; U.edir = 'A';
+    stashDraft(); D = d; draftAutoNumber(); U.er = 0; U.ec = 0; U.emode = 'ans'; U.edir = 'A';
     U.status = { kind: 'ok', text: 'డ్రాఫ్ట్ సిద్ధం: ' + d.clues.length + ' ఆధారాలు. సంఖ్యలు, ఆధారాలు చిత్రంతో పోల్చి సరిచూడండి; జవాబులు “జవాబులు” లో టైప్ చేయండి లేదా జవాబుల చిత్రం నుంచి నింపండి.' };
     saveDraft();
     if (U.pendingAns) { var pa = U.pendingAns; U.pendingAns = null; scanOpen('answers', pa); return; }
@@ -2875,7 +3143,7 @@ html.vv-short #view.typing .tlc{min-height:38px}
     var cells = []; for (var r = 0; r < D.R; r++) for (var c = 0; c < D.C; c++) if (!D.black[r][c]) cells.push([r, c]);
     U.busy = 'ocr'; render(); scanMsg('తెలుగు చదివే ఉపకరణం తెస్తున్నాం…');
     TPROG = function (m) { var t = ocrLabel(m); if (t && /ఉపకరణం/.test(t)) scanMsg(t); };
-    var big, f, got = 0;
+    var big, f, got = 0, pg = { grid: D.ans.map(function (row) { return row.map(function () { return ''; }); }), bad: {}, low: {} };
     Promise.all([tessWorker(), scanCrop(bb, 2400, SC.gridPage)]).then(function (x) {
       var w = x[0]; big = x[1]; f = big.width / bb.w;
       var chain = w.setParameters({ tessedit_pageseg_mode: '8' });
@@ -2883,23 +3151,41 @@ html.vv-short #view.typing .tlc{min-height:38px}
         chain = chain.then(function () {
           var r = rc[0], c = rc[1], a = qpt(c / D.C, r / D.R), b = qpt((c + 1) / D.C, (r + 1) / D.R);
           var x0 = (a.x - bb.x) * f, y0 = (a.y - bb.y) * f, cw = (b.x - a.x) * f, ch = (b.y - a.y) * f;
-          // a little inside the grid lines (and below the small clue number), enlarged with a white margin: reads single letters best in tests
-          var sx = x0 + cw * 0.08, sy = y0 + ch * 0.18, sW = cw * 0.84, sH = ch * 0.76, cv = document.createElement('canvas'), Hh = 120, Ww = Math.max(60, Math.round(Hh * sW / sH));
-          cv.width = Ww + 60; cv.height = Hh + 60;
-          var ctx = cv.getContext('2d'); ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, cv.width, cv.height); ctx.imageSmoothingQuality = 'high';
-          ctx.drawImage(big, sx, sy, sW, sH, 30, 30, Ww, Hh);
+          // two cuts of each square, read separately; the more confident reading wins, and where they disagree the square is marked doubtful.
+          // 1: a little inside the lines and below the clue number; 2: nearly the whole square with the red clue number washed out
+          // (cut 1 can lose the top of a letter: ద read as గ). Tested on Eenadu: 60 → 74 of 99 right.
+          function cut(ix, iyTop, iyBot, noRed) {
+            var sx = x0 + cw * ix, sy = y0 + ch * iyTop, sW = cw * (1 - 2 * ix), sH = ch * (1 - iyTop - iyBot), cv = document.createElement('canvas'), Hh = 120, Ww = Math.max(60, Math.round(Hh * sW / sH));
+            cv.width = Ww + 60; cv.height = Hh + 60;
+            var ctx = cv.getContext('2d'); ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, cv.width, cv.height); ctx.imageSmoothingQuality = 'high';
+            ctx.drawImage(big, sx, sy, sW, sH, 30, 30, Ww, Hh);
+            if (noRed) { var id = ctx.getImageData(0, 0, cv.width, cv.height), q = id.data; for (var o = 0; o < q.length; o += 4) if (q[o] > 140 && q[o] - q[o + 1] > 60 && q[o] - q[o + 2] > 40) { q[o] = q[o + 1] = q[o + 2] = 255; } ctx.putImageData(id, 0, 0); }
+            if (window.__epvDebug) { SC.dbgRects = SC.dbgRects || []; SC.dbgRects.push([sx, sy, sW, sH, x0, y0, cw, ch]); if (!SC.dbgBig) SC.dbgBig = big.toDataURL('image/png'); }
+            return cv;
+          }
+          function read1(cv) {
+            return w.recognize(cv).then(function (res) {
+              var t = String(res.data.text || '').replace(/[^ఀ-౿]/g, '').replace(/^([క-హ])్$/, '$1'), ak = t.match(AKSHARA);
+              return { a: ak && ak[0] ? ak[0].normalize('NFC') : '', conf: res.data.confidence || 0 };
+            });
+          }
           if (i % 6 === 0) scanMsg('జవాబులు చదువుతున్నాం… ' + i + ' / ' + cells.length);
-          return w.recognize(cv).then(function (res) {
-            var t = String(res.data.text || '').replace(/[^ఀ-౿]/g, '').replace(/^([క-హ])్$/, '$1'), ak = t.match(AKSHARA);
-            if (ak && ak[0]) { D.ans[r][c] = ak[0].normalize('NFC'); got++; }
+          var first;
+          return read1(cut(0.08, 0.18, 0.06, false)).then(function (x) { first = x; return read1(cut(0.08, 0.10, 0.04, true)); }).then(function (second) {
+            var kk = key(r, c), best = !first.a ? second : !second.a ? first : second.conf > first.conf ? second : first;
+            if (window.__epvDebug) (SC.conf = SC.conf || {})[kk] = [Math.round(first.conf), first.a, Math.round(second.conf), second.a];
+            if (best.a) { pg.grid[r][c] = best.a; got++; }
+            if (!best.a || first.a !== second.a) pg.low[kk] = 1;
           });
         });
       });
       return chain;
     }).then(function () {
-      TPROG = null; U.busy = ''; saveDraft(); U.emode = 'ans'; U.srcOpen = true;
+      var cmpP = mergeAnswers(D, pg, 'phone');
+      TPROG = null; U.busy = ''; saveDraft(); U.emode = 'sheet'; U.srcOpen = true;
+      try { big.toBlob(function (b) { if (b) { if (U.ansGrid) URL.revokeObjectURL(U.ansGrid); U.ansGrid = URL.createObjectURL(b); if (route() === 'edit') render(); } }, 'image/jpeg', 0.85); } catch (e) {}
       try { SC.cv.toBlob(function (b) { if (b) U.srcUrls = U.srcUrls.slice(0, 1).concat([URL.createObjectURL(b)]); if (route() === 'edit') render(); }, 'image/jpeg', 0.85); } catch (e) {}
-      U.status = { kind: 'ok', text: cells.length + ' గడుల్లో ' + got + ' అక్షరాలు చదివాం. ప్రతి గడినీ జవాబుల చిత్రంతో పోల్చి సరిదిద్దండి (పై “మూల చిత్రం” లో పేపర్ ఉంది).' };
+      U.status = { kind: 'ok', text: cmpP ? 'Gemini, ఫోన్ రీడర్ — రెండూ చదివాయి: ' + cmpP.same + ' గడుల్లో ఒకే అక్షరం (సరైనవి అయ్యే అవకాశం ఎక్కువ), ' + cmpP.diff + ' గడుల్లో తేడా — పసుపు గడులను పేపర్‌తో చూసి సరిచేయండి (Gemini అక్షరం ఉంచాం).' : cells.length + ' గడుల్లో ' + got + ' అక్షరాలు చదివాం. ప్రతి గడినీ జవాబుల చిత్రంతో పోల్చి సరిదిద్దండి (పై “మూల చిత్రం” లో పేపర్ ఉంది).' };
       location.hash = '#edit';
     }, function (e) { TPROG = null; U.busy = ''; U.status = { kind: 'err', text: 'చదవడం కుదరలేదు (' + ((e && e.message) || e || 'error') + ').' }; render(); });
   }
@@ -2916,6 +3202,7 @@ html.vv-short #view.typing .tlc{min-height:38px}
     var pages, hit, info;
     return loadPages(files).then(function (p) { pages = p; return analysePages(pages, function (i) { var el = document.querySelector('#view .status > span'); if (el) el.textContent = 'పేజీలు చూస్తున్నాం… ' + (i + 1) + ' / ' + pages.length; }); }).then(function (inf) {
       info = inf; hit = pickGridPage(info, kind);
+      U.smartHit = hit ? { R: hit.grid.R, C: hit.grid.C, pat: hit.pat, filled: hit.filled, page: hit.i } : null;
       var pick = [];
       if (!hit) for (var i = 0; i < Math.min(3, pages.length); i++) pick.push(i);
       else if (kind === 'answers') pick = [hit.i];
@@ -2931,9 +3218,10 @@ html.vv-short #view.typing .tlc{min-height:38px}
         return new Promise(function (res) { cv.toBlob(function (b) { if (b) blobs.push(b); res(); }, 'image/jpeg', 0.82); });
       }); });
       if (hit) chain = chain.then(function () { return renderPage(pages[hit.i], 2400); }).then(function (r) {
+        var keepGrid = kind === 'answers';
         var k = r.cv.width / hit.W, g = hit.grid, pad = 12 * k, x = Math.max(0, g.x0 * k - pad), y = Math.max(0, g.y0 * k - pad), w = Math.min(r.cv.width - x, (g.x1 - g.x0) * k + 2 * pad), h = Math.min(r.cv.height - y, (g.y1 - g.y0) * k + 2 * pad), c = document.createElement('canvas');
         c.width = Math.round(w); c.height = Math.round(h); c.getContext('2d').drawImage(r.cv, x, y, w, h, 0, 0, c.width, c.height);
-        return new Promise(function (res) { c.toBlob(function (b) { if (b) blobs.push(b); res(); }, 'image/jpeg', 0.9); });
+        return new Promise(function (res) { c.toBlob(function (b) { if (b) { blobs.push(b); if (keepGrid) { if (U.ansGrid) URL.revokeObjectURL(U.ansGrid); U.ansGrid = URL.createObjectURL(b); } } res(); }, 'image/jpeg', 0.9); });
       });
       return chain.then(function () { return blobs.slice(0, max); });
     });
@@ -2949,9 +3237,15 @@ html.vv-short #view.typing .tlc{min-height:38px}
       if (U.busy !== 'ai') { clearInterval(U.aiTick); return; }
       var el = document.getElementById('ai-progress'); if (el) el.textContent = Math.round((Date.now() - U.aiStart) / 1000) + ' సెకన్లు';
     }, 1000);
-    var blobs;
+    var blobs; U.smartHit = null;
     smartImages(kind, files, 5).then(function (bs) {
       blobs = bs; if (!blobs.length) throw { code: 'no_images' };
+      var sh = U.smartHit;
+      if (kind === 'answers' && D) { var fk = Array.prototype.map.call(files || [], function (f) { return f.name + ':' + f.size; }).join('|'); if (D.ansFile && D.ansFile !== fk) { D.ansBy = null; } D.ansFile = fk; }
+      if (kind === 'answers' && D && sh && sh.filled && sh.R === D.R && sh.C === D.C) {   // wrong week? stop before asking Gemini
+        var df = patDiff(sh.pat, D.R, D.C, D.black);
+        if (df != null && df > Math.max(2, 0.03 * D.R * D.C)) throw { code: 'wrong_answers', error: wrongWeekText(df, files) };
+      }
       keepSourceImage(kind, blobs[0]);
       return Promise.all(blobs.map(blobToB64));
     }).then(function (datas) {
@@ -3025,14 +3319,30 @@ html.vv-short #view.typing .tlc{min-height:38px}
     }
     return next();
   }
+  // the PDF's own empty puzzle grid (found by the app) wins over what the reader said about blocked squares
+  function gridFromPaper(d) {
+    var sh = U.smartHit; if (!sh || sh.filled || !sh.pat) return '';
+    if (sh.R !== d.R || sh.C !== d.C) {
+      var nd = newDraft(sh.R, sh.C); nd.title = d.title; nd.date = d.date; nd.clues = d.clues; nd.src = d.src; nd.uid = d.uid;
+      for (var r0 = 0; r0 < sh.R; r0++) for (var c0 = 0; c0 < sh.C; c0++) nd.black[r0][c0] = !!sh.pat[r0 * sh.C + c0];
+      Object.keys(nd).forEach(function (k) { d[k] = nd[k]; }); d.nums = {}; var p0 = draftToPuzzle(d, true); autoNumber(p0); d.nums = p0.nums;
+      return ' (గడి పరిమాణం పేపర్ ప్రకారం ' + sh.R + '×' + sh.C + ' గా సరిచేశాం.)';
+    }
+    var n = patDiff(sh.pat, d.R, d.C, d.black); if (!n) return '';
+    for (var r = 0; r < d.R; r++) for (var c = 0; c < d.C; c++) { d.black[r][c] = !!sh.pat[r * d.C + c]; if (d.black[r][c]) d.ans[r][c] = ''; }
+    var p = draftToPuzzle(d, true); autoNumber(p); d.nums = p.nums;
+    return ' (Gemini చెప్పిన గడిలో ' + n + ' నలుపు గడులు పేపర్‌తో సరిపోలలేదు — పేపర్‌లోని గడి ప్రకారం సరిచేసి, సంఖ్యలు మళ్ళీ వేశాం.)';
+  }
   function aiDone(kind, j, date, who) {
     if (kind === 'answers') {
       if (!j || !Array.isArray(j.answers)) { U.status = { kind: 'err', text: 'చదివిన సమాచారం సరిగ్గా రాలేదు. మళ్ళీ ప్రయత్నించండి.' }; render(); return; }
-      applyAnswers(D, j.answers); saveDraft();
-      U.status = { kind: 'ok', text: who + ' జవాబులు నింపింది. ప్రతి గడినీ ఒకసారి చూసి సరిదిద్దండి.' }; U.emode = 'ans'; render(); return;
+      var cmpG = mergeAnswers(D, gridFromRows(D, j.answers), 'gemini'), nBad = Object.keys(D.low || {}).length; saveDraft();
+      U.status = { kind: 'ok', text: cmpG ? who + ', ఫోన్ రీడర్ — రెండూ చదివాయి: ' + cmpG.same + ' గడుల్లో ఒకే అక్షరం (సరైనవి అయ్యే అవకాశం ఎక్కువ), ' + cmpG.diff + ' గడుల్లో తేడా — పసుపు గడులను పేపర్‌తో చూసి సరిచేయండి.'
+        : who + ' జవాబులు నింపింది.' + (nBad ? ' ' + nBad + ' గడులు సందేహం (పసుపు).' : '') + ' “పట్టిక” లో గడిని నొక్కి నేరుగా మార్చవచ్చు. ఇంకా నమ్మకంగా ఉండాలంటే “ఫోన్‌లోనే” తో కూడా చదివించండి — రెండూ ఒకటే చెప్పిన గడులు సరైనవి, తేడా ఉన్నవి మాత్రమే పసుపులో.' }; U.emode = 'sheet'; render(); return;
     }
-    D = draftFromAI(j || {}, date); D.src = 'upload'; saveDraft();
-    U.status = { kind: 'ok', text: who + ' డ్రాఫ్ట్ చేసింది. గడి, సంఖ్యలు, ఆధారాలు చిత్రంతో పోల్చి సరిచూడండి, తర్వాత ప్రచురించండి.' };
+    stashDraft(); D = draftFromAI(j || {}, date); D.src = 'upload';
+    var fixNote = gridFromPaper(D); saveDraft();
+    U.status = { kind: 'ok', text: who + ' డ్రాఫ్ట్ చేసింది.' + fixNote + ' గడి, సంఖ్యలు, ఆధారాలు చిత్రంతో పోల్చి సరిచూడండి, తర్వాత ప్రచురించండి.' };
     location.hash = '#edit';
     readPendingAnswers(geminiRead);
   }
@@ -3058,16 +3368,21 @@ html.vv-short #view.typing .tlc{min-height:38px}
       (hasSvc ? '' : '<section class="sec"><h2 class="sec-h">సర్వీస్ ఒకసారి ఏర్పాటు</h2><div class="box"><p class="note">బ్లాగ్ నిర్వహించే Google ఖాతాలో చిన్న Apps Script (ఉచితం, కార్డ్ అక్కర్లేదు) డిప్లాయ్ చేయాలి. దశలన్నీ వెబ్‌సైట్ ఫైళ్లలోని README లో “Admin service” విభాగంలో ఉన్నాయి. డిప్లాయ్ అయ్యాక వచ్చే లింక్‌ను పైన అతికించండి.</p></div></section>') +
       '</div>';
   }
+  function postsMgrHTML(busy) {
+    var q = (U.admQ || '').trim(), list = sorted().filter(function (p) { return !q || (p.date || '').indexOf(q) >= 0 || (p.title || '').indexOf(q) >= 0; });
+    if (!list.length) return q ? '<p class="note" style="padding:10px 0">“' + esc(q) + '” తో ఏ పోస్టూ దొరకలేదు.</p>' : '';
+    return list.slice(0, q ? 60 : 30).map(function (p) {
+      var m = model(p), conf = U.confirm === 'unpub:' + p.id, blog = !!p.postId;
+      return '<div class="mgr"><span class="t"><b>' + esc(p.date || 'తేదీ లేదు') + '</b><small>' + esc(p.title) + ' · ' + m.R + '×' + m.C + ' · ' + (m.hasAns ? 'జవాబులతో' : 'జవాబులు లేవు') + (blog ? '' : ' · బ్లాగ్‌లో లేదు') + '</small></span>' +
+        '<button class="smallbtn" data-act="edit-pub" data-id="' + esc(p.id) + '"' + (busy ? ' disabled' : '') + '>' + I.pen + ' మార్చు</button>' +
+        (blog ? '<button class="smallbtn danger" data-act="unpub" data-id="' + esc(p.id) + '"' + (busy ? ' disabled' : '') + '>' + (conf ? 'ఖచ్చితమా?' : 'దాచు') + '</button>' : '') + '</div>';
+    }).join('') + (!q && list.length > 30 ? '<p class="note" style="padding:10px 0">పాత పోస్టుల కోసం పైన తేదీతో వెతకండి (' + list.length + ' పోస్టులు).</p>' : '');
+  }
   function webAdminView() {
     loadSvcStatus();
     var busy = !!U.busy, st = U.svcStatus || {}, gem = !!st.gemini;
     var blogLine = U.svcLoading && !U.svcStatus ? 'సర్వీస్‌తో మాట్లాడుతున్నాం…' : st.error ? st.error : st.blog ? (st.blog.error ? 'బ్లాగ్: ' + st.blog.error : 'బ్లాగ్: ' + (st.blog.name || '') + (st.blog.posts ? ' · ' + st.blog.posts + ' పోస్టులు' : '') + (st.account ? ' · ఖాతా ' + st.account : '')) : '';
-    var mgr = sorted().map(function (p) {
-      var m = model(p), conf = U.confirm === 'unpub:' + p.id, blog = !!p.postId;
-      return '<div class="mgr"><span class="t"><b>' + esc(p.title) + ' · ' + esc(p.date || 'తేదీ లేదు') + '</b><small>' + m.R + '×' + m.C + ' · ' + (m.hasAns ? 'జవాబులతో' : 'జవాబులు లేవు') + ' · ' + (blog ? 'బ్లాగ్' : 'puzzles.json') + '</small></span>' +
-        '<button class="smallbtn" data-act="edit-pub" data-id="' + esc(p.id) + '"' + (busy ? ' disabled' : '') + '>మార్చు</button>' +
-        (blog ? '<button class="smallbtn danger" data-act="unpub" data-id="' + esc(p.id) + '"' + (busy ? ' disabled' : '') + '>' + (conf ? 'ఖచ్చితమా?' : 'దాచు') + '</button>' : '') + '</div>';
-    }).join('');
+    var mgr = postsMgrHTML(busy);
     var imp = '';
     if (U.imports && U.imports.length) imp = '<div class="implist">' + U.imports.map(function (p, i) {
       return '<button class="imp" data-act="imp-open" data-i="' + i + '"><span class="chk" aria-hidden="true">' + I.pen + '</span><span class="t"><b>' + esc(p.title) + ' · ' + esc(p.date || 'తేదీ లేదు') + '</b><small>డ్రాఫ్ట్‌గా తెరవండి</small></span></button>';
@@ -3085,7 +3400,7 @@ html.vv-short #view.typing .tlc{min-height:38px}
           '<a class="reader" href="' + STUDIO + '" target="_blank" rel="noopener"><b>Claude తో చదివించండి</b><small>Claude స్టూడియోలో ఫోటో ఇచ్చి చదివించి, అక్కడ “వెబ్‌సైట్ కోసం కాపీ” నొక్కి, కింది “Claude నుంచి” పెట్టెలో అతికించండి</small></a>' +
         '</div>' +
         '<button class="wide-btn ter" data-act="blank"' + (busy ? ' disabled' : '') + '>ఖాళీ 12×12 గడితో మొదలుపెట్టండి</button>' +
-        (D ? '<a class="wide-btn sec" href="#edit">సేవ్ చేసిన డ్రాఫ్ట్ కొనసాగించండి' + (D.date ? ' · ' + esc(D.date) : '') + '</a>' : '') +
+        (D ? '<a class="wide-btn sec" href="#edit">తెరిచి ఉన్న డ్రాఫ్ట్ కొనసాగించండి · ' + esc(draftLabel(D)) + '</a>' : '') + keptDraftsHTML() + (IS_CLAUDE ? '' : '<button class="wide-btn ter" data-act="go-posts">' + I.pen + ' ప్రచురించిన పోస్ట్ మార్చండి</button>') +
       '</div></section>' +
       '<section class="sec"><h2 class="sec-h">Claude నుంచి</h2><div class="box">' +
         '<p class="note">స్టూడియోలో “వెబ్‌సైట్ కోసం కాపీ” నొక్కి ఇక్కడ అతికించండి, లేదా అక్కడ సేవ్ చేసిన puzzles.json ఇవ్వండి.</p>' +
@@ -3093,7 +3408,7 @@ html.vv-short #view.typing .tlc{min-height:38px}
         '<div class="btnrow"><button class="wide-btn ter" data-act="imp-read"' + (busy ? ' disabled' : '') + '>అతికించినది తెరవండి</button><label class="wide-btn ter" for="imp-files" style="cursor:pointer">ఫైల్ ఎంచుకోండి</label></div>' +
         '<input id="imp-files" type="file" accept=".json,.xml,.html,.htm,.txt,application/json,text/xml,text/html" multiple style="position:absolute;width:1px;height:1px;opacity:0">' + imp +
       '</div></section>' +
-      '<section class="sec"><h2 class="sec-h">పోస్టులు · ' + PUZZLES.length + '</h2><div class="box" style="gap:0;padding-block:6px">' + (mgr || '<p class="note" style="padding:10px 0">ఇంకా ఏ పోస్టూ లేదు.</p>') + '</div><p class="note">“మార్చు”తో సరిదిద్దినవి బ్లాగ్ పోస్ట్‌లోనే మారుతాయి (పాత రూపం Blogger డ్రాఫ్ట్‌లలో బ్యాకప్‌గా ఉంటుంది). “దాచు” పోస్ట్‌ను బ్లాగ్‌లో డ్రాఫ్ట్‌గా మారుస్తుంది.</p></section>' +
+      '<section class="sec" id="adm-posts"><h2 class="sec-h">పోస్టులు మార్చండి · ' + PUZZLES.length + '</h2><p class="note">ఏ పోస్ట్‌నైనా <b>మార్చు</b> తో తెరిచి గడి, ఆధారాలు, జవాబులు, శీర్షిక, బొమ్మలు మార్చి “బ్లాగ్ పోస్ట్ సరిదిద్దండి” నొక్కండి (పాత రూపం Blogger డ్రాఫ్ట్‌గా భద్రం). <b>దాచు</b> పోస్ట్‌ను బ్లాగ్ నుంచి తీసి డ్రాఫ్ట్ చేస్తుంది.</p><input id="adm-q" class="inp" type="search" placeholder="తేదీ లేదా పేరుతో వెతకండి — ఉదా: 01.11.2026" value="' + esc(U.admQ || '') + '"><div class="box" id="adm-list" style="gap:0;padding-block:6px">' + (mgr || '<p class="note" style="padding:10px 0">ఇంకా ఏ పోస్టూ లేదు.</p>') + '</div></section>' +
       '<section class="sec"><h2 class="sec-h">సెట్టింగ్‌లు</h2><div class="box">' +
         '<div class="fld"><label class="lbl" for="gem-key">Gemini కీ ' + (gem ? '· సేవ్ అయింది (' + esc(st.gemini) + ')' : '· ఇంకా లేదు') + '</label><input id="gem-key" class="inp" type="password" autocomplete="off" placeholder="AQ.… లేదా AIza…"><p class="note">aistudio.google.com/apikey లో ఉచితంగా తీసుకోండి. ఇది మీ Apps Script లో ఉంటుంది — ఫోన్‌లలో కాదు.</p>' +
           '<div class="btnrow"><button class="wide-btn ter" data-act="gem-save"' + (busy ? ' disabled' : '') + '>కీ సేవ్ చేయండి</button>' + (gem ? '<button class="wide-btn link" data-act="gem-clear"' + (busy ? ' disabled' : '') + '>కీ తీసివేయండి</button>' : '') + '</div></div>' +
@@ -3104,7 +3419,7 @@ html.vv-short #view.typing .tlc{min-height:38px}
     '</div>';
   }
   function openImport(p) {
-    D = draftFromPuzzle(Object.assign({ title: 'ఈనాడు పద వినోదం', date: '', clues: [], nums: {} }, p));
+    stashDraft(); D = draftFromPuzzle(Object.assign({ title: 'ఈనాడు పద వినోదం', date: '', clues: [], nums: {} }, p));
     D.id = ''; D.postId = ''; D.src = 'upload'; U.er = 0; U.ec = 0; U.emode = 'ans'; U.srcUrls = []; U.imports = null; saveDraft();
     U.status = { kind: 'ok', text: 'డ్రాఫ్ట్‌గా తెరిచాం' + (p.date ? ' (' + p.date + ')' : '') + '. సరిచూసి “బ్లాగ్‌లో ప్రచురించండి” నొక్కండి.' };
     location.hash = '#edit'; render();
@@ -3160,7 +3475,7 @@ html.vv-short #view.typing .tlc{min-height:38px}
         '<p class="bignote">ఖాళీ 12×12 గడితో మొదలుపెట్టి నల్ల గడులు, అంకెలు, ఆధారాలు, జవాబులు నింపండి. ప్రచురించగానే అది నేరుగా మీ సైట్, యాప్‌లోకి వెళ్తుంది.</p>' +
         '<div class="fld"><label class="lbl" for="up-date">తేదీ</label><input id="up-date" class="inp" type="text" inputmode="numeric" placeholder="DD.MM.YYYY" value=""></div>' +
         '<div class="btnrow"><button class="wide-btn pri" data-act="blank"' + (busy ? ' disabled' : '') + '>ఖాళీ గడితో మొదలుపెట్టండి</button></div>' +
-        (D ? '<a class="wide-btn sec" href="#edit">సేవ్ చేసిన డ్రాఫ్ట్ కొనసాగించండి' + (D.date ? ' · ' + esc(D.date) : '') + '</a>' : '') +
+        (D ? '<a class="wide-btn sec" href="#edit">తెరిచి ఉన్న డ్రాఫ్ట్ కొనసాగించండి · ' + esc(draftLabel(D)) + '</a>' : '') + keptDraftsHTML() + (IS_CLAUDE ? '' : '<button class="wide-btn ter" data-act="go-posts">' + I.pen + ' ప్రచురించిన పోస్ట్ మార్చండి</button>') +
         '<p class="note">పేపర్ ఫోటో/PDF నుంచి Claude చదవాలంటే మీ Claude స్టూడియోలో చదివించి, అక్కడ “puzzles.json సేవ్ చేయండి” నొక్కి, ఆ ఫైల్‌ను కింద “ఫైల్ నుంచి దిగుమతి” లో ఇవ్వండి.</p>' +
         '</div></section>' : '') +
       (IS_CLAUDE ? '<section class="sec"><h2 class="sec-h">కొత్త పద వినోదం అప్‌లోడ్</h2><div class="box">' +
@@ -3169,7 +3484,7 @@ html.vv-short #view.typing .tlc{min-height:38px}
         '<div class="fld"><label class="lbl" for="up-date">తేదీ (ఐచ్ఛికం)</label><input id="up-date" class="inp" type="text" inputmode="numeric" placeholder="DD.MM.YYYY" value=""></div>' +
         '<p class="note">గడి, ఆధారాలు వేర్వేరు ఫోటోలుగా దగ్గరగా తీస్తే బాగా చదువుతుంది. ఒక్కో చదువుకు మీ Claude వినియోగం ఖర్చవుతుంది. బ్లాగ్‌లో వేయాలంటే: డ్రాఫ్ట్ సరిచూసి “వెబ్‌సైట్ కోసం కాపీ” నొక్కి, వెబ్‌సైట్ నిర్వాహణలో “Claude నుంచి” పెట్టెలో అతికించండి.</p>' +
         '<div class="btnrow"><button class="wide-btn pri" data-act="ai-read"' + (busy ? ' disabled' : '') + '>Claude తో చదివి డ్రాఫ్ట్ చేయండి</button><button class="wide-btn ter" data-act="blank"' + (busy ? ' disabled' : '') + '>ఖాళీ గడితో మొదలుపెట్టండి</button></div>' +
-        (D ? '<a class="wide-btn sec" href="#edit">సేవ్ చేసిన డ్రాఫ్ట్ కొనసాగించండి' + (D.date ? ' · ' + esc(D.date) : '') + '</a>' : '') +
+        (D ? '<a class="wide-btn sec" href="#edit">తెరిచి ఉన్న డ్రాఫ్ట్ కొనసాగించండి · ' + esc(draftLabel(D)) + '</a>' : '') + keptDraftsHTML() + (IS_CLAUDE ? '' : '<button class="wide-btn ter" data-act="go-posts">' + I.pen + ' ప్రచురించిన పోస్ట్ మార్చండి</button>') +
       '</div></section>' : '') +
       '<section class="sec"><h2 class="sec-h">' + (IS_CLAUDE ? 'బ్లాగ్ నుంచి దిగుమతి' : 'ఫైల్ నుంచి దిగుమతి') + '</h2><div class="box">' +
         (!IS_CLAUDE ? '<p class="note">Claude స్టూడియో నుంచి సేవ్ చేసిన puzzles.json, బ్లాగ్ ఫీడ్ లేదా పోస్ట్ పేజీ ఇవ్వండి. బ్లాగ్ పోస్టులు సైట్‌లో తానుగా వస్తాయి — వాటిని సరిదిద్దాలంటే కింది జాబితాలో “మార్చు” నొక్కండి.</p>' : '') +
@@ -3190,8 +3505,77 @@ html.vv-short #view.typing .tlc{min-height:38px}
     var p = draftToPuzzle(D, true), m = model(p), out = m.problems.slice();
     var noClue = []; Object.keys(p.nums).forEach(function (k) { var n = p.nums[k]; if (!p.clues.some(function (c) { return c.n === n; })) noClue.push(n); });
     if (noClue.length) out.push('ఆధారం లేని సంఖ్యలు: ' + noClue.sort(function (a, b) { return a - b; }).slice(0, 12).join(', ') + (noClue.length > 12 ? '…' : ''));
+    // what still stops it going to the blog
+    if (!m.hasAns && m.whites) out.push('బ్లాగ్‌కు ముందు: ' + m.missingAns + ' గడులకు జవాబులు లేవు — పైన “జవాబులు” కార్డ్‌లో జవాబుల గడి ఫోటో / PDF ఇవ్వండి, లేదా “జవాబులు” మోడ్‌లో టైప్ చేయండి.');
+    if (!/^\d{2}\.\d{2}\.\d{4}$/.test(p.date || '')) out.push('బ్లాగ్‌కు ముందు: తేదీ DD.MM.YYYY గా ఇవ్వండి (పైన “తేదీ”).');
     var info = m.whites + ' తెల్ల గడులు · అడ్డం ' + m.order.A.length + ' · నిలువు ' + m.order.D.length + ' · ' + (m.hasAns ? 'అన్ని జవాబులూ ఉన్నాయి' : 'జవాబులు లేని గడులు ' + m.missingAns);
     return '<div class="status ' + (out.length ? '' : 'ok') + '"><span>' + esc(info) + '</span>' + (out.length ? '<ul class="problems">' + out.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>' : '<span>సమస్యలేమీ కనిపించలేదు.</span>') + '</div>';
+  }
+  // answers as a sheet: every open square is a box to type in directly, under the paper's own answers grid
+  // the post's two pictures: the black squares' picture and the congratulation picture
+  function picGallery(kind) {
+    var seen = {}, out = [];
+    sorted().forEach(function (p) { var u = kind === 'blk' ? p.blk : p.fin; if (u && !seen[u]) { seen[u] = 1; out.push(u); } });
+    (S.myPics || []).forEach(function (x) { if (x.kind === kind && !seen[x.url]) { seen[x.url] = 1; out.unshift(x.url); } });
+    return out.slice(0, 16);
+  }
+  function picsHTML() {
+    var rows = [['blk', 'నలుపు గడుల బొమ్మ', 'పోస్ట్‌లోని ప్రతి నలుపు గడిలో కనిపిస్తుంది.'], ['fin', 'అభినందనల బొమ్మ', 'పూర్తి చేసినప్పుడు వచ్చేది.']];
+    return '<section class="sec"><h2 class="sec-h">బొమ్మలు (GIF)</h2><div class="box pics">' + rows.map(function (rw) {
+      var k = rw[0], chosen = k === 'blk' ? D.blkImg : D.finImg, cur = chosen || (k === 'blk' ? D.curBlk : D.curFin) || '', open = U.picOpen === k, gal = open ? picGallery(k) : [];
+      return '<div class="picrow"><div class="pichead"><span class="picnow">' + (cur ? '<img src="' + esc(cur) + '" alt="">' : '<i>తాజా పోస్ట్‌లోది</i>') + '</span><div class="t"><b>' + rw[1] + '</b><small>' + rw[2] + ' ' + (chosen ? 'మీరు ఎంచుకున్నది.' : D.postId ? 'ఈ పోస్ట్‌లో ఇప్పుడున్నది.' : 'ఎంచుకోకపోతే తాజా బ్లాగ్ పోస్ట్‌లోదే.') + '</small></div></div>' +
+        '<div class="btnrow"><button class="smallbtn" data-act="pic-open" data-v="' + k + '" aria-expanded="' + open + '">' + (open ? 'మూసివేయి' : 'మార్చండి') + '</button>' + (chosen ? '<button class="smallbtn" data-act="pic-reset" data-v="' + k + '">మొదటిదే ఉంచండి</button>' : '') + '</div>' +
+        (open ? '<div class="picpick">' +
+          (gal.length ? '<p class="lbl">బ్లాగ్‌లో వాడిన బొమ్మలు — ఒకటి నొక్కండి</p><div class="picgal">' + gal.map(function (u) { return '<button class="picbtn" data-act="pic-use" data-k="' + k + '" data-u="' + esc(u) + '" aria-pressed="' + (u === cur) + '"><img src="' + esc(u) + '" alt="" loading="lazy"></button>'; }).join('') + '</div>' : '') +
+          (IS_CLAUDE ? '' : '<label class="wide-btn ter" for="pic-file-' + k + '" style="cursor:pointer">ఫోన్ / కంప్యూటర్ నుంచి GIF ఎంచుకోండి</label><input id="pic-file-' + k + '" data-pick="' + k + '" type="file" accept="image/gif,image/png,image/jpeg,image/webp" style="position:absolute;width:1px;height:1px;opacity:0">' +
+            '<p class="note">ఎంచుకున్న బొమ్మ మీ Google Drive లో “e-padavinodam-…” పేరుతో ఉంటుంది (లింక్ ఉన్నవారు చూడగలిగేలా); పోస్ట్ దాన్ని అక్కడి నుంచి చూపిస్తుంది.</p>') +
+          '<div class="fld"><label class="lbl" for="pic-url-' + k + '">లేదా బొమ్మ లింక్ (https://…gif)</label><div class="btnrow"><input id="pic-url-' + k + '" class="inp" type="url" inputmode="url" placeholder="https://…"><button class="smallbtn" data-act="pic-link" data-v="' + k + '">వాడండి</button></div></div>' +
+        '</div>' : '') + '</div>';
+    }).join('') + '</div></section>';
+  }
+  function sheetHTML(p) {
+    var low = D.low || {}, chg = D.chg || {}, out = '';
+    for (var r = 0; r < D.R; r++) for (var c = 0; c < D.C; c++) {
+      var k = key(r, c), n = p.nums[k] || '';
+      if (D.black[r][c]) { out += '<span class="ecell b" aria-hidden="true"></span>'; continue; }
+      out += '<label class="scell' + (low[k] ? ' low' : '') + (chg[k] ? ' chg' : '') + '">' + (n ? '<i>' + n + '</i>' : '') +
+        '<input data-sr="' + r + '" data-sc="' + c + '" value="' + esc(D.ans[r][c] || '') + '" enterkeyhint="next" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" aria-label="' + esc('వరుస ' + (r + 1) + ', నిలువు ' + (c + 1) + (n ? ' · సంఖ్య ' + n : '')) + '"></label>';
+    }
+    var nLow = Object.keys(low).length;
+    return (U.ansGrid ? '<figure class="papergrid"><img src="' + U.ansGrid + '" alt="పేపర్‌లోని జవాబుల గడి"><figcaption>పేపర్‌లోని జవాబుల గడి — కింది పట్టికతో గడి గడి పోల్చండి</figcaption></figure>'
+        : '<p class="note">పేపర్‌లోని జవాబుల గడి బొమ్మ ఇక్కడే చూపాలంటే పైన “జవాబులు” కార్డ్‌లో జవాబుల ఫైల్ (మళ్ళీ) ఇవ్వండి.</p>') +
+      '<p class="note">ఏ గడినైనా నొక్కి నేరుగా టైప్ చేయండి — ఫోన్ తెలుగు కీబోర్డ్ లేదా ఆంగ్లంలో (<b>ka</b> → క, <b>kSha</b> → క్ష, <b>rru</b> → ఋ). Enter / “తర్వాత” → పక్క గడి; బాణం కీలతో ఏ వైపైనా. ' +
+      (nLow ? '<b class="lowkey">పసుపు</b> గడులు (' + nLow + '): ఫోన్ సందేహంగా చదివినవి — ముందు వాటిని చూడండి. ' : '') + '<b class="chgkey">ఆకుపచ్చ</b>: మీరు మార్చినవి.</p>' +
+      '<div class="egrid sheet" style="--n:' + D.C + '">' + out + '</div>';
+  }
+  function sheetCommit(t) {
+    var r = +t.getAttribute('data-sr'), c = +t.getAttribute('data-sc'), v = t.value.replace(/\s+/g, ''), old = t.getAttribute('data-old') || '';
+    // like a spreadsheet, typing replaces what was there: if the new letters landed after the old one, drop the old one
+    // (but a vowel sign added to it — ర + ా → రా — is an edit of that letter and stays)
+    if (old && v.length > old.length && v.indexOf(old) === 0 && /^[అ-హA-Za-z]/.test(v.slice(old.length))) { v = v.slice(old.length); t.value = v; }
+    if (/[A-Za-z]/.test(v)) { v = convertLatin(v).replace(/\s+/g, ''); t.value = v; }
+    v = v.normalize('NFC');
+    if ((D.ans[r][c] || '') === v) return;
+    D.ans[r][c] = v; t.setAttribute('data-old', v); var k = key(r, c);
+    if (D.low) delete D.low[k]; D.chg = D.chg || {}; D.chg[k] = 1;
+    var lab = t.parentNode; if (lab) { lab.classList.remove('low'); lab.classList.add('chg'); }
+    saveDraft();
+    var ck = document.getElementById('checks'); if (ck) ck.innerHTML = draftChecks();
+  }
+  function sheetMove(t, dr, dc) {
+    var r = +t.getAttribute('data-sr'), c = +t.getAttribute('data-sc');
+    for (var i = 0; i < D.R * D.C; i++) {
+      if (dr || dc) { r += dr; c += dc; if (r < 0 || c < 0 || r >= D.R || c >= D.C) return; }
+      var n = document.querySelector('input[data-sr="' + r + '"][data-sc="' + c + '"]');
+      if (n) { n.focus(); return; }
+    }
+  }
+  function sheetNext(t, back) {   // Enter: the next open square along the rows (wraps to the next row)
+    var r = +t.getAttribute('data-sr'), c = +t.getAttribute('data-sc'), step = back ? -1 : 1;
+    for (var i = 0; i < D.R * D.C; i++) {
+      c += step; if (c >= D.C) { c = 0; r++; } if (c < 0) { c = D.C - 1; r--; } if (r < 0 || r >= D.R) return;
+      if (!D.black[r][c]) { var n = document.querySelector('input[data-sr="' + r + '"][data-sc="' + c + '"]'); if (n) { n.focus(); return; } }
+    }
   }
   function editView() {
     if (!ADMIN) return adminView();
@@ -3202,7 +3586,7 @@ html.vv-short #view.typing .tlc{min-height:38px}
     var cells = '';
     for (var r = 0; r < D.R; r++) for (var c = 0; c < D.C; c++) {
       var k = key(r, c), b = D.black[r][c], n = p.nums[k] || '', a = b ? '' : D.ans[r][c] || '', sel = r === U.er && c === U.ec;
-      cells += '<button class="ecell' + (b ? ' b' : '') + (sel ? ' sel' : '') + (runs[k] && !sel ? ' run' : '') + '" data-act="ecell" data-r="' + r + '" data-c="' + c + '" aria-label="' + esc('అడ్డు వరుస ' + (r + 1) + ', నిలువు వరుస ' + (c + 1) + (b ? ' · నలుపు' : '') + (n ? ' · సంఖ్య ' + n : '') + (a ? ' · ' + a : '')) + '">' + (n ? '<span class="num">' + n + '</span>' : '') + '<span class="ltr">' + esc(a) + '</span></button>';
+      cells += '<button class="ecell' + (b ? ' b' : '') + (!b && D.low && D.low[k] ? ' low' : '') + (sel ? ' sel' : '') + (runs[k] && !sel ? ' run' : '') + '" data-act="ecell" data-r="' + r + '" data-c="' + c + '" aria-label="' + esc('అడ్డు వరుస ' + (r + 1) + ', నిలువు వరుస ' + (c + 1) + (b ? ' · నలుపు' : '') + (n ? ' · సంఖ్య ' + n : '') + (a ? ' · ' + a : '')) + '">' + (n ? '<span class="num">' + n + '</span>' : '') + '<span class="ltr">' + esc(a) + '</span></button>';
     }
     var tool = '';
     if (U.emode === 'black') tool = '<p class="note">గడిని నొక్కితే నలుపు ↔ తెలుపు మారుతుంది.</p><button class="wide-btn ter" data-act="auto-num">సంఖ్యలు ఆటోగా వేయండి</button>';
@@ -3214,21 +3598,23 @@ html.vv-short #view.typing .tlc{min-height:38px}
       return '<div class="cluerow"><input class="inp sm" type="number" inputmode="numeric" aria-label="సంఖ్య" data-ci="' + i + '" data-f="n" value="' + esc(cl.n || '') + '"><input class="inp" style="min-height:40px;padding:6px 10px;font-size:15px" type="text" aria-label="ఆధారం" data-ci="' + i + '" data-f="text" value="' + esc(cl.text || '') + '"><input class="inp sm" type="number" inputmode="numeric" aria-label="పొడవు" data-ci="' + i + '" data-f="len" value="' + esc(cl.len || '') + '"><button class="x" data-act="clue-del" data-i="' + i + '" aria-label="ఈ ఆధారం తొలగించు">×</button></div>';
     }).join('');
     var nA = D.clues.filter(function (c) { return c.d === 'A'; }).length, nD = D.clues.length - nA;
-    return '<section class="play" style="overflow-y:auto">' +
-      '<header class="ebar"><a class="ghostbtn" href="#admin" aria-label="నిర్వాహణకు వెనక్కి">' + I.back + '</a><h1>' + (D.id ? 'పోస్ట్ మార్పు' : 'కొత్త పోస్ట్ డ్రాఫ్ట్') + '</h1></header>' +
+    return '<section class="play" style="overflow-y:auto" data-scroll="edit">' +
+      '<header class="ebar"><a class="ghostbtn" href="#admin" aria-label="నిర్వాహణకు వెనక్కి">' + I.back + '</a><h1>' + (D.id ? 'పోస్ట్ మార్పు' : 'కొత్త పోస్ట్ డ్రాఫ్ట్') + ' <small style="font-size:11px;opacity:.6;font-weight:400">v0.26</small></h1></header>' +
       '<div class="page gutter" style="gap:18px">' + statusBox() +
         (U.srcUrls.length ? '<details' + (U.srcOpen ? ' open' : '') + '><summary class="lbl" style="cursor:pointer">మూల చిత్రం చూడండి' + (U.srcUrls.length > 1 ? ' (పద వినోదం, జవాబులు)' : '') + '</summary><div class="srcimgs">' + U.srcUrls.map(function (u) { return '<img src="' + u + '" alt="అప్‌లోడ్ చేసిన పద వినోదం చిత్రం">'; }).join('') + '</div></details>' : '') +
         '<div class="box"><div class="row2"><div class="fld"><label class="lbl" for="d-title">శీర్షిక</label><input id="d-title" class="inp" data-df="title" value="' + esc(D.title) + '"></div><div class="fld"><label class="lbl" for="d-date">తేదీ</label><input id="d-date" class="inp" data-df="date" inputmode="numeric" placeholder="DD.MM.YYYY" value="' + esc(D.date) + '"></div></div>' +
         '<div class="row3"><div class="fld"><label class="lbl" for="d-rows">వరుసలు</label><input id="d-rows" class="inp sm" type="number" min="3" max="25" value="' + D.R + '"></div><div class="fld"><label class="lbl" for="d-cols">నిలువు వరుసలు</label><input id="d-cols" class="inp sm" type="number" min="3" max="25" value="' + D.C + '"></div><div class="fld"><span class="lbl">&nbsp;</span><button class="smallbtn" style="min-height:40px" data-act="resize">పరిమాణం మార్చు</button></div></div></div>' +
-        '<div class="seg wide" role="group" aria-label="మార్పు రకం"><button data-act="emode" data-v="black" aria-pressed="' + (U.emode === 'black') + '">నలుపు గడులు</button><button data-act="emode" data-v="num" aria-pressed="' + (U.emode === 'num') + '">సంఖ్యలు</button><button data-act="emode" data-v="ans" aria-pressed="' + (U.emode === 'ans') + '">జవాబులు</button></div>' +
-        ansCardHTML(m) + '<div class="egrid" style="--n:' + D.C + '">' + cells + '</div>' + tool +
+        '<div class="seg wide" role="group" aria-label="మార్పు రకం"><button data-act="emode" data-v="black" aria-pressed="' + (U.emode === 'black') + '">నలుపు గడులు</button><button data-act="emode" data-v="num" aria-pressed="' + (U.emode === 'num') + '">సంఖ్యలు</button><button data-act="emode" data-v="ans" aria-pressed="' + (U.emode === 'ans') + '">జవాబులు</button><button data-act="emode" data-v="sheet" aria-pressed="' + (U.emode === 'sheet') + '">పట్టిక</button></div>' +
+        ansCardHTML(m) + (U.emode === 'sheet' ? sheetHTML(p) : '<div class="egrid" style="--n:' + D.C + '">' + cells + '</div>' + tool) +
         '<section class="sec"><div class="sec-row"><h2 class="sec-h">ఆధారాలు</h2><div class="seg" role="group" aria-label="ఆధారాల దిశ"><button data-act="etab" data-v="A" aria-pressed="' + (U.etab === 'A') + '">అడ్డం · ' + nA + '</button><button data-act="etab" data-v="D" aria-pressed="' + (U.etab === 'D') + '">నిలువు · ' + nD + '</button></div></div>' +
-          '<div class="cluerow" style="font-size:12px;color:var(--muted)"><span>సంఖ్య</span><span>ఆధారం</span><span>పొడవు</span><span></span></div>' + clueRows +
-          '<button class="wide-btn ter" data-act="clue-add">' + dirName(U.etab) + ' ఆధారం జోడించండి</button></section>' +
+          teHintHTML() + '<div class="cluerow" style="font-size:12px;color:var(--muted)"><span>సంఖ్య</span><span>ఆధారం</span><span>పొడవు</span><span></span></div>' + clueRows +
+          '<button class="wide-btn ter" data-act="clue-add">' + dirName(U.etab) + ' ఆధారం జోడించండి</button></section>' + (IS_CLAUDE ? '' : picsHTML()) +
         '<div id="checks">' + draftChecks() + '</div>' +
         '<div class="btnrow"><a class="wide-btn ter" href="#play-draft" data-act="try">పరీక్షగా ఆడండి</a>' + (IS_CLAUDE ? '<button class="wide-btn pri" data-act="publish-draft"' + (busy ? ' disabled' : '') + '>' + (D.id ? 'మార్పులు ప్రచురించండి' : 'పోస్ట్‌గా ప్రచురించండి') + '</button></div><button class="wide-btn ter" data-act="copy-site-draft">వెబ్‌సైట్ కోసం కాపీ (బ్లాగ్‌లో వేయడానికి)</button>'
           : D.postId ? '<button class="wide-btn pri" data-act="update-blog"' + (busy ? ' disabled' : '') + '>బ్లాగ్ పోస్ట్ సరిదిద్దండి</button></div>'
           : '<button class="wide-btn pri" data-act="publish-blog"' + (busy ? ' disabled' : '') + '>బ్లాగ్‌లో ప్రచురించండి</button></div><button class="wide-btn ter" data-act="publish-blog" data-v="draft"' + (busy ? ' disabled' : '') + '>బ్లాగ్‌లో డ్రాఫ్ట్‌గా సేవ్ చేయండి (Blogger లో చూసి ప్రచురించడానికి)</button>') +
+        (busy ? '<div class="status"><span>' + (U.busy === 'ai' ? 'Gemini ఇంకా చదువుతోంది — అది ముగిసే వరకు ప్రచురించే బటన్లు ఆగుతాయి.' : U.busy === 'ocr' || U.busy === 'scan' ? 'ఫోన్ ఇంకా చదువుతోంది — అది ముగిసే వరకు ప్రచురించే బటన్లు ఆగుతాయి.' : 'పని జరుగుతోంది — ముగిసే వరకు ప్రచురించే బటన్లు ఆగుతాయి.') + '</span>' + (U.busy === 'ai' ? '<button class="smallbtn" data-act="ai-stop">ఆపండి</button>' : '') + '</div>' : '') +
+        '<div class="savebar"><button class="wide-btn sec" data-act="draft-save">' + I.save + ' డ్రాఫ్ట్ సేవ్ చేయండి</button><small>' + (D.edited ? 'మార్పులు ఈ ఫోన్‌లో తానుగా సేవ్ అవుతాయి · చివరి మార్పు ' + hhmm(D.edited) : '') + ((S.drafts || []).some(function (x) { return x.uid === D.uid; }) ? ' · సేవ్ చేసిన డ్రాఫ్ట్‌ల్లో ఉంది' : '') + '</small></div>' +
         '<button class="wide-btn link" data-act="draft-drop">' + (U.confirm === 'drop' ? 'ఖచ్చితమా? డ్రాఫ్ట్ పోతుంది — మళ్ళీ నొక్కండి' : 'డ్రాఫ్ట్ వదిలేయండి') + '</button>' +
       '</div></section>';
   }
@@ -3255,9 +3641,17 @@ html.vv-short #view.typing .tlc{min-height:38px}
 
   /* ================= render & routing ================= */
   function route() { var h = location.hash.replace('#', ''); return h || 'home'; }
+  // how to find "the same field" again after the screen is redrawn
+  function focusKey(el) {
+    if (el.id) return '#' + el.id;
+    var at = ['data-ci', 'data-f', 'data-sr', 'data-sc', 'data-ocr', 'data-df'].filter(function (a) { return el.hasAttribute(a); });
+    return at.length ? el.tagName.toLowerCase() + at.map(function (a) { return '[' + a + '="' + el.getAttribute(a) + '"]'; }).join('') : null;
+  }
   function render() {
     var r = route(), keep = {};
     view.querySelectorAll('[data-scroll]').forEach(function (el) { keep[el.getAttribute('data-scroll')] = el.scrollTop; });
+    var ae = document.activeElement, fsel = null, fpos = null;
+    if (ae && view.contains(ae) && /^(INPUT|TEXTAREA)$/.test(ae.tagName) && ae.type !== 'file') { fsel = focusKey(ae); try { fpos = [ae.selectionStart, ae.selectionEnd]; } catch (e) {} }
     var html;
     if (r.indexOf('play-') === 0) html = playView(r.slice(5));
     else if (r.indexOf('done-') === 0) html = doneView(r.slice(5));
@@ -3274,6 +3668,7 @@ html.vv-short #view.typing .tlc{min-height:38px}
     var fixed = r.indexOf('play-') === 0 && !!CUR;
     view.classList.toggle('is-fixed', fixed);
     view.querySelectorAll('[data-scroll]').forEach(function (el) { var v = keep[el.getAttribute('data-scroll')]; if (v) el.scrollTop = v; });
+    if (fsel) { var ne = view.querySelector(fsel); if (ne && ne !== document.activeElement) { try { ne.focus({ preventScroll: true }); if (fpos && fpos[0] != null) ne.setSelectionRange(fpos[0], fpos[1]); } catch (e) {} } }
     tabs.hidden = r.indexOf('play-') === 0 || r.indexOf('done-') === 0 || r === 'edit' || r === 'scan';
     if (r === 'scan') mountScan();
     var tab = r === 'archive' || r === 'prefs' || r === 'profile' ? r : (r === 'home' ? 'home' : '');
@@ -3410,7 +3805,7 @@ html.vv-short #view.typing .tlc{min-height:38px}
       case 'update-blog':
         var up = draftToPuzzle(D, false), why2 = draftReadyForBlog(up);
         if (why2) { toast(why2); break; }
-        blogUpdate(up, up.date + ' బ్లాగ్ పోస్ట్ సరిదిద్దాం.', function () { D = null; S.draft = null; delete S.prog.draft; save(); location.hash = '#admin'; }); break;
+        blogUpdate(up, up.date + ' బ్లాగ్ పోస్ట్ సరిదిద్దాం.', function () { keepPublished(D, up.url); D = null; S.draft = null; delete S.prog.draft; save(); location.hash = '#admin'; }); break;
       case 'unpub':
         var upp = findPuzzle(t.getAttribute('data-id')); if (!upp || !upp.postId) break;
         if (U.confirm !== 'unpub:' + upp.id) { U.confirm = 'unpub:' + upp.id; render(); break; }
@@ -3478,7 +3873,21 @@ html.vv-short #view.typing .tlc{min-height:38px}
       // admin
       case 'ai-read': var fl = document.getElementById('up-files'); if (!fl || !fl.files.length) { toast('ముందు పద వినోదం ఫోటో లేదా PDF (1) ఎంచుకోండి.'); break; } pendingAnswers(); aiRead('puzzle', fl.files); break;
       case 'ai-stop': if (U.ctl) U.ctl.abort(); break;
-      case 'blank': D = newDraft(12, 12); var ud = document.getElementById('up-date'); D.date = ud ? ud.value.trim() : ''; U.er = 0; U.ec = 0; U.emode = 'black'; U.srcUrls = []; saveDraft(); location.hash = '#edit'; break;
+      case 'tl-alt': pickAlt(+v); break;
+      case 'go-posts': var ap = document.getElementById('adm-posts'); if (ap) { ap.scrollIntoView({ block: 'start', behavior: 'smooth' }); var aq = document.getElementById('adm-q'); if (aq) setTimeout(function () { aq.focus({ preventScroll: true }); }, 400); } break;
+      case 'pic-open': U.picOpen = U.picOpen === v ? '' : v; render(); break;
+      case 'pic-use': setPic(t.getAttribute('data-k'), t.getAttribute('data-u')); break;
+      case 'pic-reset': if (v === 'blk') D.blkImg = ''; else D.finImg = ''; saveDraft(); render(); break;
+      case 'pic-link': var pu = (document.getElementById('pic-url-' + v) || {}).value || '';
+        if (!/^https:\/\/\S+$/i.test(pu.trim())) { toast('https:// తో మొదలయ్యే బొమ్మ లింక్ ఇవ్వండి.'); break; }
+        setPic(v, pu.trim()); break;
+      case 'te-type': S.prefs.teType = S.prefs.teType === false; save(); render(); break;
+      case 'draft-save': if (!D) break; saveDraft(); keepDraft(D); render(); break;
+      case 'draft-open': var kd = (S.drafts || []).filter(function (x) { return x.uid === v; })[0]; if (!kd) break;
+        if (D && D.uid !== kd.uid) stashDraft();
+        D = JSON.parse(JSON.stringify(kd)); delete D.saved; U.er = 0; U.ec = 0; U.emode = 'ans'; U.srcUrls = []; U.status = { kind: 'ok', text: 'సేవ్ చేసిన డ్రాఫ్ట్ తెరిచాం: ' + draftLabel(D) }; saveDraft(); location.hash = '#edit'; break;
+      case 'draft-del': if (U.confirm !== 'ddel-' + v) { U.confirm = 'ddel-' + v; render(); break; } U.confirm = ''; dropKept(v); render(); break;
+      case 'blank': stashDraft(); D = newDraft(12, 12); var ud = document.getElementById('up-date'); D.date = ud ? ud.value.trim() : ''; U.er = 0; U.ec = 0; U.emode = 'black'; U.srcUrls = []; saveDraft(); location.hash = '#edit'; break;
       case 'imp-read': var ta = document.getElementById('imp-paste'); if (!ta || !ta.value.trim()) { toast('ముందు ఫీడ్ టెక్స్ట్ అతికించండి.'); break; } runImport([ta.value]); break;
       case 'imp-toggle': var iid = t.getAttribute('data-id'); U.importSel[iid] = !U.importSel[iid]; render(); break;
       case 'imp-all': var all = U.imports.every(function (p) { return U.importSel[p.id]; }); U.imports.forEach(function (p) { U.importSel[p.id] = !all; }); render(); break;
@@ -3488,7 +3897,7 @@ html.vv-short #view.typing .tlc{min-height:38px}
         var merged = PUZZLES.filter(function (p) { return !ids[p.id]; }).concat(chosen.map(function (p) { var c = Object.assign({}, p); delete c.exists; return c; }));
         savePuzzles(merged, chosen.length + ' పోస్టులు ప్రచురించాం. అవి ఇప్పుడు హోమ్, ఆర్కైవ్‌లో ఉన్నాయి.', function () { U.imports = null; U.importSel = {}; });
         break;
-      case 'edit-pub': var ep = findPuzzle(t.getAttribute('data-id')); if (!ep) break; D = draftFromPuzzle(ep); U.er = 0; U.ec = 0; U.emode = 'black'; U.srcUrls = []; saveDraft(); location.hash = '#edit'; break;
+      case 'edit-pub': var ep = findPuzzle(t.getAttribute('data-id')); if (!ep) break; stashDraft(); D = draftFromPuzzle(ep); U.er = 0; U.ec = 0; U.emode = 'black'; U.srcUrls = []; saveDraft(); location.hash = '#edit'; break;
       case 'del-pub':
         var did = t.getAttribute('data-id');
         if (U.confirm !== 'del:' + did) { U.confirm = 'del:' + did; render(); break; }
@@ -3508,7 +3917,10 @@ html.vv-short #view.typing .tlc{min-height:38px}
       case 'num-clear': delete D.nums[key(U.er, U.ec)]; saveDraft(); render(); break;
       case 'resize': resizeDraft(+(document.getElementById('d-rows') || {}).value, +(document.getElementById('d-cols') || {}).value); U.er = 0; U.ec = 0; render(); break;
       case 'etab': U.etab = v; render(); break;
-      case 'clue-add': D.clues.push({ d: U.etab, n: '', len: null, text: '' }); saveDraft(); render(); break;
+      case 'clue-add': D.clues.push({ d: U.etab, n: '', len: null, text: '' }); saveDraft(); render();
+        var nci = view.querySelector('input[data-ci="' + (D.clues.length - 1) + '"][data-f="n"]');
+        if (nci) { nci.focus({ preventScroll: true }); nci.scrollIntoView({ block: 'center' }); }
+        break;
       case 'clue-del': D.clues.splice(+t.getAttribute('data-i'), 1); saveDraft(); render(); break;
       case 'try': S.prog.draft = freshProgress(); save(); break;
       case 'publish-draft':
@@ -3518,7 +3930,7 @@ html.vv-short #view.typing .tlc{min-height:38px}
         var taken = {}; PUZZLES.forEach(function (p) { if (p.id !== D.id) taken[p.id] = true; });
         pz.id = D.id || makeId(pz.date, taken); pz.added = new Date().toISOString();
         var list = PUZZLES.filter(function (p) { return p.id !== pz.id; }).concat([pz]);
-        savePuzzles(list, (D.id ? 'మార్పులు ప్రచురించాం.' : 'కొత్త పోస్ట్ ప్రచురించాం — ' + pz.date), function () { D = null; S.draft = null; delete S.prog.draft; save(); location.hash = '#admin'; });
+        savePuzzles(list, (D.id ? 'మార్పులు ప్రచురించాం.' : 'కొత్త పోస్ట్ ప్రచురించాం — ' + pz.date), function () { forgetDraft(); D = null; S.draft = null; delete S.prog.draft; save(); location.hash = '#admin'; });
         break;
       case 'export':
         var body = JSON.stringify({ v: 1, updated: new Date().toISOString(), puzzles: PUZZLES.map(cleanPuzzle) });
@@ -3532,22 +3944,24 @@ html.vv-short #view.typing .tlc{min-height:38px}
         break;
       case 'draft-drop':
         if (U.confirm !== 'drop') { U.confirm = 'drop'; render(); break; }
-        D = null; S.draft = null; U.confirm = ''; save(); location.hash = '#admin'; break;
+        forgetDraft(); D = null; S.draft = null; U.confirm = ''; save(); location.hash = '#admin'; break;
     }
   });
   function selectText(id) { var el = document.getElementById(id); if (!el) return; var rg = document.createRange(); rg.selectNodeContents(el); var sl = window.getSelection(); sl.removeAllRanges(); sl.addRange(rg); toast('లింక్‌ను ఎంచుకున్నాం — కాపీ చేయండి.'); }
   view.addEventListener('input', function (ev) {
     var t = ev.target;
     if (t.id === 'tl-in') { if (!ev.isComposing) tlInput(t); else updateCands(); return; }
-    if (t.id === 'fix-in') { if (!ev.isComposing) autoConvertField(t); return; }
+    if (t.id === 'fix-in') { if (!ev.isComposing && S.prefs.teType !== false) autoConvertField(t); return; }
     if (t.id === 'prof-name') { S.profile.name = t.value.trim().slice(0, 30); save(); return; }
-    if (t.hasAttribute && t.hasAttribute('data-ocr') && SC) { var od = t.getAttribute('data-ocr'); SC.ocr[od] = t.value; var on = document.getElementById('ocr-n-' + od); if (on) on.textContent = parseClueText(t.value, od).length; return; }
+    if (t.hasAttribute && t.hasAttribute('data-sr')) { if (!ev.isComposing && !/[A-Za-z]/.test(t.value)) sheetCommit(t); return; }
+    if (t.hasAttribute && t.hasAttribute('data-ocr') && SC) { if (!ev.isComposing && S.prefs.teType !== false) autoConvertField(t); var od = t.getAttribute('data-ocr'); SC.ocr[od] = t.value; var on = document.getElementById('ocr-n-' + od); if (on) on.textContent = parseClueText(t.value, od).length; return; }
     if (t.id === 'sc-date' && SC) { SC.date = t.value; return; }
+    if (t.id === 'adm-q') { U.admQ = t.value; var al = document.getElementById('adm-list'); if (al) al.innerHTML = postsMgrHTML(!!U.busy) || '<p class="note" style="padding:10px 0">ఇంకా ఏ పోస్టూ లేదు.</p>'; return; }
     if (t.id === 'arch-q') { U.query = t.value; var res = document.getElementById('arch-res'); if (res) res.innerHTML = archiveResults(); return; }
     if (!D) return;
-    if (t.hasAttribute('data-df')) { D[t.getAttribute('data-df')] = t.value; saveDraft(); return; }
+    if (t.hasAttribute('data-df')) { if (t.getAttribute('data-df') === 'title' && !ev.isComposing && S.prefs.teType !== false) autoConvertField(t); D[t.getAttribute('data-df')] = t.value; saveDraft(); return; }
     if (t.hasAttribute('data-ci')) {
-      var f = t.getAttribute('data-f'); if (f === 'text') autoConvertField(t);
+      var f = t.getAttribute('data-f'); if (f === 'text' && !ev.isComposing && S.prefs.teType !== false) autoConvertField(t);
       var cl = D.clues[+t.getAttribute('data-ci')];
       if (cl) { cl[f] = f === 'text' ? t.value : (parseInt(t.value, 10) || ''); saveDraft(); var ch = document.getElementById('checks'); if (ch) ch.innerHTML = draftChecks(); }
     }
@@ -3556,6 +3970,7 @@ html.vv-short #view.typing .tlc{min-height:38px}
     var t = ev.target;
     if (t.id === 'imp-files' && t.files.length) { Promise.all(Array.prototype.map.call(t.files, readFileText)).then(runImport, function () { U.status = { kind: 'err', text: 'ఫైల్ తెరవలేకపోయాం.' }; render(); }); }
     if (t.id === 'ans-files' && t.files.length) aiRead('answers', t.files);
+    if (t.hasAttribute && t.hasAttribute('data-pick') && t.files.length) uploadPic(t.getAttribute('data-pick'), t.files[0]);
     if (t.id === 'ans-gem' && t.files.length) geminiRead('answers', t.files);
     if (t.id === 'ans-scan' && t.files.length) scanOpen('answers', t.files);
     if ((t.id === 'sc-r' || t.id === 'sc-c') && SC) { var nv2 = Math.max(3, Math.min(25, parseInt(t.value, 10) || 12)); if (t.id === 'sc-r') SC.R = nv2; else SC.C = nv2; SC.flip = {}; scanDetect(); render(); }
@@ -3564,10 +3979,31 @@ html.vv-short #view.typing .tlc{min-height:38px}
   view.addEventListener('compositionend', function (ev) {
     var t = ev.target;
     if (t.id === 'tl-in') tlInput(t);
-    else if (t.id === 'fix-in' || t.getAttribute('data-f') === 'text') autoConvertField(t);
+    else if (teField(t) && S.prefs.teType !== false) { autoConvertField(t); t.dispatchEvent(new Event('input', { bubbles: true })); }
+  });
+  view.addEventListener('focusin', function (ev) {
+    var t = ev.target; if (!(t.hasAttribute && t.hasAttribute('data-sr'))) return;
+    t.setAttribute('data-old', t.value); t.setAttribute('data-fresh', '1');
+    try { t.select(); } catch (e) {} setTimeout(function () { try { t.select(); } catch (e) {} }, 0);
+  });
+  // the tap that focused a square must not drop the selection (then typing replaces the letter, as in Excel)
+  view.addEventListener('mouseup', function (ev) { var t = ev.target; if (t.getAttribute && t.getAttribute('data-fresh') === '1') { ev.preventDefault(); t.removeAttribute('data-fresh'); try { t.select(); } catch (e) {} } });
+  view.addEventListener('touchend', function (ev) { var t = ev.target; if (t.getAttribute && t.getAttribute('data-fresh') === '1') { t.removeAttribute('data-fresh'); setTimeout(function () { try { t.select(); } catch (e) {} }, 0); } });
+  // leaving a field: a last English word with no space after it turns Telugu too
+  view.addEventListener('focusout', function (ev) {
+    if (ev.target.hasAttribute && ev.target.hasAttribute('data-sr')) { sheetCommit(ev.target); return; }
+    var t = ev.target; if (!teField(t) || S.prefs.teType === false) return;
+    if (/[A-Za-z]/.test(t.value)) { var nv = convertLatin(t.value); if (nv !== t.value) { t.value = nv; t.dispatchEvent(new Event('input', { bubbles: true })); } }
+    setTimeout(function () { var bar = document.getElementById('tlalts'); if (bar && !(document.activeElement && (document.activeElement === t || teField(document.activeElement)))) { bar.remove(); U.tlAlt = null; } }, 250);
   });
   view.addEventListener('keydown', function (ev) {
     var t = ev.target;
+    if (t.hasAttribute && t.hasAttribute('data-sr')) {
+      var mv = { ArrowUp: [-1, 0], ArrowDown: [1, 0], ArrowLeft: [0, -1], ArrowRight: [0, 1] }[ev.key];
+      if (ev.key === 'Enter' || ev.key === 'Tab') { ev.preventDefault(); sheetCommit(t); sheetNext(t, ev.shiftKey); }
+      else if (mv && !ev.isComposing) { ev.preventDefault(); sheetCommit(t); sheetMove(t, mv[0], mv[1]); }
+      return;
+    }
     if (t.id !== 'tl-in') return;
     if (ev.key === 'Enter') { ev.preventDefault(); var c = pickFor(t.value); t.value = ''; if (c) commitTyped(c); var n = document.getElementById('tl-in'); if (n) { n.focus(); updateCands(); } }
     else if (ARROWS[ev.key] && route().indexOf('play-') === 0 && CUR && (!t.value || ev.key === 'ArrowUp' || ev.key === 'ArrowDown')) { ev.preventDefault(); if (moveSel(ev.key)) refreshPlay(); }
