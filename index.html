@@ -1676,7 +1676,7 @@ html.vv-short #view.typing .tlc{min-height:38px}
       '<section class="sec"><h2 class="sec-h">Android యాప్‌లో రాబోయేవి</h2><div class="box"><ul class="soon"><li>కొత్త పద వినోదం వస్తే నోటిఫికేషన్</li><li>English భాషలో యాప్</li></ul>' + (IS_CLAUDE ? '' : '<p class="note">ఆఫ్‌లైన్: ఒకసారి తెరిచిన తర్వాత ఇంటర్నెట్ లేకున్నా యాప్, చివరిసారి లోడ్ అయిన పోస్టులు తెరుచుకుంటాయి.</p>') + '</div></section>' +
       '<section class="sec"><h2 class="sec-h">ఆట పురోగతి</h2><div class="box"><p class="note">మీ అమరికలు, ఆట పురోగతి ఈ పరికరంలోనే సేవ్ అవుతాయి.</p><button class="wide-btn ter" data-act="resetall">' + (U.confirm === 'resetall' ? 'ఖచ్చితమా? అన్ని ఆటల పురోగతి పోతుంది — మళ్ళీ నొక్కండి' : 'అన్ని ఆటల పురోగతి తుడిచివేయండి') + '</button></div></section>' +
       (!IS_CLAUDE ? '<section class="sec"><h2 class="sec-h">నిర్వాహణ</h2><div class="box"><p class="note">' + (ADMIN ? 'ఈ పరికరంలో నిర్వాహకుడిగా ప్రవేశించారు: కొత్త పద వినోదం (ఫోటో / PDF నుంచి కూడా), మార్పులు, ప్రచురణ.' : 'బ్లాగ్ నిర్వాహకుడి కోసం మాత్రమే: కొత్త పద వినోదం చేర్చడం, ఆధారాలు సరిదిద్దడం.') + '</p><a class="wide-btn ' + (ADMIN ? 'pri' : 'ter') + '" href="#admin">' + I.lock + (ADMIN ? ' నిర్వాహణ పేజీ తెరవండి' : ' నిర్వాహకుడి ప్రవేశం') + '</a></div></section>' : '') +
-      '<footer style="display:flex;flex-direction:column;align-items:center;gap:2px;text-align:center"><a href="' + BLOG + '" target="_blank" rel="noopener" style="font-weight:600;padding:10px 0">బ్లాగ్ తెరవండి · telugupadavinodam.blogspot.com</a><span style="font-family:var(--font-display);font-size:22px;color:var(--title)">ఈ-పద వినోదం</span><span class="note">వెర్షన్ 0.20.1' + (IS_CLAUDE ? ' · స్టూడియో' : '') + '</span></footer></div>';
+      '<footer style="display:flex;flex-direction:column;align-items:center;gap:2px;text-align:center"><a href="' + BLOG + '" target="_blank" rel="noopener" style="font-weight:600;padding:10px 0">బ్లాగ్ తెరవండి · telugupadavinodam.blogspot.com</a><span style="font-family:var(--font-display);font-size:22px;color:var(--title)">ఈ-పద వినోదం</span><span class="note">వెర్షన్ 0.20.2' + (IS_CLAUDE ? ' · స్టూడియో' : '') + '</span></footer></div>';
   }
 
   /* ================= admin: who may manage ================= */
@@ -1689,7 +1689,13 @@ html.vv-short #view.typing .tlc{min-height:38px}
   function lsSet(k, v) { try { if (v) localStorage.setItem(k, v); else localStorage.removeItem(k); } catch (e) {} }
   function svcUrl() { return lsGet(SVC_K) || CONFIG.service || ''; }
   lsSet('epv-admin-github', '');
-  if (!IS_CLAUDE) ADMIN = !!lsGet(SES_K);
+  // the admin stays signed in only while the app is open and the admin pages are in use; closing the app or leaving the admin pages signs out
+  var SES = '';
+  function sesGet() { if (SES) return SES; try { SES = sessionStorage.getItem(SES_K) || ''; } catch (e) {} return SES; }
+  function sesSet(v) { SES = v || ''; try { if (v) sessionStorage.setItem(SES_K, v); else sessionStorage.removeItem(SES_K); } catch (e) {} }
+  lsSet(SES_K, '');
+  var ADMIN_ROUTES = { admin: 1, edit: 1, scan: 1, 'play-draft': 1 };
+  if (!IS_CLAUDE) ADMIN = !!sesGet();
   else cap('user').then(function (u) {
     if (!u) { ADMIN = false; render(); return; }
     u.canEdit().then(function (v) { ADMIN = !!v; render(); }, function () { ADMIN = false; render(); });
@@ -1697,7 +1703,7 @@ html.vv-short #view.typing .tlc{min-height:38px}
   function svc(action, data, signal) {
     var url = svcUrl();
     if (!url) return Promise.reject({ code: 'no_service' });
-    var body = JSON.stringify(Object.assign({ action: action, token: lsGet(SES_K) }, data || {}));
+    var body = JSON.stringify(Object.assign({ action: action, token: sesGet() }, data || {}));
     // plain text body: the browser sends it without a pre-check, which Apps Script cannot answer
     return fetch(url, { method: 'POST', body: body, redirect: 'follow', cache: 'no-store', signal: signal })
       .then(function (r) { return r.text(); }, function (e) { throw { code: e && e.name === 'AbortError' ? 'cancelled' : 'network' }; })
@@ -1707,7 +1713,7 @@ html.vv-short #view.typing .tlc{min-height:38px}
         return j;
       });
   }
-  function adminOut(msg) { lsSet(SES_K, ''); if (!IS_CLAUDE) ADMIN = false; U.svcStatus = null; if (msg) U.status = { kind: 'err', text: msg }; }
+  function adminOut(msg) { sesSet(''); if (!IS_CLAUDE) ADMIN = false; U.svcStatus = null; if (msg) U.status = { kind: 'err', text: msg }; }
   function svcErr(e) {
     var code = e && e.code;
     return {
@@ -2472,7 +2478,8 @@ html.vv-short #view.typing .tlc{min-height:38px}
         (hasSvc ? '' : '<div class="fld"><label class="lbl" for="svc-url">అడ్మిన్ సర్వీస్ లింక్ (మొదటిసారి మాత్రమే)</label><input id="svc-url" class="inp" type="url" autocomplete="off" placeholder="https://script.google.com/macros/s/…/exec"><p class="note">Google Apps Script డిప్లాయ్ చేసినప్పుడు వచ్చే Web app లింక్. ఇది ఈ పరికరంలో గుర్తుంటుంది.</p></div>') +
         '<div class="fld"><label class="lbl" for="adm-pw">పాస్‌వర్డ్</label><input id="adm-pw" class="inp" type="password" autocomplete="current-password"></div>' +
         '<button class="wide-btn pri" data-act="svc-login"' + (U.busy ? ' disabled' : '') + '>ప్రవేశించండి</button>' +
-        (hasSvc ? '<button class="wide-btn link" data-act="svc-reset"' + (U.busy ? ' disabled' : '') + '>' + (U.confirm === 'reset' ? 'ఖచ్చితమా? కొత్త పాస్‌వర్డ్ మెయిల్‌కు పంపుతాం — మళ్ళీ నొక్కండి' : 'పాస్‌వర్డ్ మర్చిపోయారా? కొత్తది మెయిల్‌కు పంపండి') + '</button>' : '') +
+        '<button class="wide-btn ter" data-act="svc-reset"' + (U.busy ? ' disabled' : '') + '>' + (U.confirm === 'reset' ? 'ఖచ్చితమా? కొత్త పాస్‌వర్డ్ blogofrulings@gmail.com కు పంపుతాం — మళ్ళీ నొక్కండి' : 'పాస్‌వర్డ్ మర్చిపోయారా?') + '</button>' +
+        '<p class="note">“పాస్‌వర్డ్ మర్చిపోయారా?” నొక్కితే కొత్త పాస్‌వర్డ్ blogofrulings@gmail.com కు మెయిల్ వస్తుంది. యాప్ మూసినా, నిర్వాహణ పేజీ నుంచి బయటకు వెళ్ళినా మళ్ళీ పాస్‌వర్డ్ అడుగుతుంది.</p>' +
         (hasSvc ? '<button class="wide-btn link" data-act="svc-forget">వేరే సర్వీస్ లింక్ ఇవ్వాలా?</button>' : '') +
       '</div></section>' +
       (hasSvc ? '' : '<section class="sec"><h2 class="sec-h">సర్వీస్ ఒకసారి ఏర్పాటు</h2><div class="box"><p class="note">బ్లాగ్ నిర్వహించే Google ఖాతాలో చిన్న Apps Script (ఉచితం, కార్డ్ అక్కర్లేదు) డిప్లాయ్ చేయాలి. దశలన్నీ వెబ్‌సైట్ ఫైళ్లలోని README లో “Admin service” విభాగంలో ఉన్నాయి. డిప్లాయ్ అయ్యాక వచ్చే లింక్‌ను పైన అతికించండి.</p></div></section>') +
@@ -2699,6 +2706,11 @@ html.vv-short #view.typing .tlc{min-height:38px}
   var lastRoute = null;
   function onRoute() {
     var r = route();
+    if (r !== lastRoute && !IS_CLAUDE && ADMIN && !ADMIN_ROUTES[r] && lastRoute && ADMIN_ROUTES[lastRoute]) {
+      var tk = sesGet(); adminOut(); U.status = null;
+      if (tk) { try { fetch(svcUrl(), { method: 'POST', body: JSON.stringify({ action: 'logout', token: tk }), keepalive: true }).catch(function () {}); } catch (e) {} }
+      toast('నిర్వాహణ నుంచి బయటకు వచ్చారు. మళ్ళీ వాడాలంటే పాస్‌వర్డ్ ఇవ్వండి.');
+    }
     if (r !== lastRoute) {
       view.scrollTop = 0; U.confirm = ''; if (U.auto && U.auto.on) autoStop(true);
       if (r.indexOf('done-') === 0) U.showVariant = null;
@@ -2764,11 +2776,14 @@ html.vv-short #view.typing .tlc{min-height:38px}
         if (!pwv) { toast('పాస్‌వర్డ్ ఇవ్వండి.'); break; }
         U.busy = 'login'; U.status = { kind: 'wait', text: 'సరిచూస్తున్నాం…' }; render();
         svc('login', { password: pwv }).then(function (j) {
-          lsSet(SES_K, j.token); ADMIN = true; U.busy = ''; U.svcStatus = null;
+          sesSet(j.token); ADMIN = true; U.busy = ''; U.svcStatus = null;
           U.status = { kind: 'ok', text: 'నిర్వాహకుడిగా ప్రవేశించారు.' + (j.firstPassword ? ' మొదటి పాస్‌వర్డ్ (uvs-2026) వాడుతున్నారు — కింది సెట్టింగ్‌లలో మీ సొంత పాస్‌వర్డ్ పెట్టుకోండి.' : '') }; render();
         }, function (e) { U.busy = ''; U.status = { kind: 'err', text: svcErr(e) }; render(); });
         break;
       case 'svc-reset':
+        var sur = document.getElementById('svc-url'), surv = sur ? sur.value.trim() : '';
+        if (surv && /^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec\/?$/.test(surv)) lsSet(SVC_K, surv.replace(/\/$/, ''));
+        if (!svcUrl()) { toast('ముందు అడ్మిన్ సర్వీస్ లింక్ అతికించండి.'); break; }
         if (U.confirm !== 'reset') { U.confirm = 'reset'; render(); break; }
         U.confirm = ''; U.busy = 'login'; U.status = { kind: 'wait', text: 'కొత్త పాస్‌వర్డ్ పంపుతున్నాం…' }; render();
         svc('reset').then(function (j) { U.busy = ''; U.status = { kind: 'ok', text: 'కొత్త పాస్‌వర్డ్ ' + (j.sentTo || 'మెయిల్') + ' కు పంపాం (Spam లో కూడా చూడండి). దానితో ప్రవేశించగానే అదే మీ పాస్‌వర్డ్ అవుతుంది; అప్పటిదాకా పాతది కూడా పనిచేస్తుంది.' }; render(); },

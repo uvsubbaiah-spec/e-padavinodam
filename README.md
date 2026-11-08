@@ -62,7 +62,7 @@ The magnifier buttons on the puzzle's top bar zoom the grid from 100% to 200% (i
 
 ## Admin page
 
-Settings (అమరికలు) → **నిర్వాహణ** → **నిర్వాహకుడి ప్రవేశం**. The first password is **uvs-2026**; change it under నిర్వాహణ → సెట్టింగ్‌లు. **పాస్‌వర్డ్ మర్చిపోయారా?** emails a new password to blogofrulings@gmail.com (the old one keeps working until the new one is used, so a stranger pressing it cannot lock you out).
+Settings (అమరికలు) → **నిర్వాహణ** → **నిర్వాహకుడి ప్రవేశం**. The password is asked every time: closing the app or leaving the admin pages signs out. The first password is **uvs-2026**; change it under నిర్వాహణ → సెట్టింగ్‌లు. **పాస్‌వర్డ్ మర్చిపోయారా?** emails a new password to blogofrulings@gmail.com (the old one keeps working until the new one is used, so a stranger pressing it cannot lock you out).
 
 On the admin page:
 - **కొత్త పద వినోదం**: give a newspaper photo or PDF, then choose a reader:
@@ -71,7 +71,7 @@ On the admin page:
   - **Claude తో చదివించండి**: read it in the Claude studio, press **వెబ్‌సైట్ కోసం కాపీ** there and paste on the admin page under **Claude నుంచి**.
   - Then check the draft (black squares, numbers, clues), fill the answers (typing, or **జవాబుల చిత్రం · Gemini / ఫోన్‌లోనే**) and press **బ్లాగ్‌లో ప్రచురించండి** (or save it as a Blogger draft first).
 - A new post copies the layout of the latest blog post (scripts, సులభం/కష్టం switch, hint bulb, congratulation picture, record button, black-square picture), gets the next number for its element names, the address `…/YYYY/MM/DDMMYYYY.html`, a « link to the previous post, and the previous post's » button is linked to it. Before sending, the app reads the made post back and refuses to publish if the squares or clues do not come out the same.
-- **మార్చు** on a blog post rewrites that post's squares and clues in place; the old version is saved first as a Blogger draft named “బ్యాకప్ · …”. The pencil on the clue bar does the same for one clue while playing. **దాచు** turns a post back into a draft.
+- **మార్చు** on a blog post rewrites that post's squares and clues in place; the old version is saved first as a Blogger draft named “బ్యాకప్ · …”. **దాచు** turns a post back into a draft.
 
 ## Admin service (one-time setup, about 10 minutes, free, no card)
 
