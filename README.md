@@ -58,6 +58,15 @@ The magnifier buttons on the puzzle's top bar zoom the grid from 100% to 200% (i
 - **Posts made in the Claude studio** (from a newspaper photo or PDF, or a corrected blog post) live in `puzzles.json`. In the studio's admin page press **puzzles.json సేవ్ చేయండి**, then upload that file to the repository in place of the old one. A post in `puzzles.json` replaces the blog post with the same date.
 - **Correcting a clue's Telugu text:** in the Claude studio, open the puzzle, select the clue and tap the pencil on the clue bar (or use **మార్చు** in the admin list for the full editor). Type the fix in Telugu, or in English and it converts. Save publishes it in the studio at once; export `puzzles.json` as above to update the website. For blog posts, import them into the studio first (admin page → బ్లాగ్ నుంచి దిగుమతి) so there is a copy to correct.
 
+## Admin on the website and in the app
+
+Settings → **నిర్వాహకుడి ప్రవేశం** (at the bottom). Sign in once per device with a GitHub fine-grained token for this repository (Contents: Read and write); the page shows how to make one. After that:
+- **కొత్త పద వినోదం**: start from an empty 12×12 grid, set black squares, numbers, clues and answers, and publish;
+- **ఫైల్ నుంచి దిగుమతి**: a `puzzles.json` saved in the Claude studio (for posts read from newspaper photos), a blog feed or a post page;
+- **మార్చు / తొలగించు** on any post, including blog posts (to add answers or fix clues), and the pencil on the clue bar to correct one clue while playing.
+
+Publishing writes `puzzles.json` in this repository through GitHub's API; the site picks it up within a minute or two. The token stays on that device only; revoke it on GitHub if a device is lost. Reading newspaper photos with AI is only in the Claude studio.
+
 ## The Android app (APK)
 
 The APK built in Android Studio opens this site full-screen. Name the signed release file **`e-padavinodam.apk`** and upload it to this repository next to `index.html`. It is then always the latest one at `https://uvsubbaiah-spec.github.io/e-padavinodam/e-padavinodam.apk`:
