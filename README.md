@@ -65,7 +65,7 @@ The magnifier buttons on the puzzle's top bar zoom the grid from 100% to 200% (i
 Settings (అమరికలు) → **నిర్వాహణ** → **నిర్వాహకుడి ప్రవేశం**. The password is asked every time: closing the app or leaving the admin pages signs out. The first password is **uvs-2026**; change it under నిర్వాహణ → సెట్టింగ్‌లు. **పాస్‌వర్డ్ మర్చిపోయారా?** emails a new password to blogofrulings@gmail.com (the old one keeps working until the new one is used, so a stranger pressing it cannot lock you out).
 
 On the admin page:
-- **కొత్త పద వినోదం**: give a newspaper photo or PDF, then choose a reader:
+- **కొత్త పద వినోదం**: give the puzzle (grid + clues) photo or PDF in box **1**, and the answers grid (Eenadu prints it the next week) in box **2** — optional; it can also be added later from the **జవాబులు** card in the draft. Then choose a reader; it reads the puzzle and then the answers into the same draft:
   - **Gemini తో చదవండి**: Google Gemini reads the grid, numbers, clues (and a solved grid). Needs a free key from aistudio.google.com/apikey, saved once under సెట్టింగ్‌లు; it is kept in your Apps Script, not on phones.
   - **ఫోన్‌లోనే చదవండి**: no key. Draw a box around the grid (the red lines must sit on the grid lines; drag the corner dots to fix a tilted photo), and boxes around the అడ్డం and నిలువు clues. The phone finds the black squares and reads the clues with Tesseract (about 5 MB downloaded the first time). Telugu reading has mistakes; fix them in the text boxes.
   - **Claude తో చదివించండి**: read it in the Claude studio, press **వెబ్‌సైట్ కోసం కాపీ** there and paste on the admin page under **Claude నుంచి**.
