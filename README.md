@@ -88,7 +88,7 @@ A small Google Apps Script does the parts a website cannot do by itself: checkin
 3. **Allow it once**: in the Editor choose the function `setup` and press **Run** → Review permissions → choose the blog's account → *Google hasn't verified this app* → **Advanced → Go to e-padavinodam admin (unsafe)** → Allow. (It is your own script.) The log should show your blog's name.
 4. **Deploy**: **Deploy → New deployment** → type **Web app** → Execute as **Me**, Who has access **Anyone** → Deploy → copy the **Web app URL** (`https://script.google.com/macros/s/…/exec`).
 5. In the app: Settings → నిర్వాహకుడి ప్రవేశం → paste the link (asked only the first time on each device) → password **uvs-2026**.
-   - Optional: to skip pasting the link on every device, create a file `config.json` in this repository with `{"service": "<the Web app URL>"}`.
+   - The link of this deployment is built into the app (`SVC_URL` in the code), so admins only type the password. If you ever make a *new* deployment (a new link), tell the developer or put `{"service": "<new link>"}` in a `config.json` file in this repository.
 
 If you later change `Code.gs`, use **Deploy → Manage deployments → Edit → Version: New version → Deploy** so the link stays the same.
 
