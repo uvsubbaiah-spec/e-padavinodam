@@ -634,6 +634,7 @@ html.vv-short #view.typing .tlc{min-height:38px}
 .autohead{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
 .autohead b{font-size:16px;color:var(--title)}
 .autohead span{font-size:13px;color:var(--muted)}
+.autonote{margin:0;font-size:12.5px;color:var(--muted);text-align:center}
 .autoword{text-align:center;font-family:var(--font-grid);font-weight:var(--grid-wt,600);font-size:calc(28px * min(var(--grid-scale,1), 1.25));letter-spacing:.08em;color:var(--ok-ink);padding:8px;border-radius:14px;background:var(--ok-bg);border:1.5px solid var(--ok-bd);min-height:56px}
 .autobtns{display:flex;flex-wrap:wrap;gap:8px}
 .autobtns .smallbtn{flex:1 1 auto;min-height:44px}
@@ -758,12 +759,14 @@ html.vv-short #view.typing .tlc{min-height:38px}
     Object.keys(text).forEach(function (k) { p.clues.push({ d: k[0], n: +k.slice(1), len: 3, text: text[k] }); });
     return p;
   }
+  // Eenadu gives a white square with no white neighbour its own అడ్డం clue of one letter
+  function lone(w, r, c) { return w(r, c) && !w(r, c - 1) && !w(r, c + 1) && !w(r - 1, c) && !w(r + 1, c); }
   function autoNumber(p) {
     var R = p.grid.length, C = p.grid[0].length, n = 0; p.nums = {};
     function w(r, c) { return r >= 0 && c >= 0 && r < R && c < C && p.grid[r][c] !== '#'; }
     for (var r = 0; r < R; r++) for (var c = 0; c < C; c++) {
       if (!w(r, c)) continue;
-      if ((!w(r, c - 1) && w(r, c + 1)) || (!w(r - 1, c) && w(r + 1, c))) p.nums[r + ',' + c] = ++n;
+      if ((!w(r, c - 1) && w(r, c + 1)) || (!w(r - 1, c) && w(r + 1, c)) || lone(w, r, c)) p.nums[r + ',' + c] = ++n;
     }
   }
   var SAMPLE = sampleToPuzzle();
@@ -1164,15 +1167,20 @@ html.vv-short #view.typing .tlc{min-height:38px}
     }
     P.hints++; put(m.sol(k));
   }
-  // ---- ఆటో: shows every answer, clue by clue, one letter at a time, so the player learns each one ----
+  // ---- ఆటో: fills only the empty and wrong squares, from the first clue on the board, one letter at a time ----
   var AUTO_SPEED = { slow: [900, 2600], mid: [520, 1700], fast: [260, 900] };
   function autoOn() { return !!(U.auto && U.auto.on && CUR && U.auto.id === CUR.id); }
   function autoList() { var m = CUR.m; return m.order.A.concat(m.order.D); }
-  function autoStart(from) {
+  function autoNeed(k) { var s = CUR.m.sol(k); return !!s && CUR.P.letters[k] !== s; }
+  function autoLeft() { var m = CUR.m, seen = {}, n = 0; autoList().forEach(function (id) { m.entries[id].cells.forEach(function (x) { var k = key(x[0], x[1]); if (!seen[k]) { seen[k] = 1; if (autoNeed(k)) n++; } }); }); return n; }
+  function autoWordLeft(e) { return e.cells.some(function (x) { return autoNeed(key(x[0], x[1])); }); }
+  function autoStart() {
     if (!CUR || !CUR.m.hasAns) return;
     autoStop(true);
-    var list = autoList(), at = from != null ? from : Math.max(0, list.indexOf(cur().id));
-    U.auto = { on: true, paused: false, id: CUR.id, list: list, i: at, j: -1, speed: (U.auto && U.auto.speed) || 'mid', t: null, shown: 0 };
+    var left = autoLeft();
+    if (!left) { toast('అన్ని గడులూ ఇప్పటికే సరైనవే — ఆటో చేయాల్సింది ఏమీ లేదు.'); return; }
+    // always from the beginning of the board: అడ్డం 1 first, then the rest in order
+    U.auto = { on: true, paused: false, id: CUR.id, list: autoList(), i: 0, j: -1, speed: (U.auto && U.auto.speed) || 'mid', t: null, shown: 0, words: 0, total: left };
     U.lastKb = U.panel === 'auto' ? U.lastKb : (U.panel !== 'none' ? U.panel : U.lastKb); U.panel = 'auto';
     var ti = document.getElementById('tl-in'); if (ti) ti.blur();
     render(); autoTick();
@@ -1184,31 +1192,37 @@ html.vv-short #view.typing .tlc{min-height:38px}
   function autoTick() {
     var A = U.auto; if (!A || !A.on || A.paused || !CUR || A.id !== CUR.id) return;
     var m = CUR.m, P = CUR.P, sp = AUTO_SPEED[A.speed] || AUTO_SPEED.mid;
-    if (A.i >= A.list.length) { autoDone(); return; }
-    var e = m.entries[A.list[A.i]];
-    if (A.j < 0) {   // start of a word: select it and show its clue
-      P.dir = e.d; U.tab = e.d; P.r = e.cells[0][0]; P.c = e.cells[0][1]; A.j = 0; U.follow = true; refreshPlay();
+    if (A.j < 0) {   // next word that still has an empty or wrong square
+      while (A.i < A.list.length && !autoWordLeft(m.entries[A.list[A.i]])) A.i++;
+      if (A.i >= A.list.length || !autoLeft()) { autoDone(); return; }
+      var e0 = m.entries[A.list[A.i]], first = e0.cells.filter(function (x) { return autoNeed(key(x[0], x[1])); })[0];
+      P.dir = e0.d; U.tab = e0.d; P.r = first[0]; P.c = first[1]; A.j = 0; A.words++; U.follow = true; refreshPlay();
       A.t = setTimeout(autoTick, sp[0]); return;
     }
+    var e = m.entries[A.list[A.i]];
+    while (A.j < e.cells.length && !autoNeed(key(e.cells[A.j][0], e.cells[A.j][1]))) A.j++;   // right squares are left alone
     if (A.j < e.cells.length) {
-      var c = e.cells[A.j], k = key(c[0], c[1]), sol = m.sol(k);
+      var c = e.cells[A.j], k = key(c[0], c[1]);
       P.r = c[0]; P.c = c[1];
-      if (sol && P.letters[k] !== sol) { P.letters[k] = sol; delete U.shown[k]; P.started = true; P.hints = (P.hints || 0) + 1; P.auto = true; A.shown++; }
+      P.letters[k] = m.sol(k); delete U.shown[k]; P.started = true; P.hints = (P.hints || 0) + 1; P.auto = true; A.shown++;
       A.j++; U.follow = true; save(); refreshPlay();
-      A.t = setTimeout(autoTick, A.j < e.cells.length ? sp[0] : sp[1]); return;
+      var more = false; for (var j2 = A.j; j2 < e.cells.length; j2++) if (autoNeed(key(e.cells[j2][0], e.cells[j2][1]))) { more = true; break; }
+      A.t = setTimeout(autoTick, more ? sp[0] : sp[1]); return;
     }
     A.i++; A.j = -1; autoTick();
   }
   function autoDone() {
-    var A = U.auto; A.on = false; CUR.P.revealed = true; save();
+    var A = U.auto; A.on = false; if (!autoLeft()) CUR.P.revealed = true; save();
     U.panel = 'none'; U.autoHidden = false; render();
-    toast('ఆటో పూర్తయింది — ' + A.list.length + ' ఆధారాల జవాబులు చూపించాం. మీరే ఆడాలంటే “గడి ఖాళీ చేసి మీరే ఆడండి” నొక్కండి.');
+    toast(A.shown ? 'ఆటో పూర్తయింది — ఖాళీగా లేదా తప్పుగా ఉన్న ' + A.shown + ' గడులు (' + A.words + ' పదాల్లో) నింపాం; మీరు సరిగ్గా వేసినవి అలాగే ఉంచాం. మీరే మళ్ళీ ఆడాలంటే “గడి ఖాళీ చేసి మీరే ఆడండి” నొక్కండి.' : 'అన్ని గడులూ సరైనవే.');
   }
   function autoPanelHTML() {
     var A = U.auto, e = cur(), m = CUR.m, word = e.cells.map(function (x) { var k = key(x[0], x[1]); return CUR.P.letters[k] === m.sol(k) ? CUR.P.letters[k] : '·'; }).join(' ');
     var sp = [['slow', 'నెమ్మది'], ['mid', 'మామూలు'], ['fast', 'వేగం']].map(function (o) { return '<button data-act="auto-speed" data-v="' + o[0] + '" aria-pressed="' + (A.speed === o[0]) + '">' + o[1] + '</button>'; }).join('');
-    return '<div class="autobox"><div class="autohead"><b>ఆటో</b><span>' + Math.min(A.i + 1, A.list.length) + ' / ' + A.list.length + ' ఆధారాలు</span></div>' +
+    var left = autoLeft();
+    return '<div class="autobox"><div class="autohead"><b>ఆటో</b><span>' + (left ? 'ఇంకా ' + left + ' / ' + A.total + ' గడులు' : 'పూర్తి') + '</span></div>' +
       '<div class="autoword" aria-live="polite">' + esc(word) + '</div>' +
+      '<p class="autonote">ఖాళీ, తప్పు గడులు మాత్రమే నింపుతుంది; సరైనవి మారవు.</p>' +
       '<div class="autobtns"><button class="smallbtn pri" data-act="auto-pause">' + (A.paused ? '▶ కొనసాగించు' : '⏸ ఆపి చూడండి') + '</button><button class="smallbtn" data-act="auto-next">తదుపరి ⏭</button><button class="smallbtn danger" data-act="auto-stop">⏹ ముగించు</button></div>' +
       '<div class="seg" role="group" aria-label="వేగం">' + sp + '</div></div>';
   }
@@ -1698,7 +1712,7 @@ html.vv-short #view.typing .tlc{min-height:38px}
       '<section class="sec"><h2 class="sec-h">Android యాప్‌లో రాబోయేవి</h2><div class="box"><ul class="soon"><li>కొత్త పద వినోదం వస్తే నోటిఫికేషన్</li><li>English భాషలో యాప్</li></ul>' + (IS_CLAUDE ? '' : '<p class="note">ఆఫ్‌లైన్: ఒకసారి తెరిచిన తర్వాత ఇంటర్నెట్ లేకున్నా యాప్, చివరిసారి లోడ్ అయిన పోస్టులు తెరుచుకుంటాయి.</p>') + '</div></section>' +
       '<section class="sec"><h2 class="sec-h">ఆట పురోగతి</h2><div class="box"><p class="note">మీ అమరికలు, ఆట పురోగతి ఈ పరికరంలోనే సేవ్ అవుతాయి.</p><button class="wide-btn ter" data-act="resetall">' + (U.confirm === 'resetall' ? 'ఖచ్చితమా? అన్ని ఆటల పురోగతి పోతుంది — మళ్ళీ నొక్కండి' : 'అన్ని ఆటల పురోగతి తుడిచివేయండి') + '</button></div></section>' +
       (!IS_CLAUDE ? '<section class="sec"><h2 class="sec-h">నిర్వాహణ</h2><div class="box"><p class="note">' + (ADMIN ? 'ఈ పరికరంలో నిర్వాహకుడిగా ప్రవేశించారు: కొత్త పద వినోదం (ఫోటో / PDF నుంచి కూడా), మార్పులు, ప్రచురణ.' : 'బ్లాగ్ నిర్వాహకుడి కోసం మాత్రమే: కొత్త పద వినోదం చేర్చడం, ఆధారాలు సరిదిద్దడం.') + '</p><a class="wide-btn ' + (ADMIN ? 'pri' : 'ter') + '" href="#admin">' + I.lock + (ADMIN ? ' నిర్వాహణ పేజీ తెరవండి' : ' నిర్వాహకుడి ప్రవేశం') + '</a></div></section>' : '') +
-      '<footer style="display:flex;flex-direction:column;align-items:center;gap:2px;text-align:center"><a href="' + BLOG + '" target="_blank" rel="noopener" style="font-weight:600;padding:10px 0">బ్లాగ్ తెరవండి · telugupadavinodam.blogspot.com</a><span style="font-family:var(--font-display);font-size:22px;color:var(--title)">ఈ-పద వినోదం</span><span class="note">వెర్షన్ 0.21.1' + (IS_CLAUDE ? ' · స్టూడియో' : '') + '</span></footer></div>';
+      '<footer style="display:flex;flex-direction:column;align-items:center;gap:2px;text-align:center"><a href="' + BLOG + '" target="_blank" rel="noopener" style="font-weight:600;padding:10px 0">బ్లాగ్ తెరవండి · telugupadavinodam.blogspot.com</a><span style="font-family:var(--font-display);font-size:22px;color:var(--title)">ఈ-పద వినోదం</span><span class="note">వెర్షన్ 0.22' + (IS_CLAUDE ? ' · స్టూడియో' : '') + '</span></footer></div>';
   }
 
   /* ================= admin: who may manage ================= */
@@ -1888,7 +1902,7 @@ html.vv-short #view.typing .tlc{min-height:38px}
         var id = idp + '-' + idx, n = p.nums[r + ',' + c], a = String((p.ans[r] && p.ans[r][c]) || '').trim() + ' ', lab = '';
         if (n) {
           var parts = [], ca = clue['A' + n], cd = clue['D' + n];
-          if (ca && w(r, c + 1) && !w(r, c - 1)) parts.push('&#8680; అడ్డం: ' + n + '. ' + escAttr(ca.text) + ' (' + (ca.len || run(r, c, 0, 1)) + ')  ');
+          if (ca && !w(r, c - 1) && (w(r, c + 1) || lone(w, r, c))) parts.push('&#8680; అడ్డం: ' + n + '. ' + escAttr(ca.text) + ' (' + (ca.len || run(r, c, 0, 1)) + ')  ');
           if (cd && w(r + 1, c) && !w(r - 1, c)) parts.push('&#8681; నిలువు: ' + n + '. ' + escAttr(cd.text) + ' (' + (cd.len || run(r, c, 1, 0)) + ')  ');
           lab = '<label for="' + id + '" class = "tooltip">' + n + '<span class="tooltiptext">' + parts.join('&#13;\n  ') + '</span></label>';
         }
@@ -1922,7 +1936,7 @@ html.vv-short #view.typing .tlc{min-height:38px}
     pz.clues.forEach(function (c) { has[c.d + c.n] = true; });
     Object.keys(pz.nums).forEach(function (k) {
       var x = k.split(','), r = +x[0], c = +x[1], n = pz.nums[k];
-      if (has['A' + n] && w(r, c + 1) && !w(r, c - 1)) exp++;
+      if (has['A' + n] && !w(r, c - 1) && (w(r, c + 1) || lone(w, r, c))) exp++;
       if (has['D' + n] && w(r + 1, c) && !w(r - 1, c)) exp++;
     });
     return exp > 0 && b.clues.length === exp;
@@ -2112,9 +2126,10 @@ html.vv-short #view.typing .tlc{min-height:38px}
     ' "across": [{"n": <number>, "text": "the clue exactly as printed in Telugu, without the length in brackets", "len": <the number in brackets, or null>}],\n' +
     ' "down": [same shape],\n' +
     ' "answers": null, or, only if a solved grid with letters is visible: [[one string per square: "" for black squares, otherwise the single Telugu akshara written there, e.g. "క్ష", "మ్మ", "రం"]]}\n\n' +
-    'Count rows and columns carefully by looking at the grid lines. Copy Telugu text exactly; do not translate or correct it. Include every clue you can see. If a part is hard to read, give your best reading and continue.';
+    'Count rows and columns carefully by looking at the grid lines. Copy Telugu text exactly; do not translate or correct it. Include every clue you can see. If a part is hard to read, give your best reading and continue.\n\n' +
+    'Eenadu web pages saved as PDF: the puzzle is called పదకేళి or పద వినోదం. Blocked squares may be drawn as coloured squares (yellow-green leaves), purple circles with a white star or small flowers instead of black: mark all of them #. Clue numbers are small red numbers in the squares. The clues may be spread over two or three pages under అడ్డం and నిలువు; ignore other puzzles such as సుడోకు, news links and advertisements. A white square with blocked squares on all four sides is numbered too and has a one-letter అడ్డం clue, e.g. "20. ... (1)": include it in across with len 1. When a close-up of the grid is included, use it for the squares and numbers.';
   var PROMPT_ANSWERS =
-    'This image shows a SOLVED Telugu crossword grid (పద వినోదం జవాబులు). The grid has ROWS rows and COLS columns; black squares are marked # in this pattern, one string per row:\nPATTERN\n\n' +
+    'This image shows a SOLVED Telugu crossword grid (పద వినోదం జవాబులు). On Eenadu pages it is the పదకేళి grid in the section గతవారం సమాధానాలు (last week\'s answers), usually beside a సుడోకు grid — read only the పదకేళి grid; its blocked squares may be purple circles with stars or small flowers. The grid has ROWS rows and COLS columns; black squares are marked # in this pattern, one string per row:\nPATTERN\n\n' +
     'Reply with only one JSON object: {"answers": [[one string per square, row by row: "" for black squares, otherwise the single Telugu akshara in that square, e.g. "క్ష", "మ్మ", "రం"]]}. Keep exactly ROWS rows and COLS entries per row.';
   function aiRead(kind, files) {
     if (!IS_CLAUDE) return geminiRead(kind, files);
@@ -2127,11 +2142,10 @@ html.vv-short #view.typing .tlc{min-height:38px}
       return sample.limits().catch(function () { return null; });
     }).then(function (l) {
       lim = l; if (!lim || !lim.images) throw { code: 'images_unavailable' };
-      return prepareImages(files, lim.images.maxCount);
+      return smartImages(kind, files, lim.images.maxCount);
     }).then(function (blobs) {
       if (!blobs.length) throw { code: 'no_images' };
-      U.srcUrls.forEach(function (u) { URL.revokeObjectURL(u); });
-      U.srcUrls = blobs.slice(0, 1).map(function (b) { return URL.createObjectURL(b); });
+      keepSourceImage(kind, blobs[0]);
       var prompt = PROMPT_PUZZLE;
       if (kind === 'answers') {
         var pz = draftToPuzzle(D, true);
@@ -2165,8 +2179,11 @@ html.vv-short #view.typing .tlc{min-height:38px}
   }
 
   /* ================= admin: reading a photo or PDF on the phone itself (no AI, no key) ================= */
+  // For Eenadu's web pages saved as PDF the grid, its page and the clue columns are found by themselves;
+  // for a newspaper photo the admin draws the boxes. Everything found is shown for review before the draft.
   var TESS = 'https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js';
   var SC = null, TW = null, TPROG = null;
+  window.__epvScan = function () { return SC; };   // for checking the reader in tests
   function pdfLib() {
     if (window.pdfjsLib) return Promise.resolve(window.pdfjsLib);
     return loadScript(PDFJS + 'pdf.min.js').then(function () {
@@ -2186,131 +2203,286 @@ html.vv-short #view.typing .tlc{min-height:38px}
     var el = document.querySelector('#view .status > span');
     if (el && route() === 'scan') { el.textContent = text; el.parentNode.className = 'status' + (kind === 'err' ? ' err' : kind === 'ok' ? ' ok' : ''); } else render();
   }
-  function scanOpen(kind, files) {
-    if (U.busy) return;
-    var list = Array.prototype.slice.call(files || []), pages = [], date = (document.getElementById('up-date') || {}).value || (D && D.date) || '';
-    U.busy = 'scan'; U.status = { kind: 'wait', text: 'చిత్రం తెరుస్తున్నాం…' }; render();
-    var chain = Promise.resolve();
-    list.forEach(function (f) {
+  function loadPages(files) {
+    var pages = [], chain = Promise.resolve();
+    Array.prototype.slice.call(files || []).forEach(function (f) {
       chain = chain.then(function () {
-        if (/pdf$/i.test(f.type) || /\.pdf$/i.test(f.name)) return pdfLib().then(function (lib) { return f.arrayBuffer().then(function (b) { return lib.getDocument({ data: b }).promise; }); }).then(function (pdf) { for (var i = 1; i <= Math.min(pdf.numPages, 8); i++) pages.push({ pdf: pdf, num: i }); });
+        if (/pdf$/i.test(f.type) || /\.pdf$/i.test(f.name)) return pdfLib().then(function (lib) { return f.arrayBuffer().then(function (b) { return lib.getDocument({ data: b }).promise; }); }).then(function (pdf) { for (var i = 1; i <= Math.min(pdf.numPages, 10); i++) pages.push({ pdf: pdf, num: i }); });
         if (/^image\//.test(f.type)) pages.push({ blob: f });
       });
     });
-    chain.then(function () {
-      if (!pages.length) throw { code: 'no_images' };
-      SC = { kind: kind, pages: pages, page: -1, mode: 'grid', zoom: 1, quad: null, boxes: {}, R: kind === 'answers' && D ? D.R : 12, C: kind === 'answers' && D ? D.C : 12, means: null, flip: {}, ocr: { A: '', D: '' }, date: date };
-      return scanPage(0);
+    return chain.then(function () { return pages; });
+  }
+  // one page drawn at most `max` pixels on its long side; `src` tells how to cut sharper parts from it later
+  function renderPage(pg, max) {
+    var cv = document.createElement('canvas');
+    if (pg.blob) return blobToImage(pg.blob).then(function (im) {
+      var W0 = im.naturalWidth, H0 = im.naturalHeight, s = Math.min(1, max / Math.max(W0, H0));
+      cv.width = Math.round(W0 * s); cv.height = Math.round(H0 * s); cv.getContext('2d').drawImage(im, 0, 0, cv.width, cv.height);
+      return { cv: cv, src: { img: im, k: W0 / cv.width } };
+    });
+    return pg.pdf.getPage(pg.num).then(function (page) {
+      var v1 = page.getViewport({ scale: 1 }), s = max / Math.max(v1.width, v1.height), vp = page.getViewport({ scale: s });
+      cv.width = Math.ceil(vp.width); cv.height = Math.ceil(vp.height);
+      var ctx = cv.getContext('2d'); ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, cv.width, cv.height);
+      return page.render({ canvasContext: ctx, viewport: vp }).promise.then(function () { return { cv: cv, src: { page: page, base: s } }; });
+    });
+  }
+
+  /* --- finding the grid: evenly spaced lines (Eenadu's pink lines, or dark lines), square cells --- */
+  function lineMask(d, W, H) {
+    var m = new Uint8Array(W * H);
+    for (var i = 0, p = 0; i < m.length; i++, p += 4) {
+      var r = d[p], g = d[p + 1], b = d[p + 2], lum = (r * 299 + g * 587 + b * 114) / 1000;
+      if (r > 150 && r - g > 10 && r - b > 12 && lum < 240) m[i] = 1;          // Eenadu's pink/red grid lines
+    }
+    return m;
+  }
+  function lineCenters(counts, rel, minabs) {
+    var mx = 0, i; for (i = 0; i < counts.length; i++) if (counts[i] > mx) mx = counts[i];
+    var thr = Math.max(rel * mx, minabs), out = [], start = -1, last = -9;
+    if (mx < minabs) return out;
+    for (i = 0; i < counts.length; i++) if (counts[i] >= thr) { if (i - last > 2) { if (start >= 0) out.push((start + last) / 2); start = i; } last = i; }
+    if (start >= 0) out.push((start + last) / 2);
+    return out;
+  }
+  function evenRuns(c, minlen, wantGap) {
+    var out = [];
+    for (var i = 0; i < c.length; i++) for (var j = i + 1; j < c.length; j++) {
+      var gap = c[j] - c[i];
+      if (gap < 8 || (wantGap && Math.abs(gap - wantGap) > 0.25 * wantGap)) continue;
+      var run = [c[i], c[j]], k = j;
+      for (;;) {
+        var nx = -1;
+        for (var q = k + 1; q < c.length; q++) if (Math.abs(c[q] - run[run.length - 1] - gap) <= 0.2 * gap) { nx = q; break; }
+        if (nx < 0) break; run.push(c[nx]); k = nx;
+      }
+      if (run.length >= minlen) out.push(run);
+    }
+    out.sort(function (a, b) { return b.length - a.length; });
+    var keep = [];
+    out.forEach(function (r) { if (!keep.some(function (k) { return r[0] >= k[0] - 1 && r[r.length - 1] <= k[k.length - 1] + 1; })) keep.push(r); });
+    return keep;
+  }
+  function findGrid(d, W, H) {
+    var m = lineMask(d, W, H), hc = new Uint32Array(H), x, y, best = null;
+    for (y = 0; y < H; y++) { var s = 0, o = y * W; for (x = 0; x < W; x++) s += m[o + x]; hc[y] = s; }
+    evenRuns(lineCenters(hc, 0.4, 20), 6).slice(0, 8).forEach(function (rr) {
+      var y0 = Math.round(rr[0]), y1 = Math.round(rr[rr.length - 1]), gy = (y1 - y0) / (rr.length - 1), vc = new Uint32Array(W);
+      for (y = y0; y <= y1; y++) { var o2 = y * W; for (x = 0; x < W; x++) vc[x] += m[o2 + x]; }
+      evenRuns(lineCenters(vc, 0.3, Math.round(0.25 * (y1 - y0))), 6, gy).forEach(function (cc) {
+        var n = Math.min(rr.length, cc.length) - 1, score = n * 1000 + (rr.length - 1) * (cc.length - 1);
+        if (!best || score > best.score) best = { score: score, R: rr.length - 1, C: cc.length - 1, x0: cc[0], x1: cc[cc.length - 1], y0: y0, y1: y1 };
+      });
+    });
+    return best;
+  }
+  // per square: share of coloured samples (Eenadu's stars, leaves, flowers) and of dark ones (black squares or letters)
+  function cellStats(d, W, H, pt, R, C) {
+    var out = [];
+    for (var r = 0; r < R; r++) for (var c = 0; c < C; c++) {
+      var col = 0, dark = 0, n = 0;
+      for (var i = 0; i < 7; i++) for (var j = 0; j < 7; j++) {
+        var p = pt((c + 0.3 + 0.4 * j / 6) / C, (r + 0.3 + 0.4 * i / 6) / R), xx = p.x | 0, yy = p.y | 0;
+        if (xx < 0 || yy < 0 || xx >= W || yy >= H) continue;
+        var o = (yy * W + xx) * 4, R0 = d[o], G0 = d[o + 1], B0 = d[o + 2], mx = Math.max(R0, G0, B0), mn = Math.min(R0, G0, B0), lum = (R0 * 299 + G0 * 587 + B0 * 114) / 1000;
+        n++; if (mx - mn > 40) col++; else if (lum < 110) dark++;
+      }
+      out.push({ col: n ? col / n : 0, dark: n ? dark / n : 0 });
+    }
+    return out;
+  }
+  function otsu(v) {
+    var lo = Math.min.apply(null, v), hi = Math.max.apply(null, v);
+    if (hi - lo < 0.2) return hi + 1;     // nothing stands out: no blocked squares
+    var best = -1, thr = (lo + hi) / 2;
+    for (var t = lo + 0.02; t < hi; t += 0.02) {
+      var a = v.filter(function (x) { return x < t; }), b = v.filter(function (x) { return x >= t; });
+      if (!a.length || !b.length) continue;
+      var ma = a.reduce(function (x, y) { return x + y; }, 0) / a.length, mb = b.reduce(function (x, y) { return x + y; }, 0) / b.length, s = a.length * b.length * (ma - mb) * (ma - mb);
+      if (s > best) { best = s; thr = t; }
+    }
+    return thr;
+  }
+  function rectPt(g) { return function (u, v) { return { x: g.x0 + u * (g.x1 - g.x0), y: g.y0 + v * (g.y1 - g.y0) }; }; }
+  // every page is looked at once at low size: where is a grid, is it empty (a puzzle) or filled (answers)?
+  function analysePages(pages, note) {
+    var info = [], chain = Promise.resolve();
+    pages.forEach(function (pg, i) {
+      chain = chain.then(function () { if (note) note(i); return renderPage(pg, 1200); }).then(function (r) {
+        var W = r.cv.width, H = r.cv.height, d = r.cv.getContext('2d').getImageData(0, 0, W, H).data, g = findGrid(d, W, H), it = { i: i, W: W, H: H };
+        it.k = (r.src.img ? Math.min(Math.max(r.src.img.naturalWidth, r.src.img.naturalHeight), 2000) : 2000) / Math.max(W, H);   // analysis → screen size
+        if (g && g.R >= 8 && g.C >= 8 && !(g.R === 9 && g.C === 9)) {
+          var st = cellStats(d, W, H, rectPt(g), g.R, g.C), v = st.map(function (s) { return Math.max(s.col, s.dark); }), t = otsu(v);
+          var white = st.filter(function (s, k) { return v[k] < t; }), ink = white.length ? white.reduce(function (a, s) { return a + s.dark; }, 0) / white.length : 0;
+          it.grid = g; it.ink = ink; it.filled = ink > 0.04; it.area = (g.x1 - g.x0) * (g.y1 - g.y0);
+        }
+        info.push(it);
+      });
+    });
+    return chain.then(function () { return info; });
+  }
+  function pickGridPage(info, kind) {
+    var c = info.filter(function (x) { return x.grid && (kind === 'answers' ? x.filled : !x.filled); });
+    if (kind === 'answers' && D) {
+      var same = c.filter(function (x) { return x.grid.R === D.R && x.grid.C === D.C; });
+      if (same.length) c = same;
+    }
+    if (!c.length) c = info.filter(function (x) { return x.grid; });
+    c.sort(function (a, b) { return b.area - a.area; });
+    return c[0] || null;
+  }
+
+  function scanOpen(kind, files) {
+    if (U.busy) return;
+    var date = (document.getElementById('up-date') || {}).value || (D && D.date) || '', pages;
+    U.busy = 'scan'; U.status = { kind: 'wait', text: 'ఫైల్ తెరుస్తున్నాం…' }; render();
+    loadPages(files).then(function (p) {
+      pages = p; if (!pages.length) throw { code: 'no_images' };
+      SC = { kind: kind, pages: pages, page: -1, gridPage: -1, mode: 'grid', zoom: 1, quad: null, boxes: [], R: kind === 'answers' && D ? D.R : 12, C: kind === 'answers' && D ? D.C : 12, vals: null, thr: 1, flip: {}, ocr: { A: '', D: '' }, date: date, srcs: {} };
+      return analysePages(pages, function (i) { scanMsg('పేజీలు చూస్తున్నాం… ' + (i + 1) + ' / ' + pages.length); });
+    }).then(function (info) {
+      SC.info = info;
+      var hit = pickGridPage(info, kind);
+      return scanPage(hit ? hit.i : 0).then(function () {
+        if (!hit) return;
+        var k = SC.W / hit.W, g = hit.grid;
+        SC.gridPage = hit.i; SC.auto = true;
+        if (kind !== 'answers') { SC.R = g.R; SC.C = g.C; }
+        SC.quad = { tl: { x: g.x0 * k, y: g.y0 * k }, tr: { x: g.x1 * k, y: g.y0 * k }, bl: { x: g.x0 * k, y: g.y1 * k }, br: { x: g.x1 * k, y: g.y1 * k } };
+        scanDetect();
+        if (kind !== 'answers') SC.boxes = clueRegions(hit, info);
+      });
     }).then(function () {
-      U.busy = ''; U.status = kind === 'answers' ? { kind: 'ok', text: 'జవాబుల గడి చుట్టూ వేలితో పెట్టె గీయండి (ఎరుపు గీతలు గడి గీతలపై పడేలా మూలల చుక్కలు లాగండి), తర్వాత “జవాబులు చదివి డ్రాఫ్ట్‌లో నింపండి” నొక్కండి.' } : null;
+      U.busy = '';
+      var found = SC.quad && SC.auto, ans = kind === 'answers';
+      U.status = found ? { kind: 'ok', text: (ans ? 'జవాబుల గడి పేజీ ' + (SC.gridPage + 1) + ' లో దొరికింది' + matchNote() + '.' : 'గడి పేజీ ' + (SC.gridPage + 1) + ' లో దొరికింది (' + SC.R + '×' + SC.C + '). ఆధారాలు చదువుతున్నాం…') }
+        : { kind: 'ok', text: ans ? 'జవాబుల గడి చుట్టూ వేలితో పెట్టె గీయండి (ఎరుపు గీతలు గడి గీతలపై పడేలా మూలల చుక్కలు లాగండి), తర్వాత “జవాబులు చదివి డ్రాఫ్ట్‌లో నింపండి” నొక్కండి.' : 'గడి తానుగా దొరకలేదు. గడి చుట్టూ, ఆధారాల చుట్టూ వేలితో పెట్టెలు గీయండి.' };
       location.hash = '#scan'; if (route() === 'scan') render();
+      // found by itself: read straight away; the admin reviews the result on this screen and in the draft
+      if (found && !ans && SC.boxes.length) setTimeout(scanOCR, 60);
+      if (found && ans && SC.match >= 0.85) setTimeout(scanAnswers, 60);
     }, function (e) {
       U.busy = ''; U.status = { kind: 'err', text: e && e.code === 'no_images' ? 'చిత్రం (JPG/PNG) లేదా PDF ఎంచుకోండి.' : 'ఫైల్ తెరవలేకపోయాం (' + ((e && e.message) || 'error') + ').' }; render();
     });
   }
+  // where the clues are likely: the grid's column on the grid page (above and below it) and on the pages around it
+  function clueRegions(hit, info) {
+    var out = [], g = hit.grid, k = hit.k;
+    for (var i = Math.max(0, hit.i - 1); i <= Math.min(info.length - 1, hit.i + 2); i++) {
+      var it = info[i], kk = it.k, W = it.W * kk, H = it.H * kk, pad = 0.04 * W;
+      var x0 = Math.max(0, g.x0 * k - pad), x1 = Math.min(W, g.x1 * k + pad);
+      if (i === hit.i) {
+        if (g.y0 * k > 120) out.push({ page: i, x: x0, y: 0, w: x1 - x0, h: g.y0 * k - 6, auto: true });
+        if (H - g.y1 * k > 120) out.push({ page: i, x: x0, y: g.y1 * k + 6, w: x1 - x0, h: H - g.y1 * k - 6, auto: true });
+      } else if (!(it.grid && it.grid !== g && it.filled)) out.push({ page: i, x: x0, y: 0, w: x1 - x0, h: H, auto: true });
+    }
+    return out;
+  }
   // Shows one page at up to 2000 px; crops for reading come from the full-size photo or a sharper PDF render
   function scanPage(i) {
-    var pg = SC.pages[i]; SC.page = i; SC.quad = null; SC.boxes = {}; SC.means = null; SC.flip = {};
-    var cv = document.createElement('canvas');
-    var ready = pg.blob ? blobToImage(pg.blob).then(function (im) {
-      var W0 = im.naturalWidth, H0 = im.naturalHeight, s = Math.min(1, 2000 / Math.max(W0, H0));
-      cv.width = Math.round(W0 * s); cv.height = Math.round(H0 * s); cv.getContext('2d').drawImage(im, 0, 0, cv.width, cv.height);
-      SC.src = { img: im, k: W0 / cv.width };
-    }) : pg.pdf.getPage(pg.num).then(function (page) {
-      var v1 = page.getViewport({ scale: 1 }), s = 2000 / Math.max(v1.width, v1.height), vp = page.getViewport({ scale: s });
-      cv.width = Math.ceil(vp.width); cv.height = Math.ceil(vp.height);
-      var ctx = cv.getContext('2d'); ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, cv.width, cv.height);
-      SC.src = { page: page, base: s };
-      return page.render({ canvasContext: ctx, viewport: vp }).promise;
-    });
-    return ready.then(function () {
-      SC.cv = cv; SC.W = cv.width; SC.H = cv.height;
-      var d = cv.getContext('2d').getImageData(0, 0, SC.W, SC.H).data, g = new Uint8ClampedArray(SC.W * SC.H);
-      for (var j = 0, p = 0; j < g.length; j++, p += 4) g[j] = (d[p] * 299 + d[p + 1] * 587 + d[p + 2] * 114) / 1000;
-      SC.gray = g;
-      if (SC.kind === 'answers') return;   // the editor keeps showing the puzzle picture
+    return renderPage(SC.pages[i], 2000).then(function (r) {
+      SC.page = i; SC.cv = r.cv; SC.W = r.cv.width; SC.H = r.cv.height; SC.src = r.src; SC.srcs[i] = r.src;
+      SC.data = r.cv.getContext('2d').getImageData(0, 0, SC.W, SC.H).data;
+      if (SC.kind === 'answers' || (SC.gridPage >= 0 && i !== SC.gridPage)) return;   // the editor keeps showing the puzzle's grid page
       U.srcUrls.forEach(function (u) { URL.revokeObjectURL(u); });
-      return new Promise(function (res) { cv.toBlob(function (b) { U.srcUrls = b ? [URL.createObjectURL(b)] : []; res(); }, 'image/jpeg', 0.85); });
+      return new Promise(function (res) { r.cv.toBlob(function (b) { U.srcUrls = b ? [URL.createObjectURL(b)] : []; res(); }, 'image/jpeg', 0.85); });
     });
   }
-  // a part of the page, sharp enough to read: at least minW pixels wide where the source allows
-  function scanCrop(rc, minW) {
-    var x = Math.max(0, rc.x), y = Math.max(0, rc.y), w = Math.min(SC.W - x, rc.w), h = Math.min(SC.H - y, rc.h), out = document.createElement('canvas');
-    if (SC.src.img) {
-      var k = SC.src.k, up = Math.min(3, Math.max(1, minW / (w * k)));
-      out.width = Math.round(w * k * up); out.height = Math.round(h * k * up);
-      var c0 = out.getContext('2d'); c0.fillStyle = '#fff'; c0.fillRect(0, 0, out.width, out.height); c0.imageSmoothingQuality = 'high';
-      c0.drawImage(SC.src.img, x * k, y * k, w * k, h * k, 0, 0, out.width, out.height);
-      return Promise.resolve(out);
-    }
-    var f = Math.min(4, Math.max(1.5, minW / w)), s = SC.src.base * f, vp = SC.src.page.getViewport({ scale: s });
-    out.width = Math.round(w * f); out.height = Math.round(h * f);
-    var ctx = out.getContext('2d'); ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, out.width, out.height);
-    return SC.src.page.render({ canvasContext: ctx, viewport: vp, transform: [1, 0, 0, 1, -x * f, -y * f] }).promise.then(function () { return out; });
+  function pageSrc(i) {
+    if (SC.srcs[i]) return Promise.resolve(SC.srcs[i]);
+    var pg = SC.pages[i];
+    var p = pg.blob ? blobToImage(pg.blob).then(function (im) { var s = Math.min(1, 2000 / Math.max(im.naturalWidth, im.naturalHeight)); return { img: im, k: im.naturalWidth / Math.round(im.naturalWidth * s) }; })
+      : pg.pdf.getPage(pg.num).then(function (page) { var v1 = page.getViewport({ scale: 1 }); return { page: page, base: 2000 / Math.max(v1.width, v1.height) }; });
+    return p.then(function (s) { SC.srcs[i] = s; return s; });
+  }
+  // a part of a page, sharp enough to read: at least minW pixels wide where the source allows
+  function scanCrop(rc, minW, pageIdx) {
+    var pi = pageIdx == null ? SC.page : pageIdx;
+    return pageSrc(pi).then(function (src) {
+      var x = Math.max(0, rc.x), y = Math.max(0, rc.y), w = rc.w, h = rc.h, out = document.createElement('canvas');
+      if (src.img) {
+        var k = src.k, up = Math.min(3, Math.max(1, minW / (w * k)));
+        out.width = Math.round(w * k * up); out.height = Math.round(h * k * up);
+        var c0 = out.getContext('2d'); c0.fillStyle = '#fff'; c0.fillRect(0, 0, out.width, out.height); c0.imageSmoothingQuality = 'high';
+        c0.drawImage(src.img, x * k, y * k, w * k, h * k, 0, 0, out.width, out.height);
+        return out;
+      }
+      var f = Math.min(4, Math.max(1, minW / w)), vp = src.page.getViewport({ scale: src.base * f });
+      out.width = Math.round(w * f); out.height = Math.round(h * f);
+      var ctx = out.getContext('2d'); ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, out.width, out.height);
+      return src.page.render({ canvasContext: ctx, viewport: vp, transform: [1, 0, 0, 1, -x * f, -y * f] }).promise.then(function () { return out; });
+    });
   }
   function qpt(u, v) {
     var q = SC.quad;
     return { x: (1 - u) * (1 - v) * q.tl.x + u * (1 - v) * q.tr.x + (1 - u) * v * q.bl.x + u * v * q.br.x,
              y: (1 - u) * (1 - v) * q.tl.y + u * (1 - v) * q.tr.y + (1 - u) * v * q.bl.y + u * v * q.br.y };
   }
-  // black squares: the middle of each square is sampled and the darker group is taken (Otsu's method)
+  // blocked squares: coloured (Eenadu's stars, leaves, flowers) or dark squares, split from the plain ones (Otsu's method)
   function scanDetect() {
-    if (!SC.quad) { SC.means = null; return; }
-    var R = SC.R, C = SC.C, W = SC.W, H = SC.H, g = SC.gray, means = [];
-    for (var r = 0; r < R; r++) for (var c = 0; c < C; c++) {
-      var s = 0, n = 0;
-      for (var i = 0; i < 5; i++) for (var j = 0; j < 5; j++) {
-        var p = qpt((c + 0.3 + 0.1 * j) / C, (r + 0.3 + 0.1 * i) / R), xx = p.x | 0, yy = p.y | 0;
-        if (xx >= 0 && yy >= 0 && xx < W && yy < H) { s += g[yy * W + xx]; n++; }
-      }
-      means.push(n ? s / n : 255);
+    if (!SC.quad || SC.page !== SC.gridPage) { if (!SC.quad) SC.vals = null; return; }
+    var st = cellStats(SC.data, SC.W, SC.H, qpt, SC.R, SC.C);
+    SC.stats = st; SC.vals = st.map(function (s) { return Math.max(s.col, s.dark); }); SC.thr = otsu(SC.vals);
+    if (SC.kind === 'answers' && D && D.R === SC.R && D.C === SC.C) {
+      // answers: the squares come from the draft; check that its open squares hold letters here
+      var whites = 0, inked = 0;
+      for (var r = 0; r < D.R; r++) for (var c = 0; c < D.C; c++) if (!D.black[r][c]) { whites++; var s = st[r * D.C + c]; if (s.dark > 0.03 || s.col > 0.3) inked++; }
+      SC.match = whites ? inked / whites : 0;
     }
-    var lo = Math.min.apply(null, means), hi = Math.max.apply(null, means), thr = 110;
-    if (hi - lo > 50) {
-      var best = -1;
-      for (var t = lo + 1; t < hi; t += 2) {
-        var a = means.filter(function (m) { return m < t; }), b = means.filter(function (m) { return m >= t; });
-        if (!a.length || !b.length) continue;
-        var ma = a.reduce(function (x, y) { return x + y; }, 0) / a.length, mb = b.reduce(function (x, y) { return x + y; }, 0) / b.length;
-        var v = a.length * b.length * (ma - mb) * (ma - mb);
-        if (v > best) { best = v; thr = t; }
-      }
-    }
-    SC.means = means; SC.thr = thr;
   }
-  function scanBlack(r, c) { if (!SC.means) return false; var b = SC.means[r * SC.C + c] < SC.thr; return SC.flip[r + ',' + c] ? !b : b; }
+  function matchNote() { return SC.match == null ? '' : ' · డ్రాఫ్ట్‌లోని ' + Math.round(SC.match * 100) + '% తెల్ల గడుల్లో అక్షరాలు కనిపించాయి' + (SC.match >= 0.85 ? ' — సరిపోయింది, చదువుతున్నాం…' : ' — ఇది సరైన గడేనా? గడి పెట్టె సరిచూసి “జవాబులు చదవండి” నొక్కండి'); }
+  function scanBlack(r, c) {
+    if (SC.kind === 'answers' && D && D.black[r]) return !!D.black[r][c];
+    if (!SC.vals) return false; var b = SC.vals[r * SC.C + c] >= SC.thr; return SC.flip[r + ',' + c] ? !b : b;
+  }
+  // the numbers the grid gives, in order, with the length of each word: clues are matched to these
+  function gridStarts() {
+    var R = SC.R, C = SC.C, A = [], Dn = [], n = 0;
+    function w(r, c) { return r >= 0 && c >= 0 && r < R && c < C && !scanBlack(r, c); }
+    for (var r = 0; r < R; r++) for (var c = 0; c < C; c++) {
+      if (!w(r, c)) continue;
+      var a = (!w(r, c - 1) && w(r, c + 1)) || lone(w, r, c), d = !w(r - 1, c) && w(r + 1, c);
+      if (!a && !d) continue; n++;
+      if (a) { var l = 0; for (var x = c; w(r, x); x++) l++; A.push({ n: n, len: l }); }
+      if (d) { var l2 = 0; for (var y = r; w(y, c); y++) l2++; Dn.push({ n: n, len: l2 }); }
+    }
+    return { A: A, D: Dn };
+  }
   function scanView() {
     if (!ADMIN || !SC) return '<div class="page gutter"><p class="note">చదవాల్సిన చిత్రం లేదు.</p><a class="wide-btn pri" href="#admin">నిర్వాహణకు వెళ్ళండి</a></div>';
-    var ans = SC.kind === 'answers', busy = !!U.busy;
-    var modes = [['move', 'కదుపు'], ['grid', 'గడి']].concat(ans ? [] : [['A', 'అడ్డం ఆధారాలు'], ['D', 'నిలువు ఆధారాలు']]);
+    var ans = SC.kind === 'answers', busy = !!U.busy, onGrid = SC.page === SC.gridPage;
+    var modes = [['move', 'కదుపు'], ['grid', 'గడి']].concat(ans ? [] : [['A', 'అడ్డం పెట్టె'], ['D', 'నిలువు పెట్టె']]);
     var help = SC.mode === 'move' ? 'పేజీని వేలితో జరిపి చూడండి. గీయడానికి పైన ఒక పెట్టె రకం ఎంచుకోండి.'
-      : SC.mode === 'grid' ? (SC.quad ? 'గడి మూలల్లోని చుక్కలను లాగి, ఎరుపు గీతలు గడి గీతలపై పడేలా సరిచేయండి. కావాలంటే మళ్ళీ గీయండి.' : 'పద వినోదం గడి ఒక మూల నుంచి ఎదురు మూల దాకా వేలితో లాగి పెట్టె గీయండి.')
-      : 'ఈ పదాల ' + (SC.mode === 'A' ? 'అడ్డం' : 'నిలువు') + ' ఆధారాలు ఉన్న భాగం చుట్టూ వేలితో లాగి పెట్టె గీయండి (శీర్షికతో సహా పర్లేదు).';
-    var pages = SC.pages.length > 1 ? '<div class="seg wide" role="group" aria-label="పేజీ">' + SC.pages.map(function (x, i) { return '<button data-act="scan-page" data-v="' + i + '" aria-pressed="' + (i === SC.page) + '">పేజీ ' + (i + 1) + '</button>'; }).join('') + '</div>' : '';
+      : SC.mode === 'grid' ? (SC.quad && onGrid ? 'గడి మూలల్లోని చుక్కలను లాగి, ఎరుపు గీతలు గడి గీతలపై పడేలా సరిచేయండి. కావాలంటే మళ్ళీ గీయండి.' : 'పద వినోదం గడి ఒక మూల నుంచి ఎదురు మూల దాకా వేలితో లాగి పెట్టె గీయండి.')
+      : (SC.mode === 'A' ? 'అడ్డం' : 'నిలువు') + ' ఆధారాలు ఉన్న భాగం చుట్టూ ఖాళీ చోట వేలితో లాగి కొత్త పెట్టె గీయండి. ఉన్న పెట్టెను మధ్యలో పట్టుకుని జరపండి, మూలల చుక్కలు లాగి పెంచండి / తగ్గించండి, పైన కుడివైపు × తో తీసివేయండి. పేజీ మార్చి ఆ పేజీలోనూ గీయవచ్చు.';
+    var pages = SC.pages.length > 1 ? '<div class="seg wide pagesel" role="group" aria-label="పేజీ">' + SC.pages.map(function (x, i) { var tag = i === SC.gridPage ? ' ▦' : (SC.boxes.some(function (b) { return b.page === i; }) ? ' ✎' : ''); return '<button data-act="scan-page" data-v="' + i + '" aria-pressed="' + (i === SC.page) + '">' + (i + 1) + tag + '</button>'; }).join('') + '</div>' : '';
     var mini = '';
-    if (SC.means) {
+    if (SC.vals || ans) {
       var nb = 0, cells = '';
-      for (var r = 0; r < SC.R; r++) for (var c = 0; c < SC.C; c++) { var b = scanBlack(r, c); if (b) nb++; cells += '<button class="mc' + (b ? ' b' : '') + (SC.flip[r + ',' + c] ? ' f' : '') + '" data-act="scan-flip" data-r="' + r + '" data-c="' + c + '" aria-label="' + (r + 1) + ', ' + (c + 1) + (b ? ' నలుపు' : ' తెలుపు') + '"></button>'; }
-      var diff = 0; if (ans && D) for (var r2 = 0; r2 < SC.R; r2++) for (var c2 = 0; c2 < SC.C; c2++) if (scanBlack(r2, c2) !== !!(D.black[r2] && D.black[r2][c2])) diff++;
-      mini = '<div class="fld"><h3 class="lbl">గుర్తించిన గడి · నలుపు ' + nb + '</h3><div class="scanmini" style="--n:' + SC.C + '">' + cells + '</div><p class="note">తప్పుగా వచ్చిన గడిని నొక్కితే నలుపు ↔ తెలుపు మారుతుంది.' + (ans ? (diff ? ' డ్రాఫ్ట్‌తో ' + diff + ' గడులు తేడా — గడి పెట్టె సరిచూడండి.' : ' డ్రాఫ్ట్‌తో సరిపోయింది.') : '') + '</p></div>';
+      for (var r = 0; r < SC.R; r++) for (var c = 0; c < SC.C; c++) { var b = scanBlack(r, c); if (b) nb++; cells += '<button class="mc' + (b ? ' b' : '') + (SC.flip[r + ',' + c] ? ' f' : '') + '" data-act="scan-flip" data-r="' + r + '" data-c="' + c + '"' + (ans ? ' disabled' : '') + ' aria-label="' + (r + 1) + ', ' + (c + 1) + (b ? ' నలుపు' : ' తెలుపు') + '"></button>'; }
+      mini = '<div class="fld"><h3 class="lbl">' + (ans ? 'డ్రాఫ్ట్‌లోని గడి' : 'గుర్తించిన గడి · ' + SC.R + '×' + SC.C + ' · నల్ల గడులు ' + nb) + '</h3><div class="scanmini" style="--n:' + SC.C + '">' + cells + '</div><p class="note">' +
+        (ans ? (SC.match != null ? 'ఈ పేజీలో ' + Math.round(SC.match * 100) + '% తెల్ల గడుల్లో అక్షరాలు కనిపించాయి.' : '') : 'పేపర్‌తో పోల్చండి: తప్పుగా వచ్చిన గడిని నొక్కితే నలుపు ↔ తెలుపు మారుతుంది.') + '</p></div>';
     }
+    var exp = !ans && SC.vals ? gridStarts() : null;
     var ocr = ans ? '' : '<section class="sec"><h2 class="sec-h">ఆధారాలు</h2><div class="box">' +
-      '<p class="note">అడ్డం, నిలువు ఆధారాల చుట్టూ పెట్టెలు గీసి “చదవండి” నొక్కండి. ఫోన్‌లోని చదివే ఉపకరణం (Tesseract) మొదటిసారి సుమారు 5 MB తెచ్చుకుంటుంది. తెలుగు అక్షరాల్లో కొన్ని తప్పులు రావచ్చు — కింది పెట్టెల్లోనే సరిదిద్దండి, ప్రతి ఆధారం “సంఖ్య. ఆధారం (పొడవు)” అని ఒక్కో లైన్‌లో.</p>' +
-      '<button class="wide-btn ter" data-act="scan-ocr"' + (busy ? ' disabled' : '') + '>ఆధారాలు చదవండి</button>' +
-      ['A', 'D'].map(function (d) { var n = parseClueText(SC.ocr[d], d).length; return '<div class="fld"><label class="lbl" for="ocr-' + d + '">' + (d === 'A' ? 'అడ్డం' : 'నిలువు') + ' · <span id="ocr-n-' + d + '">' + n + '</span> ఆధారాలు</label><textarea id="ocr-' + d + '" class="inp ocrbox" data-ocr="' + d + '" placeholder="1. ఆధారం (3)">' + esc(SC.ocr[d]) + '</textarea></div>'; }).join('') +
+      '<p class="note">' + (SC.boxes.some(function (b) { return b.auto; }) ? 'ఆధారాలు ఉండే భాగాలు తానుగా గుర్తించాం (బూడిద చుక్కల పెట్టెలు) — పైన “అడ్డం / నిలువు పెట్టె” ఎంచుకుని వాటిని జరపవచ్చు, మూలలు లాగి పెంచవచ్చు, × తో తీసివేయవచ్చు. ' : '') + 'చదివినవి కింద ఉన్నాయి — ప్రతి ఆధారం “సంఖ్య. ఆధారం (పొడవు)” అని ఒక్కో లైన్‌లో. సంఖ్యలు, పొడవులు గడి నుంచి వేశాం; తెలుగు అక్షరాల్లో తప్పులు ఉంటే ఇక్కడే సరిదిద్దండి.</p>' +
+      '<div class="btnrow"><button class="wide-btn ter" data-act="scan-ocr"' + (busy ? ' disabled' : '') + '>' + (SC.ocr.A || SC.ocr.D ? 'మళ్ళీ చదవండి' : 'ఆధారాలు చదవండి') + '</button>' + (SC.boxes.length ? '<button class="wide-btn link" data-act="scan-clear"' + (busy ? ' disabled' : '') + '>గీసిన ఆధారాల పెట్టెలు తీసివేయండి</button>' : '') + '</div>' +
+      ['A', 'D'].map(function (d) { var n = parseClueText(SC.ocr[d], d).length, want = exp ? exp[d].length : 0; return '<div class="fld"><label class="lbl" for="ocr-' + d + '">' + (d === 'A' ? 'అడ్డం' : 'నిలువు') + ' · <span id="ocr-n-' + d + '">' + n + '</span>' + (want ? ' / ' + want : '') + ' ఆధారాలు</label><textarea id="ocr-' + d + '" class="inp ocrbox" data-ocr="' + d + '" placeholder="1. ఆధారం (3)">' + esc(SC.ocr[d]) + '</textarea></div>'; }).join('') +
       '</div></section>';
     return '<section class="play" style="overflow-y:auto">' +
       '<header class="ebar"><a class="ghostbtn" href="' + (ans ? '#edit' : '#admin') + '" aria-label="వెనక్కి">' + I.back + '</a><h1>' + (ans ? 'జవాబులు · ఫోన్‌లోనే చదవడం' : 'ఫోన్‌లోనే చదవడం') + '</h1></header>' +
       '<div class="page gutter" style="gap:14px">' + statusBox() + pages +
         '<div class="seg wide" role="group" aria-label="గీసే పెట్టె">' + modes.map(function (m) { return '<button data-act="scan-mode" data-v="' + m[0] + '" aria-pressed="' + (SC.mode === m[0]) + '">' + m[1] + '</button>'; }).join('') + '</div>' +
         '<p class="note" id="scan-help">' + help + '</p>' +
+        (SC.quad ? '<div class="btnrow"><button class="wide-btn link" data-act="scan-ungrid"' + (busy ? ' disabled' : '') + '>' + (U.confirm === 'ungrid' ? 'ఖచ్చితమా? గడి పెట్టె తీసివేస్తాం — మళ్ళీ నొక్కండి' : 'గడి పెట్టె తీసివేయండి (పేజీ ' + (SC.gridPage + 1) + ')') + '</button></div>' : '') +
         '<div class="scanwrap" id="scanwrap"><div class="scanbox" id="scanbox"><canvas id="scan-cv"></canvas><svg id="scan-ov" class="' + (SC.mode === 'move' ? '' : 'draw') + '" xmlns="http://www.w3.org/2000/svg"></svg></div></div>' +
         '<div class="btnrow scanzoom"><button class="smallbtn" data-act="scan-zoom" data-v="-1" aria-label="చిన్నగా">−</button><span class="note">' + Math.round(SC.zoom * 100) + '%</span><button class="smallbtn" data-act="scan-zoom" data-v="1" aria-label="పెద్దగా">+</button></div>' +
         '<div class="row3"><div class="fld"><label class="lbl" for="sc-r">వరుసలు</label><input id="sc-r" class="inp sm" type="number" min="3" max="25" value="' + SC.R + '"' + (ans ? ' disabled' : '') + '></div><div class="fld"><label class="lbl" for="sc-c">నిలువు వరుసలు</label><input id="sc-c" class="inp sm" type="number" min="3" max="25" value="' + SC.C + '"' + (ans ? ' disabled' : '') + '></div>' +
           (ans ? '' : '<div class="fld"><label class="lbl" for="sc-date">తేదీ</label><input id="sc-date" class="inp sm" style="width:100%" inputmode="numeric" placeholder="DD.MM.YYYY" value="' + esc(SC.date) + '"></div>') + '</div>' +
         mini + ocr +
-        (ans ? '<button class="wide-btn pri" data-act="scan-answers"' + (busy || !SC.means ? ' disabled' : '') + '>జవాబులు చదివి డ్రాఫ్ట్‌లో నింపండి</button><p class="note">ప్రతి గడిలోని అక్షరాన్ని విడిగా చదువుతాం. తెలుగు గుణింతాలు, ఒత్తుల్లో తప్పులు రావచ్చు — తర్వాత “జవాబులు” లో సరిచూడండి.</p>'
-          : '<button class="wide-btn pri" data-act="scan-draft"' + (busy || !SC.means ? ' disabled' : '') + '>డ్రాఫ్ట్ తయారు చేయండి</button>') +
+        (ans ? '<button class="wide-btn pri" data-act="scan-answers"' + (busy || !SC.quad ? ' disabled' : '') + '>జవాబులు చదివి డ్రాఫ్ట్‌లో నింపండి</button><p class="note">ప్రతి గడిలోని అక్షరాన్ని విడిగా చదువుతాం. తెలుగు గుణింతాలు, ఒత్తుల్లో తప్పులు రావచ్చు — తర్వాత డ్రాఫ్ట్‌లో “జవాబులు” లో సరిచూడండి.</p>'
+          : '<button class="wide-btn pri" data-act="scan-draft"' + (busy || !SC.vals ? ' disabled' : '') + '>సరిచూశాను — డ్రాఫ్ట్ తయారు చేయండి</button>') +
       '</div></section>';
   }
   function mountScan() {
@@ -2320,6 +2492,7 @@ html.vv-short #view.typing .tlc{min-height:38px}
     box.style.width = Math.round(wrap.clientWidth * SC.zoom) + 'px';
     ov.setAttribute('viewBox', '0 0 ' + SC.W + ' ' + SC.H); ov.setAttribute('preserveAspectRatio', 'none');
     if (SC.scroll) { wrap.scrollLeft = SC.scroll[0]; wrap.scrollTop = SC.scroll[1]; }
+    else if (SC.quad && SC.page === SC.gridPage && SC.zoom === 1) { var bh = box.getBoundingClientRect().height, k = bh / SC.H; wrap.scrollTop = Math.max(0, SC.quad.tl.y * k - 20); }
     wrap.onscroll = function () { SC.scroll = [wrap.scrollLeft, wrap.scrollTop]; };
     drawScanOverlay();
     var drag = null;
@@ -2328,8 +2501,18 @@ html.vv-short #view.typing .tlc{min-height:38px}
       if (SC.mode === 'move' || U.busy) return;
       var p = pt(ev), rad = 34 / (ov.getBoundingClientRect().width / SC.W);
       drag = null;
-      if (SC.mode === 'grid' && SC.quad) ['tl', 'tr', 'bl', 'br'].forEach(function (k) { var q = SC.quad[k]; if (!drag && Math.hypot(q.x - p.x, q.y - p.y) < rad) drag = { corner: k }; });
-      if (!drag) drag = { start: p };
+      if (SC.mode === 'grid' && SC.quad && SC.page === SC.gridPage) ['tl', 'tr', 'bl', 'br'].forEach(function (k) { var q = SC.quad[k]; if (!drag && Math.hypot(q.x - p.x, q.y - p.y) < rad) drag = { corner: k }; });
+      if (!drag && SC.mode !== 'grid') {
+        for (var bi = SC.boxes.length - 1; bi >= 0 && !drag; bi--) {
+          var b = SC.boxes[bi]; if (b.page !== SC.page) continue;
+          var del = boxDel(b, rad);
+          if (Math.hypot(p.x - del.x, p.y - del.y) < rad * 0.8) { SC.boxes.splice(bi, 1); drawScanOverlay(); render(); ev.preventDefault(); return; }
+          var cs = { tl: [b.x, b.y], tr: [b.x + b.w, b.y], bl: [b.x, b.y + b.h], br: [b.x + b.w, b.y + b.h] };
+          Object.keys(cs).forEach(function (k) { if (!drag && Math.hypot(p.x - cs[k][0], p.y - cs[k][1]) < rad) drag = { box: b, bcorner: k }; });
+          if (!drag && p.x > b.x && p.x < b.x + b.w && p.y > b.y && p.y < b.y + b.h) drag = { box: b, move: { dx: p.x - b.x, dy: p.y - b.y } };
+        }
+      }
+      if (!drag) drag = { start: p, box: null };
       try { ov.setPointerCapture(ev.pointerId); } catch (e) {}
       ev.preventDefault();
     };
@@ -2337,23 +2520,35 @@ html.vv-short #view.typing .tlc{min-height:38px}
       if (!drag) return;
       var p = pt(ev);
       if (drag.corner) SC.quad[drag.corner] = p;
+      else if (drag.move) { drag.box.x = Math.max(0, Math.min(SC.W - drag.box.w, p.x - drag.move.dx)); drag.box.y = Math.max(0, Math.min(SC.H - drag.box.h, p.y - drag.move.dy)); }
+      else if (drag.bcorner) {
+        var bx = drag.box, L = bx.x, T = bx.y, Rr = bx.x + bx.w, B = bx.y + bx.h, kc = drag.bcorner;
+        if (kc[1] === 'l') L = Math.min(p.x, Rr - 20); else Rr = Math.max(p.x, L + 20);
+        if (kc[0] === 't') T = Math.min(p.y, B - 20); else B = Math.max(p.y, T + 20);
+        bx.x = Math.max(0, L); bx.y = Math.max(0, T); bx.w = Math.min(SC.W, Rr) - bx.x; bx.h = Math.min(SC.H, B) - bx.y;
+      }
       else {
         var x0 = Math.min(drag.start.x, p.x), y0 = Math.min(drag.start.y, p.y), x1 = Math.max(drag.start.x, p.x), y1 = Math.max(drag.start.y, p.y);
         if (x1 - x0 < 12 || y1 - y0 < 12) return;
-        if (SC.mode === 'grid') SC.quad = { tl: { x: x0, y: y0 }, tr: { x: x1, y: y0 }, bl: { x: x0, y: y1 }, br: { x: x1, y: y1 } };
-        else SC.boxes[SC.mode] = { x: x0, y: y0, w: x1 - x0, h: y1 - y0 };
+        if (SC.mode === 'grid') { SC.quad = { tl: { x: x0, y: y0 }, tr: { x: x1, y: y0 }, bl: { x: x0, y: y1 }, br: { x: x1, y: y1 } }; SC.gridPage = SC.page; SC.flip = {}; }
+        else {
+          if (!drag.box) { drag.box = { page: SC.page, d: SC.mode }; SC.boxes.push(drag.box); }
+          drag.box.x = x0; drag.box.y = y0; drag.box.w = x1 - x0; drag.box.h = y1 - y0;
+        }
       }
       drawScanOverlay();
     };
     ov.onpointerup = ov.onpointercancel = function () {
-      if (!drag) return; drag = null;
+      if (!drag) return; var was = drag; drag = null;
       if (SC.mode === 'grid' && SC.quad) { scanDetect(); render(); }
+      else if (was.box) { was.box.auto = was.box.auto && !was.start; render(); }
     };
   }
+  function boxDel(b, rad) { return { x: b.x + b.w - rad * 2.2, y: b.y + rad * 1.4 }; }
   function drawScanOverlay() {
     var ov = document.getElementById('scan-ov'); if (!ov) return;
     var sw = SC.W / 400, s = '';
-    if (SC.quad) {
+    if (SC.quad && SC.page === SC.gridPage) {
       var R = SC.R, C = SC.C;
       for (var r = 0; r < R; r++) for (var c = 0; c < C; c++) if (scanBlack(r, c)) {
         var a = qpt(c / C, r / R), b = qpt((c + 1) / C, r / R), d = qpt((c + 1) / C, (r + 1) / R), e = qpt(c / C, (r + 1) / R);
@@ -2363,19 +2558,25 @@ html.vv-short #view.typing .tlc{min-height:38px}
       for (var j = 0; j <= C; j++) { var q0 = qpt(j / C, 0), q1 = qpt(j / C, 1); s += '<line x1="' + q0.x + '" y1="' + q0.y + '" x2="' + q1.x + '" y2="' + q1.y + '" stroke="#E00000" stroke-width="' + (j % C ? sw : sw * 2) + '"/>'; }
       ['tl', 'tr', 'bl', 'br'].forEach(function (k) { var q = SC.quad[k]; s += '<circle cx="' + q.x + '" cy="' + q.y + '" r="' + sw * 9 + '" fill="rgba(224,0,0,.25)" stroke="#E00000" stroke-width="' + sw * 2 + '"/>'; });
     }
-    [['A', '#1565C0', 'అడ్డం'], ['D', '#2E7D32', 'నిలువు']].forEach(function (o) {
-      var b = SC.boxes[o[0]]; if (!b) return;
-      s += '<rect x="' + b.x + '" y="' + b.y + '" width="' + b.w + '" height="' + b.h + '" fill="none" stroke="' + o[1] + '" stroke-width="' + sw * 2.5 + '"/>' +
-        '<text x="' + (b.x + sw * 4) + '" y="' + (b.y + sw * 22) + '" fill="' + o[1] + '" font-size="' + sw * 20 + '" font-weight="700">' + o[2] + '</text>';
+    SC.boxes.forEach(function (b) {
+      if (b.page !== SC.page) return;
+      var col = b.d === 'A' ? '#1565C0' : b.d === 'D' ? '#2E7D32' : '#6B5849', lab = b.d === 'A' ? 'అడ్డం' : b.d === 'D' ? 'నిలువు' : 'ఆధారాలు (ఆటో)';
+      s += '<rect x="' + b.x + '" y="' + b.y + '" width="' + b.w + '" height="' + b.h + '" fill="' + (SC.mode === 'A' || SC.mode === 'D' ? 'rgba(255,255,255,.06)' : 'none') + '" stroke="' + col + '" stroke-width="' + sw * 2.5 + '"' + (b.d ? '' : ' stroke-dasharray="' + sw * 8 + ' ' + sw * 6 + '"') + '/>' +
+        '<text x="' + (b.x + sw * 4) + '" y="' + (b.y + sw * 22) + '" fill="' + col + '" font-size="' + sw * 18 + '" font-weight="700">' + lab + '</text>';
+      if (SC.mode === 'A' || SC.mode === 'D') {
+        [[b.x, b.y], [b.x + b.w, b.y], [b.x, b.y + b.h], [b.x + b.w, b.y + b.h]].forEach(function (q) { s += '<circle cx="' + q[0] + '" cy="' + q[1] + '" r="' + sw * 8 + '" fill="' + col + '" fill-opacity=".25" stroke="' + col + '" stroke-width="' + sw * 2 + '"/>'; });
+        var dl = boxDel(b, 34 / ((ov.getBoundingClientRect().width || SC.W) / SC.W));
+        s += '<circle cx="' + dl.x + '" cy="' + dl.y + '" r="' + sw * 9 + '" fill="#fff" stroke="#C00000" stroke-width="' + sw * 2 + '"/><text x="' + dl.x + '" y="' + (dl.y + sw * 6) + '" text-anchor="middle" fill="#C00000" font-size="' + sw * 18 + '" font-weight="700">×</text>';
+      }
     });
     ov.innerHTML = s;
   }
+  // reviewed clue lines ("12. text (3)") as the admin sees them in the text boxes
   function parseClueText(text, dir) {
     var out = [], cur = null, d = dir;
-    String(text || '').replace(/[\u200C\u200D]/g, '').replace(/\)\s+(?=\d{1,2}\s*[.)])/g, ')\n').split(/\n/).forEach(function (line) {
+    String(text || '').replace(/[‌‍]/g, '').replace(/\)\s+(?=\d{1,2}\s*[.)])/g, ')\n').split(/\n/).forEach(function (line) {
       line = line.replace(/\s+/g, ' ').trim(); if (!line) return;
-      // headings (OCR often bends them: అడడం, అల్డం, నిలుప)
-      var hm = line.match(/^(అ\S{0,3}డ\S{0,2}ం|అడ్డము|ని\S{0,2}లు\S{0,2})\s*[:：.-]?\s*/);
+      var hm = line.match(HEAD_RE);
       if (hm && !/^\d/.test(line)) { d = /^అ/.test(hm[1]) ? 'A' : 'D'; line = line.slice(hm[0].length); if (!line) return; }
       var m = line.match(/^(\d{1,2})\s*[.)\-:,]?\s*(.*)$/);
       if (m) { cur = { d: d, n: +m[1], text: m[2], len: null }; out.push(cur); }
@@ -2384,41 +2585,242 @@ html.vv-short #view.typing .tlc{min-height:38px}
     out.forEach(function (c) {
       var lm = c.text.match(/\s*[(\[{]?\s*(\d{1,2})\s*[)\]}]\s*$/);
       if (lm) { c.len = +lm[1]; c.text = c.text.slice(0, c.text.length - lm[0].length); }
-      c.text = c.text.replace(/\s*\(\s*\)\s*$/, '');
-      c.text = c.text.replace(/\s+/g, ' ').trim().normalize('NFC');
+      c.text = c.text.replace(/\s*\(\s*\)\s*$/, '').replace(/\s+/g, ' ').trim().normalize('NFC');
     });
     return out.filter(function (c) { return c.n > 0 && c.text; });
+  }
+  // headings, as printed or as the reader bends them (అడడం, అల్డం, నిలుప)
+  var HEAD_RE = /^(అ\S{0,3}డ\S{0,2}ం|అడ్డము|ని\S{0,2}లు\S{0,2})\s*[:：.-]?\s*/;
+  // raw reading of a clue column → clues. A clue ends at its length mark "(3)"; clue numbers are often lost by the
+  // reader, so they are taken from the grid, in order.
+  // a clue number as the reader bends it: 31 → 81, 2 → £, 4 → క్ష, 7 → గ, 9 → ర, 6 → &
+  var NUM_START = /^[\s.,:;'"“”‘’`_~\-–—•·\[\]]*((?:\d|[£€&$?\[\]|]|క్ష){1,3}'?|[గరశ&'](?=\s*[.,]))\s*[.,:;'’)]\s*(?=\S)/;
+  var LEN_END = /\s*[(\[{]\s*([^()\[\]{}\s]{0,3})\s*[)\]}]\s*$|\s*[(\[{]\s*([^()\s]{0,2})\s*$|\s+([^()\s]{1,3})\)\s*$|\s*([0-9?£€!|]{1,3})\)\s*$|\s+(\d{1,2})\s*\??\s*$/;
+  function teluguLetters(t) { return (String(t).match(/[అ-హ]/g) || []).length; }
+  // raw reading of a clue column → clues. A clue ends at its length mark "(3)" or where the next number starts;
+  // numbers and lengths are kept only as hints (the reader bends them) — the grid decides them later.
+  function parseClueItems(text, dir) {
+    var items = [], cur = null, d = dir || null;
+    String(text || '').replace(/[‌‍|]/g, '').split(/\n/).forEach(function (raw) {
+      // specks: far right of the text, or a dot/quote just after the length mark
+      var line = raw.replace(/\s{3,}\S{1,2}\s*$/, '').replace(/\)\s*[,.'"`’”]{1,2}\s*$/, ')').replace(/\s+/g, ' ').trim(); if (!line) return;
+      var hh = headingOf(line);
+      if (hh) { d = hh.d; cur = null; line = hh.rest; if (!line) return; }
+      if (HEAD_STOP.test(line)) { d = null; cur = null; return; }
+      if (/^\S{0,2}\s*ఆ?ధారాలు\s*[-–:.]?\s*$/.test(line)) return;   // a bare "ఆధారాలు" banner
+      if (!d) return;
+      var nm = line.match(NUM_START);
+      if (cur && nm && /^[\u0C05-\u0C39“"'‘]/.test(line.slice(nm[0].length))) cur = null;   // a fresh number starts a new clue
+      if (!cur) {
+        nm = nm || line.match(/^\s*(\d{1,2})\s+(?=[\u0C05-\u0C39])/);   // a number whose dot was lost: "85 వంచన"
+        var num = nm ? nm[1] : '';
+        line = line.slice(nm ? nm[0].length : 0).replace(/^(?:[క-హ][\u0C3E-\u0C4D]?|[£€$&]{1,2}\??)\s+(?=\S\S)/, function (x) { if (!num) num = x.trim(); return ''; });
+        if (!line) return;
+        cur = { d: d, raw: num.replace(/'/g, ''), n: /^\d{1,2}$/.test(num) ? +num : null, text: '' }; items.push(cur);
+      }
+      var em = line.match(LEN_END);
+      if (em && teluguLetters(line.slice(0, line.length - em[0].length) + cur.text) >= 2) {
+        var lr = em[1] || em[2] || em[3] || em[4] || em[5] || '', lv = (lr.match(/[1-9]/) || [''])[0];
+        cur.text += (cur.text ? ' ' : '') + line.slice(0, line.length - em[0].length); cur.len = lv ? +lv : null; cur.lenRaw = lr; cur = null;
+      } else cur.text += (cur.text ? ' ' : '') + line;
+    });
+    items.forEach(function (it) { it.text = it.text.replace(/\s*[(\[{]\s*$/, '').replace(/[\s\u0C66-\u0C6F_~]+$/, '').replace(/^[^అ-హ“"'‘(]+/, '').replace(/\s+/g, ' ').trim().normalize('NFC'); });
+    return { items: items.filter(function (it) { return teluguLetters(it.text) >= 2; }), dir: d };
+  }
+  // how well a bent clue number / length fits the grid's one
+  var DIGIT_LIKE = { '8': '386', '3': '38', '0': '06893', '1': '174', '7': '17', '9': '93', '6': '68', '5': '5', '2': '2', '4': '4', 'Q': '4', '£': '2', '€': '2', '&': '68', 'గ': '57', 'ర': '9', 'శ': '3' };
+  function digitSim(a, b) { return a === b ? 1 : (DIGIT_LIKE[a] || '').indexOf(b) >= 0 ? 0.6 : 0; }
+  function numSim(raw, n) {
+    if (!raw) return 0;
+    var r = String(raw).replace(/క్ష/g, 'Q').replace(/[\[\]|?$'`]/g, '').split(''), t = String(n).split('');
+    if (!r.length) return 0;
+    function cmp(x, y) { var s = 0; for (var i = 0; i < y.length; i++) { var v = digitSim(x[i], y[i]); if (!v) return 0; s += v; } return s / y.length; }
+    if (r.length === t.length) return 3 * cmp(r, t);
+    if (r.length === t.length - 1) return 1.2 * cmp(r, t.slice(1));                        // the first digit lost
+    if (r.length === t.length + 1) return 1.2 * Math.max(cmp(r.slice(1), t), cmp(r.slice(0, -1), t));
+    return 0;
+  }
+  function lenSim(it, L) { if (!it.len) return 0; return it.len === L ? 0.6 : digitSim(String(it.len), String(L)) ? 0.3 : 0; }
+  // read clues → the grid's clue slots, in order: a bent number or a stray line must not shift every clue after it
+  function alignItems(items, exp) {
+    var m = items.length, k = exp.length, DROP = -0.6, SKIP = -0.35, i, j;
+    var sc = [], how = [];
+    for (i = 0; i <= m; i++) { sc.push(new Float64Array(k + 1)); how.push(new Int8Array(k + 1)); }
+    for (i = 1; i <= m; i++) { sc[i][0] = sc[i - 1][0] + DROP; how[i][0] = 1; }
+    for (j = 1; j <= k; j++) { sc[0][j] = sc[0][j - 1] + SKIP; how[0][j] = 2; }
+    for (i = 1; i <= m; i++) for (j = 1; j <= k; j++) {
+      var it = items[i - 1], e = exp[j - 1];
+      var a = sc[i - 1][j - 1] + 1 + numSim(it.raw, e.n) + lenSim(it, e.len), b = sc[i - 1][j] + DROP, c = sc[i][j - 1] + SKIP;
+      if (a >= b && a >= c) { sc[i][j] = a; how[i][j] = 0; } else if (b >= c) { sc[i][j] = b; how[i][j] = 1; } else { sc[i][j] = c; how[i][j] = 2; }
+    }
+    var got = new Array(k), extra = []; i = m; j = k;
+    while (i > 0 || j > 0) {
+      var h = i === 0 ? 2 : j === 0 ? 1 : how[i][j];
+      if (h === 0) { got[j - 1] = items[i - 1]; i--; j--; } else if (h === 1) { extra.unshift(items[i - 1]); i--; } else j--;
+    }
+    return { got: got, extra: extra };
+  }
+  function numberItems(items, exp) {
+    if (!exp || !exp.length) return items.map(function (it) { return { n: it.n || '', text: it.text, len: it.len }; });
+    var al = alignItems(items, exp);
+    return exp.map(function (e, j) { var it = al.got[j]; return { n: e.n, text: it ? it.text : '', len: e.len }; });
   }
   function ocrLabel(m) {
     var pc = m && m.progress ? ' ' + Math.round(m.progress * 100) + '%' : '';
     return /loading|initializ/i.test((m && m.status) || '') ? 'చదివే ఉపకరణం సిద్ధమవుతోంది…' + pc : /recogniz/i.test((m && m.status) || '') ? 'చదువుతున్నాం…' + pc : '';
   }
+  // Eenadu's red పదకేళి banner beside the clues is blanked out so its big letters are not read as clue text
+  function blankBanner(cv) {
+    var W = cv.width, H = cv.height, ctx = cv.getContext('2d'), d = ctx.getImageData(0, 0, W, H).data, step = Math.max(1, Math.floor(H / 400));
+    var red = new Uint32Array(W), top = new Int32Array(W).fill(-1), bot = new Int32Array(W).fill(-1), rows = 0;
+    for (var y = 0; y < H; y += step) { rows++; for (var x = 0; x < W; x++) { var o = (y * W + x) * 4; if (d[o] > 170 && d[o + 1] < 140 && d[o + 2] < 140) { red[x]++; if (top[x] < 0) top[x] = y; bot[x] = y; } } }
+    // the banner: columns that are mostly red over their red stretch; whiten that stretch only, not the clues above or below it
+    ctx.fillStyle = '#fff';
+    for (var x2 = 0; x2 < W; x2++) {
+      if (top[x2] < 0) continue;
+      var span = (bot[x2] - top[x2]) / step + 1;
+      if (span > rows * 0.06 && red[x2] > span * 0.45) ctx.fillRect(x2, top[x2], 1, bot[x2] - top[x2] + step);
+    }
+    return cv;
+  }
+  // a clue area → blocks (separated by wide empty bands) → columns (separated by empty gutters, dashed rules allowed).
+  // A block whose columns are not separated all the way down (a సుడోకు grid under the clues) is first cut at its widest
+  // empty band. A narrow strip (a column of clue numbers) stays with its text.
+  function splitLayout(cv) {
+    var W = cv.width, H = cv.height, d = cv.getContext('2d').getImageData(0, 0, W, H).data, ink = new Uint8Array(W * H), rowInk = new Uint32Array(H), x, y;
+    for (y = 0; y < H; y++) for (x = 0; x < W; x++) { var o = (y * W + x) * 4; if ((d[o] * 299 + d[o + 1] * 587 + d[o + 2] * 114) / 1000 < 150) { ink[y * W + x] = 1; rowInk[y]++; } }
+    function emptyRuns(a, lim) { var out = [], st = -1; for (var i = 0; i < a.length; i++) { var z = a[i] <= lim; if (z && st < 0) st = i; if (!z && st >= 0) { if (st > 0) out.push([st, i]); st = -1; } } return out; }
+    var runs = emptyRuns(rowInk, 1);
+    var lens = runs.map(function (r) { return r[1] - r[0]; }).sort(function (a, b) { return a - b; }), med = lens.length ? lens[lens.length >> 1] : 0;
+    var cuts = [0]; runs.forEach(function (r) { if (r[1] - r[0] >= Math.max(2.5 * med, 0.03 * W)) cuts.push((r[0] + r[1]) >> 1); }); cuts.push(H);
+    // columns of a region: a gutter is a vertical strip that (almost) no text line crosses. Thin vertical rules
+    // (dashed column lines) are ignored; loose: up to 12% of the lines (a title, a link) may cross it.
+    function columns(x0, x1, y0, y1, loose) {
+      var w = x1 - x0, bh = y1 - y0, col = new Float32Array(w), tot = 0, rowc = new Uint32Array(bh);
+      var in0 = x0 + Math.round(0.1 * w), in1 = x1 - Math.round(0.1 * w);   // text lines are found away from the side margins
+      for (y = y0; y < y1; y++) for (x = x0; x < x1; x++) if (ink[y * W + x]) { col[x - x0]++; tot++; if (x >= in0 && x < in1) rowc[y - y0]++; }
+      var bands = [], bs = -1;
+      for (y = 0; y <= bh; y++) { var on = y < bh && rowc[y] > 2; if (on && bs < 0) bs = y; if (!on && bs >= 0) { if (y - bs >= 4) bands.push([bs, y]); bs = -1; } }
+      var hit = new Uint16Array(w), win = Math.max(3, Math.round(0.006 * W)), R = 12, ps = new Int32Array(w + 1);
+      bands.forEach(function (bd) {
+        var orr = new Uint8Array(w);
+        for (var yy = y0 + bd[0]; yy < y0 + bd[1]; yy++) {
+          for (x = 0; x < w; x++) ps[x + 1] = ps[x] + ink[yy * W + x0 + x];
+          for (x = 0; x < w; x++) if (ink[yy * W + x0 + x] && ps[Math.min(w, x + R + 1)] - ps[Math.max(0, x - R)] > 5) orr[x] = 1;
+        }
+        var last = -1e9; for (x = 0; x < w; x++) if (orr[x]) last = x; else if (x - last <= win) orr[x] = 2;   // widen each mark a little
+        last = 1e9; for (x = w - 1; x >= 0; x--) if (orr[x] === 1) last = x; else if (last - x <= win && !orr[x]) orr[x] = 2;
+        for (x = 0; x < w; x++) if (orr[x]) hit[x]++;
+      });
+      var nb = Math.max(1, bands.length), lim = loose ? 0.12 * nb : Math.max(1, Math.floor(0.04 * nb));   // a heading may cross
+      var gut = [], gs = -1;
+      for (x = 0; x < w; x++) { var e = hit[x] <= lim; if (e && gs < 0) gs = x; if (!e && gs >= 0) { gut.push([gs, x]); gs = -1; } }
+      // a column gutter is wide; the gap between a clue number and its text is narrow — keep only the wide ones
+      var cand = gut.filter(function (g) { return g[0] > 0.12 * w && g[1] < 0.88 * w && g[1] - g[0] >= Math.max(6, (loose ? 0.015 : 0.025) * W); });
+      var widest = cand.reduce(function (m, g) { return Math.max(m, g[1] - g[0]); }, 0), xs = [0];
+      cand.forEach(function (g) {
+        if (g[1] - g[0] < 0.5 * widest) return;
+        var lo = Infinity, a0 = g[0], a1 = g[0], b0 = -1;       // cut where the fewest lines cross, in the middle of that stretch
+        for (var xx = g[0]; xx < g[1]; xx++) lo = Math.min(lo, hit[xx]);
+        for (xx = g[0]; xx <= g[1]; xx++) { var ok = xx < g[1] && hit[xx] <= lo; if (ok && b0 < 0) b0 = xx; if (!ok && b0 >= 0) { if (xx - b0 > a1 - a0) { a0 = b0; a1 = xx; } b0 = -1; } }
+        xs.push((a0 + a1) >> 1);
+      });
+      xs.push(w);
+      for (var again = true; again && xs.length > 2;) {           // a strip narrower than 15% joins its neighbour
+        again = false;
+        for (var j = 0; j < xs.length - 1; j++) if (xs[j + 1] - xs[j] < 0.15 * w) { xs.splice(j + 1 < xs.length - 1 ? j + 1 : j, 1); again = true; break; }
+      }
+      var strips = [];
+      for (var j2 = 0; j2 < xs.length - 1; j2++) { var ink2 = 0; for (x = xs[j2]; x < xs[j2 + 1]; x++) ink2 += col[x]; if (ink2 > 0.002 * bh * (xs[j2 + 1] - xs[j2])) strips.push([x0 + xs[j2], x0 + xs[j2 + 1]]); }
+      return { tot: tot, strips: strips };
+    }
+    function cut(x0, x1, y0, y1, depth, out) {
+      var cs = columns(x0, x1, y0, y1); if (cs.tot < 60) return;
+      if (cs.strips.length > 1) { cs.strips.forEach(function (sp) { out.push([sp[0], y0, sp[1], y1]); }); return; }
+      if (depth < 8) {
+        // split across at an empty band — preferably the one that leaves clean columns above and below (between two clue boxes)
+        var a = new Uint32Array(y1 - y0), ix0 = x0 + Math.round(0.1 * (x1 - x0)), ix1 = x1 - Math.round(0.1 * (x1 - x0));
+        for (y = y0; y < y1; y++) for (x = ix0; x < ix1; x++) if (ink[y * W + x]) a[y - y0]++;
+        var rr = emptyRuns(a, 1), ls = rr.map(function (r) { return r[1] - r[0]; }).sort(function (p, q) { return p - q; }), md = ls.length ? ls[ls.length >> 1] : 0;
+        var cands = rr.filter(function (r) { return r[1] - r[0] >= Math.max(6, 0.008 * W); }).sort(function (p, q) { return (q[1] - q[0]) - (p[1] - p[0]); }).slice(0, 10);
+        var both = null, one = null;
+        for (var ci = 0; ci < cands.length && !both; ci++) {
+          var mid0 = y0 + ((cands[ci][0] + cands[ci][1]) >> 1), up = columns(x0, x1, y0, mid0).strips.length > 1, dn = columns(x0, x1, mid0, y1).strips.length > 1;
+          if (up && dn) both = mid0; else if ((up || dn) && one == null) one = mid0;
+        }
+        var bigGap = cands.length && rr.length > 1 && cands[0][1] - cands[0][0] >= Math.max(1.6 * md, 0.01 * W) ? y0 + ((cands[0][0] + cands[0][1]) >> 1) : null;
+        var mid = both != null ? both : one != null ? one : bigGap;
+        if (mid != null) { cut(x0, x1, y0, mid, depth + 1, out); cut(x0, x1, mid, y1, depth + 1, out); return; }
+      }
+      var lc = columns(x0, x1, y0, y1, true);
+      if (lc.strips.length > 1) { lc.strips.forEach(function (sp) { out.push([sp[0], y0, sp[1], y1]); }); return; }
+      out.push([cs.strips.length ? cs.strips[0][0] : x0, y0, cs.strips.length ? cs.strips[0][1] : x1, y1]);
+    }
+    var blocks = [];
+    for (var i = 0; i < cuts.length - 1; i++) { var rects = []; cut(0, W, cuts[i], cuts[i + 1], 0, rects); if (rects.length) blocks.push({ rects: rects }); }
+    return blocks;
+  }
+  function subCanvas(cv, x0, y0, x1, y1) { var c = document.createElement('canvas'), pad = 16; c.width = x1 - x0 + 2 * pad; c.height = y1 - y0 + 2 * pad; var g = c.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, c.width, c.height); g.drawImage(cv, x0, y0, x1 - x0, y1 - y0, pad, pad, x1 - x0, y1 - y0); return c; }
+  var HEAD_STOP = /సు[డటదఢ]\S{0,2}కు|Sudoku/i;   // సుడోకు, also as the reader bends it (సుటదొకు)
+  // a heading line: అడ్డం / నిలువు (also "ఆధారాలు - అడ్డం"), alone or followed by a numbered clue — not a clue like "అడ్డం 4తో యుద్ధం"
+  var HEAD_RE2 = /^(?:\S{0,2}\s+)?(?:ఆ?ధారాలు\s*[-–:.]?\s*)?(అ\S{0,3}డ\S{0,2}ం|అడ్డము|ని\S{0,2}లు\S{0,2})(?=\s|$|[:：.-])\s*[:：.-]?\s*/;
+  function headingOf(line) {
+    line = String(line || '').replace(/[\u200C\u200D]/g, '').replace(/\s{4,}\S{1,8}\s*$/, '').trim();   // a speck far right of the heading
+    var m = line.match(HEAD_RE2); if (!m) return null;
+    var rest = line.slice(m[0].length).trim();
+    if (rest && !/^\d{1,2}\s*[.)]/.test(rest) && rest.length > 4) return null;
+    return { d: /^అ/.test(m[1]) ? 'A' : 'D', rest: /^\d/.test(rest) ? rest : '' };
+  }
   function scanOCR() {
-    var jobs = ['A', 'D'].filter(function (d) { return SC.boxes[d]; });
-    if (!jobs.length) { toast('ముందు “అడ్డం ఆధారాలు”, “నిలువు ఆధారాలు” ఎంచుకుని ఆ భాగాల చుట్టూ పెట్టెలు గీయండి.'); return; }
+    var jobs = SC.boxes.slice().sort(function (a, b) { return a.page - b.page || a.y - b.y || a.x - b.x; });
+    if (!jobs.length) { toast('ముందు “అడ్డం పెట్టె”, “నిలువు పెట్టె” ఎంచుకుని ఆధారాల చుట్టూ పెట్టెలు గీయండి.'); return; }
     U.busy = 'ocr'; render(); scanMsg('తెలుగు చదివే ఉపకరణం తెస్తున్నాం… మొదటిసారి కొంత సమయం పడుతుంది.');
-    var label = '';
+    var label = '', texts = [], sudoku = false;   // nothing after the సుడోకు heading is read
     TPROG = function (m) { var t = ocrLabel(m); if (t) scanMsg(label + t); };
     tessWorker().then(function (w) {
-      // read twice: as columns found automatically, and as one column; keep the reading that gives more clues
-      var chain = Promise.resolve();
-      jobs.forEach(function (d) {
-        var cv, texts = [];
-        chain = chain.then(function () { label = (d === 'A' ? 'అడ్డం' : 'నిలువు') + ' ఆధారాలు: '; scanMsg(label + 'చదువుతున్నాం…'); return scanCrop(SC.boxes[d], 1800); })
-          .then(function (c) { cv = c; return w.setParameters({ tessedit_pageseg_mode: '3', preserve_interword_spaces: '1' }); })
-          .then(function () { return w.recognize(cv); }).then(function (res) { texts.push(res.data.text); return w.setParameters({ tessedit_pageseg_mode: '4' }); })
-          .then(function () { return w.recognize(cv); }).then(function (res) {
-            texts.push(res.data.text);
-            var best = texts.map(function (t) { t = String(t || '').replace(/[|]/g, '').replace(/\n{2,}/g, '\n').trim(); var seen = {}; parseClueText(t, d).forEach(function (c) { seen[c.n] = 1; }); return { t: t, n: Object.keys(seen).length }; })
-              .sort(function (a, b) { return b.n - a.n; })[0];
-            SC.ocr[d] = best.t;
+      var chain = w.setParameters({ tessedit_pageseg_mode: '6', preserve_interword_spaces: '1' });   // each strip is one column: read it line by line
+      jobs.forEach(function (job, ji) {
+        chain = chain.then(function () { if (sudoku) return null; label = 'పేజీ ' + (job.page + 1) + ' (' + (ji + 1) + '/' + jobs.length + '): '; scanMsg(label + 'చదువుతున్నాం…'); return scanCrop(job, 1500, job.page); })
+          .then(function (cv) {
+            if (!cv) return null;
+            var pre = window.__epvDebug ? cv.toDataURL('image/png') : '';
+            cv = blankBanner(cv);
+            var blocks = splitLayout(cv), c2 = Promise.resolve();
+            if (window.__epvDebug) (SC.dbg = SC.dbg || []).push({ page: job.page, img: cv.toDataURL('image/png'), pre: pre, blocks: blocks });
+            blocks.forEach(function (bl) {
+              var parts = [];
+              bl.rects.forEach(function (q) { c2 = c2.then(function () { if (sudoku) return null; return w.recognize(subCanvas(cv, q[0], q[1], q[2], q[3])); }).then(function (res) { if (!res) return; var t = String(res.data.text || ''); parts.push(t); if (HEAD_STOP.test(t)) sudoku = true; }); });
+              c2 = c2.then(function () { if (parts.length) texts.push({ d: job.d || null, parts: parts, page: job.page }); });
+            });
+            return c2;
           });
       });
       return chain;
     }).then(function () {
-      TPROG = null; U.busy = '';
-      var n = parseClueText(SC.ocr.A, 'A').length + parseClueText(SC.ocr.D, 'D').length;
-      U.status = { kind: 'ok', text: n + ' ఆధారాలు చదివాం. కింది పెట్టెల్లో తప్పులు సరిదిద్ది “డ్రాఫ్ట్ తయారు చేయండి” నొక్కండి.' }; render();
+      TPROG = null; U.busy = ''; SC.raw = texts;
+      // each block: its heading (అడ్డం / నిలువు, wherever the columns cut it) sets the direction; blocks without one continue the last
+      var all = { A: [], D: [] }, dir = null, stop = false;
+      texts.forEach(function (bl) {
+        if (stop) return;
+        var heads = []; bl.parts.forEach(function (t) { t.split('\n').forEach(function (l) { var h = headingOf(l); if (h) heads.push(h.d); }); });
+        var hasA = heads.indexOf('A') >= 0, hasD = heads.indexOf('D') >= 0;
+        if (bl.d) dir = bl.d; else if (hasA && !hasD) dir = 'A'; else if (hasD && !hasA) dir = 'D';
+        var start = dir;
+        bl.parts.forEach(function (t) {
+          if (stop) return;
+          var cut = t.search(HEAD_STOP); if (cut >= 0) { t = t.slice(0, Math.max(0, t.lastIndexOf('\n', cut))); stop = true; }
+          var r = parseClueItems(t, start);
+          r.items.forEach(function (it) { if (all[it.d]) all[it.d].push(it); });
+          if (hasA && hasD) start = r.dir;   // both lists in one block: follow the headings in reading order
+        });
+      });
+      var exp = SC.vals ? gridStarts() : null, note = [];
+      ['A', 'D'].forEach(function (d) {
+        var got = all[d], out = numberItems(got, exp && exp[d]), have = out.filter(function (c) { return c.text; }).length;
+        SC.ocr[d] = out.map(function (c) { return c.n + '. ' + c.text + (c.len ? ' (' + c.len + ')' : ''); }).join('\n');
+        if (exp) note.push((d === 'A' ? 'అడ్డం ' : 'నిలువు ') + have + ' / ' + exp[d].length + (have === exp[d].length ? ' ✓' : ' — ' + (exp[d].length - have) + ' ఖాళీ, సరిచూడండి'));
+      });
+      U.status = { kind: 'ok', text: 'ఆధారాలు చదివాం: ' + (note.join(', ') || (parseClueText(SC.ocr.A, 'A').length + parseClueText(SC.ocr.D, 'D').length) + '') + '. కింది పెట్టెల్లో ప్రతి ఆధారం పేపర్‌తో పోల్చి, తప్పులు సరిదిద్ది “సరిచూశాను — డ్రాఫ్ట్ తయారు చేయండి” నొక్కండి.' }; render();
     }, function (e) { TPROG = null; U.busy = ''; U.status = { kind: 'err', text: 'చదవడం కుదరలేదు (' + ((e && e.message) || e || 'error') + '). ఇంటర్నెట్ చూసి మళ్ళీ ప్రయత్నించండి.' }; render(); });
   }
   function scanMakeDraft() {
@@ -2429,26 +2831,25 @@ html.vv-short #view.typing .tlc{min-height:38px}
     D = d; draftAutoNumber(); U.er = 0; U.ec = 0; U.emode = 'ans'; U.edir = 'A';
     U.status = { kind: 'ok', text: 'డ్రాఫ్ట్ సిద్ధం: ' + d.clues.length + ' ఆధారాలు. సంఖ్యలు, ఆధారాలు చిత్రంతో పోల్చి సరిచూడండి; జవాబులు “జవాబులు” లో టైప్ చేయండి లేదా జవాబుల చిత్రం నుంచి నింపండి.' };
     saveDraft();
-    if (U.pendingAns) { var pa = U.pendingAns; U.pendingAns = null; scanOpen('answers', pa); U.status = { kind: 'ok', text: 'డ్రాఫ్ట్ సిద్ధం (' + d.clues.length + ' ఆధారాలు). ఇప్పుడు జవాబుల గడి చుట్టూ పెట్టె గీసి “జవాబులు చదివి డ్రాఫ్ట్‌లో నింపండి” నొక్కండి.' }; return; }
+    if (U.pendingAns) { var pa = U.pendingAns; U.pendingAns = null; scanOpen('answers', pa); return; }
     location.hash = '#edit';
   }
   function scanAnswers() {
-    if (!D || !SC.quad) return;
+    if (!D || !SC.quad || U.busy) return;
     var xs = ['tl', 'tr', 'bl', 'br'].map(function (k) { return SC.quad[k].x; }), ys = ['tl', 'tr', 'bl', 'br'].map(function (k) { return SC.quad[k].y; });
     var bb = { x: Math.min.apply(null, xs), y: Math.min.apply(null, ys) }; bb.w = Math.max.apply(null, xs) - bb.x; bb.h = Math.max.apply(null, ys) - bb.y;
     var cells = []; for (var r = 0; r < D.R; r++) for (var c = 0; c < D.C; c++) if (!D.black[r][c]) cells.push([r, c]);
     U.busy = 'ocr'; render(); scanMsg('తెలుగు చదివే ఉపకరణం తెస్తున్నాం…');
     TPROG = function (m) { var t = ocrLabel(m); if (t && /ఉపకరణం/.test(t)) scanMsg(t); };
     var big, f, got = 0;
-    Promise.all([tessWorker(), scanCrop(bb, 2200)]).then(function (x) {
+    Promise.all([tessWorker(), scanCrop(bb, 2400, SC.gridPage)]).then(function (x) {
       var w = x[0]; big = x[1]; f = big.width / bb.w;
       var chain = w.setParameters({ tessedit_pageseg_mode: '8' });
       cells.forEach(function (rc, i) {
         chain = chain.then(function () {
           var r = rc[0], c = rc[1], a = qpt(c / D.C, r / D.R), b = qpt((c + 1) / D.C, (r + 1) / D.R);
           var x0 = (a.x - bb.x) * f, y0 = (a.y - bb.y) * f, cw = (b.x - a.x) * f, ch = (b.y - a.y) * f;
-          // skip the small clue number in the top-left corner and the grid lines
-          // a little inside the grid lines, enlarged with a white margin: reads single letters best in tests
+          // a little inside the grid lines (and below the small clue number), enlarged with a white margin: reads single letters best in tests
           var sx = x0 + cw * 0.08, sy = y0 + ch * 0.18, sW = cw * 0.84, sH = ch * 0.76, cv = document.createElement('canvas'), Hh = 120, Ww = Math.max(60, Math.round(Hh * sW / sH));
           cv.width = Ww + 60; cv.height = Hh + 60;
           var ctx = cv.getContext('2d'); ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, cv.width, cv.height); ctx.imageSmoothingQuality = 'high';
@@ -2462,10 +2863,46 @@ html.vv-short #view.typing .tlc{min-height:38px}
       });
       return chain;
     }).then(function () {
-      TPROG = null; U.busy = ''; saveDraft(); U.emode = 'ans';
-      U.status = { kind: 'ok', text: cells.length + ' గడుల్లో ' + got + ' అక్షరాలు చదివాం. ప్రతి గడినీ చిత్రంతో పోల్చి సరిదిద్దండి.' };
+      TPROG = null; U.busy = ''; saveDraft(); U.emode = 'ans'; U.srcOpen = true;
+      try { SC.cv.toBlob(function (b) { if (b) U.srcUrls = U.srcUrls.slice(0, 1).concat([URL.createObjectURL(b)]); if (route() === 'edit') render(); }, 'image/jpeg', 0.85); } catch (e) {}
+      U.status = { kind: 'ok', text: cells.length + ' గడుల్లో ' + got + ' అక్షరాలు చదివాం. ప్రతి గడినీ జవాబుల చిత్రంతో పోల్చి సరిదిద్దండి (పై “మూల చిత్రం” లో పేపర్ ఉంది).' };
       location.hash = '#edit';
     }, function (e) { TPROG = null; U.busy = ''; U.status = { kind: 'err', text: 'చదవడం కుదరలేదు (' + ((e && e.message) || e || 'error') + ').' }; render(); });
+  }
+  function keepSourceImage(kind, blob) {
+    var u = URL.createObjectURL(blob); U.srcOpen = true;
+    if (kind === 'answers') U.srcUrls = U.srcUrls.slice(0, 1).concat([u]);
+    else { U.srcUrls.forEach(function (x) { URL.revokeObjectURL(x); }); U.srcUrls = [u]; }
+  }
+  function isPdf(f) { return /pdf$/i.test(f.type) || /\.pdf$/i.test(f.name); }
+  // PDFs: only the pages that matter (the grid page and its clue pages, or the page with last week's answers) and a close-up of the grid
+  function smartImages(kind, files, max) {
+    var list = Array.prototype.slice.call(files || []);
+    if (!list.some(isPdf)) return prepareImages(files, max);
+    var pages, hit, info;
+    return loadPages(files).then(function (p) { pages = p; return analysePages(pages, function (i) { var el = document.querySelector('#view .status > span'); if (el) el.textContent = 'పేజీలు చూస్తున్నాం… ' + (i + 1) + ' / ' + pages.length; }); }).then(function (inf) {
+      info = inf; hit = pickGridPage(info, kind);
+      var pick = [];
+      if (!hit) for (var i = 0; i < Math.min(3, pages.length); i++) pick.push(i);
+      else if (kind === 'answers') pick = [hit.i];
+      else for (var j = Math.max(0, hit.i - 1); j <= Math.min(pages.length - 1, hit.i + 2); j++) pick.push(j);
+      var blobs = [], chain = Promise.resolve();
+      pick.forEach(function (i) { chain = chain.then(function () { return renderPage(pages[i], 1800); }).then(function (r) {
+        var cv = r.cv;
+        if (hit) {   // keep the puzzle's column; the news and links beside it only cost upload time
+          var k = cv.width / info[i].W, gx0 = (hit.grid.x0 / hit.W) * info[i].W, gx1 = (hit.grid.x1 / hit.W) * info[i].W, pad = 0.06 * info[i].W;
+          var x0 = Math.max(0, (gx0 - pad) * k), x1 = Math.min(cv.width, (gx1 + pad) * k), c2 = document.createElement('canvas');
+          c2.width = Math.round(x1 - x0); c2.height = cv.height; c2.getContext('2d').drawImage(cv, x0, 0, x1 - x0, cv.height, 0, 0, c2.width, c2.height); cv = c2;
+        }
+        return new Promise(function (res) { cv.toBlob(function (b) { if (b) blobs.push(b); res(); }, 'image/jpeg', 0.82); });
+      }); });
+      if (hit) chain = chain.then(function () { return renderPage(pages[hit.i], 2400); }).then(function (r) {
+        var k = r.cv.width / hit.W, g = hit.grid, pad = 12 * k, x = Math.max(0, g.x0 * k - pad), y = Math.max(0, g.y0 * k - pad), w = Math.min(r.cv.width - x, (g.x1 - g.x0) * k + 2 * pad), h = Math.min(r.cv.height - y, (g.y1 - g.y0) * k + 2 * pad), c = document.createElement('canvas');
+        c.width = Math.round(w); c.height = Math.round(h); c.getContext('2d').drawImage(r.cv, x, y, w, h, 0, 0, c.width, c.height);
+        return new Promise(function (res) { c.toBlob(function (b) { if (b) blobs.push(b); res(); }, 'image/jpeg', 0.9); });
+      });
+      return chain.then(function () { return blobs.slice(0, max); });
+    });
   }
   function blobToB64(b) { return new Promise(function (res, rej) { var r = new FileReader(); r.onload = function () { res(String(r.result).split(',')[1] || ''); }; r.onerror = function () { rej(r.error); }; r.readAsDataURL(b); }); }
   // Website: the admin script sends the pictures to Google Gemini with the same instructions Claude gets in the studio
@@ -2474,10 +2911,9 @@ html.vv-short #view.typing .tlc{min-height:38px}
     var date = (document.getElementById('up-date') || {}).value || '';
     U.busy = 'ai'; U.aiStart = Date.now(); U.status = { kind: 'wait', text: 'చిత్రాలు సిద్ధం చేస్తున్నాం…' }; render();
     var blobs;
-    prepareImages(files, 5).then(function (bs) {
+    smartImages(kind, files, 5).then(function (bs) {
       blobs = bs; if (!blobs.length) throw { code: 'no_images' };
-      U.srcUrls.forEach(function (u) { URL.revokeObjectURL(u); });
-      U.srcUrls = blobs.slice(0, 1).map(function (b) { return URL.createObjectURL(b); });
+      keepSourceImage(kind, blobs[0]);
       return Promise.all(blobs.map(blobToB64));
     }).then(function (datas) {
       var prompt = PROMPT_PUZZLE;
@@ -2485,7 +2921,16 @@ html.vv-short #view.typing .tlc{min-height:38px}
       else if (date) prompt += '\nThe admin says this puzzle is dated ' + date + '.';
       U.ctl = new AbortController();
       U.status = { kind: 'wait', text: 'Gemini చదువుతోంది… (' + blobs.length + ' చిత్రాలు). ఒకట్రెండు నిమిషాలు పట్టవచ్చు.' }; render();
-      return svc('read', { prompt: prompt, images: datas.map(function (d, i) { return { mime: blobs[i].type || 'image/jpeg', data: d }; }) }, U.ctl.signal);
+      var imgs = datas.map(function (d, i) { return { mime: blobs[i].type || 'image/jpeg', data: d }; });
+      return svc('gemini-get', {}, U.ctl.signal).then(function (g) {
+        return geminiDirect(g, prompt, imgs, U.ctl.signal).catch(function (e) {   // Google not reachable from this phone: let the admin script ask
+          if (e && e.code === 'network') { U.status = { kind: 'wait', text: 'Gemini నేరుగా అందలేదు — అడ్మిన్ సర్వీస్ ద్వారా పంపుతున్నాం…' }; render(); return svc('read', { prompt: prompt, images: imgs }, U.ctl.signal); }
+          throw e;
+        });
+      }, function (e) {
+        if (e && (e.code === 'bad_request' || e.code === 'svc_html')) return svc('read', { prompt: prompt, images: imgs }, U.ctl.signal);   // older admin script
+        throw e;
+      });
     }).then(function (r) { U.busy = ''; U.ctl = null; aiDone(kind, r.json, date, 'Gemini (' + (r.model || '') + ')'); }, function (e) {
       U.busy = ''; U.ctl = null; U.status = { kind: e && e.code === 'cancelled' ? 'wait' : 'err', text: svcErr(e) }; render();
     });
@@ -2495,6 +2940,30 @@ html.vv-short #view.typing .tlc{min-height:38px}
     var f = U.pendingAns; U.pendingAns = null; if (!f || !D) return;
     var note = U.status ? U.status.text + ' ' : '';
     setTimeout(function () { U.busy = ''; reader('answers', f); if (U.status && U.status.kind === 'wait') U.status.text = note + 'ఇప్పుడు జవాబుల చిత్రం చదువుతున్నాం…'; render(); }, 50);
+  }
+  function geminiDirect(g, prompt, imgs, signal) {
+    if (!g || !g.key) return Promise.reject({ code: 'no_gemini' });
+    var parts = [{ text: prompt }].concat(imgs.map(function (im) { return { inline_data: { mime_type: im.mime, data: im.data } }; }));
+    var body = JSON.stringify({ contents: [{ role: 'user', parts: parts }], generationConfig: { temperature: 0.1, responseMimeType: 'application/json' } });
+    var models = (g.models && g.models.length ? g.models : ['gemini-flash-latest', 'gemini-2.5-flash']).slice(0, 3), i = 0, last = '';
+    function next() {
+      if (i >= models.length) return Promise.reject({ code: /^429/.test(last) ? 'rate_limited' : 'gemini', error: 'Gemini చదవలేకపోయింది: ' + last });
+      var m = models[i++];
+      return fetch('https://generativelanguage.googleapis.com/v1beta/models/' + m + ':generateContent', { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-goog-api-key': g.key }, body: body, signal: signal })
+        .then(function (r) { return r.text().then(function (t) { return { code: r.status, t: t }; }); }, function (e) { throw { code: e && e.name === 'AbortError' ? 'cancelled' : 'network' }; })
+        .then(function (x) {
+          if (x.code === 200) {
+            var j = JSON.parse(x.t), c = j.candidates && j.candidates[0], txt = '';
+            ((c && c.content && c.content.parts) || []).forEach(function (pp) { if (pp.text && !pp.thought) txt += pp.text; });
+            txt = txt.replace(/^```(?:json)?\s*|\s*```\s*$/g, '').trim();
+            try { return { ok: true, model: m, json: JSON.parse(txt) }; } catch (e) { last = 'invalid_json'; return next(); }
+          }
+          try { last = x.code + ' ' + JSON.parse(x.t).error.message; } catch (e) { last = String(x.code); }
+          if (x.code === 400 || x.code === 403) return Promise.reject({ code: 'gemini', error: 'Gemini చదవలేకపోయింది: ' + last });
+          return next();
+        });
+    }
+    return next();
   }
   function aiDone(kind, j, date, who) {
     if (kind === 'answers') {
@@ -2688,7 +3157,7 @@ html.vv-short #view.typing .tlc{min-height:38px}
     return '<section class="play" style="overflow-y:auto">' +
       '<header class="ebar"><a class="ghostbtn" href="#admin" aria-label="నిర్వాహణకు వెనక్కి">' + I.back + '</a><h1>' + (D.id ? 'పోస్ట్ మార్పు' : 'కొత్త పోస్ట్ డ్రాఫ్ట్') + '</h1></header>' +
       '<div class="page gutter" style="gap:18px">' + statusBox() +
-        (U.srcUrls.length ? '<details><summary class="lbl" style="cursor:pointer">మూల చిత్రం చూడండి</summary><div class="srcimgs">' + U.srcUrls.map(function (u) { return '<img src="' + u + '" alt="అప్‌లోడ్ చేసిన పద వినోదం చిత్రం">'; }).join('') + '</div></details>' : '') +
+        (U.srcUrls.length ? '<details' + (U.srcOpen ? ' open' : '') + '><summary class="lbl" style="cursor:pointer">మూల చిత్రం చూడండి' + (U.srcUrls.length > 1 ? ' (పద వినోదం, జవాబులు)' : '') + '</summary><div class="srcimgs">' + U.srcUrls.map(function (u) { return '<img src="' + u + '" alt="అప్‌లోడ్ చేసిన పద వినోదం చిత్రం">'; }).join('') + '</div></details>' : '') +
         '<div class="box"><div class="row2"><div class="fld"><label class="lbl" for="d-title">శీర్షిక</label><input id="d-title" class="inp" data-df="title" value="' + esc(D.title) + '"></div><div class="fld"><label class="lbl" for="d-date">తేదీ</label><input id="d-date" class="inp" data-df="date" inputmode="numeric" placeholder="DD.MM.YYYY" value="' + esc(D.date) + '"></div></div>' +
         '<div class="row3"><div class="fld"><label class="lbl" for="d-rows">వరుసలు</label><input id="d-rows" class="inp sm" type="number" min="3" max="25" value="' + D.R + '"></div><div class="fld"><label class="lbl" for="d-cols">నిలువు వరుసలు</label><input id="d-cols" class="inp sm" type="number" min="3" max="25" value="' + D.C + '"></div><div class="fld"><span class="lbl">&nbsp;</span><button class="smallbtn" style="min-height:40px" data-act="resize">పరిమాణం మార్చు</button></div></div></div>' +
         '<div class="seg wide" role="group" aria-label="మార్పు రకం"><button data-act="emode" data-v="black" aria-pressed="' + (U.emode === 'black') + '">నలుపు గడులు</button><button data-act="emode" data-v="num" aria-pressed="' + (U.emode === 'num') + '">సంఖ్యలు</button><button data-act="emode" data-v="ans" aria-pressed="' + (U.emode === 'ans') + '">జవాబులు</button></div>' +
@@ -2813,7 +3282,7 @@ html.vv-short #view.typing .tlc{min-height:38px}
       case 'auto-start': if (autoOn()) break; autoStart(); break;
       case 'auto-pause': if (!U.auto) break; U.auto.paused = !U.auto.paused; clearTimeout(U.auto.t); refreshPlay(); if (!U.auto.paused) autoTick(); break;
       case 'auto-next': if (!U.auto) break; clearTimeout(U.auto.t); var en0 = CUR.m.entries[U.auto.list[U.auto.i]];
-        if (en0) en0.cells.forEach(function (x) { var kx = key(x[0], x[1]), so = CUR.m.sol(kx); if (so && CUR.P.letters[kx] !== so) { CUR.P.letters[kx] = so; CUR.P.hints = (CUR.P.hints || 0) + 1; CUR.P.auto = true; } });
+        if (en0) en0.cells.forEach(function (x) { var kx = key(x[0], x[1]); if (autoNeed(kx)) { CUR.P.letters[kx] = CUR.m.sol(kx); delete U.shown[kx]; CUR.P.hints = (CUR.P.hints || 0) + 1; CUR.P.auto = true; U.auto.shown++; } });
         U.auto.i++; U.auto.j = -1; save(); if (!U.auto.paused) autoTick(); else refreshPlay(); break;
       case 'auto-stop': autoStop(); toast('ఆటో ఆపాం. మిగతావి మీరే నింపండి.'); break;
       case 'auto-speed': if (U.auto) { U.auto.speed = v; refreshPlay(); } break;
@@ -2860,12 +3329,14 @@ html.vv-short #view.typing .tlc{min-height:38px}
       case 'gem-read': var gf = document.getElementById('up-files'); if (!gf || !gf.files.length) { toast('ముందు పద వినోదం ఫోటో లేదా PDF (1) ఎంచుకోండి.'); break; } pendingAnswers(); geminiRead('puzzle', gf.files); break;
       case 'scan-start': var sf = document.getElementById('up-files'); if (!sf || !sf.files.length) { toast('ముందు పద వినోదం ఫోటో లేదా PDF (1) ఎంచుకోండి.'); break; } pendingAnswers(); scanOpen('puzzle', sf.files); break;
       case 'scan-page': if (!SC || U.busy) break; U.busy = 'scan'; scanPage(+v).then(function () { U.busy = ''; SC.scroll = null; render(); }, function () { U.busy = ''; render(); }); break;
+      case 'scan-clear': if (SC) { SC.boxes = []; render(); } break;
+      case 'scan-ungrid': if (!SC) break; if (U.confirm !== 'ungrid') { U.confirm = 'ungrid'; render(); break; } U.confirm = ''; SC.quad = null; SC.vals = null; SC.gridPage = -1; SC.flip = {}; SC.mode = 'grid'; render(); toast('గడి పెట్టె తీసివేశాం. సరైన పేజీలో గడి చుట్టూ మళ్ళీ గీయండి.'); break;
       case 'scan-mode': if (SC) { SC.mode = v; render(); } break;
       case 'scan-zoom': if (SC) { SC.zoom = Math.max(1, Math.min(4, SC.zoom + (+v))); render(); } break;
       case 'scan-flip': if (SC) { var fk = t.getAttribute('data-r') + ',' + t.getAttribute('data-c'); SC.flip[fk] = !SC.flip[fk]; render(); } break;
       case 'scan-ocr': if (SC && !U.busy) scanOCR(); break;
-      case 'scan-draft': if (SC && SC.means && !U.busy) scanMakeDraft(); break;
-      case 'scan-answers': if (SC && SC.means && !U.busy) scanAnswers(); break;
+      case 'scan-draft': if (SC && SC.vals && !U.busy) scanMakeDraft(); break;
+      case 'scan-answers': if (SC && SC.vals && !U.busy) scanAnswers(); break;
       case 'publish-blog':
         var bp = draftToPuzzle(D, false), why = draftReadyForBlog(bp);
         if (why) { toast(why); break; }

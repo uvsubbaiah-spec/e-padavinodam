@@ -38,7 +38,7 @@ In ENG, type the complete answer and press space, Enter or **పెట్టు*
 
 Answer colours follow the blog: a right letter turns grey with a green border and blue letter, a wrong one gold with a red border and red letter. A right letter is frozen: typing and delete pass over it. The selected square has a blue frame.
 
-**ఆటో** (next to సులభం / కష్టం, on puzzles that have answers) fills the answers by itself, one clue at a time: it selects each clue, shows it on the clue bar and writes its answer letter by letter, so the player learns every answer. Pause, next clue, stop and three speeds are under the board. Auto-filled letters count as hints; afterwards **గడి ఖాళీ చేసి మీరే ఆడండి** empties the grid to play it yourself.
+**ఆటో** (next to సులభం / కష్టం, on puzzles that have answers) fills the answers by itself, always starting from the first clue on the board: it goes clue by clue, shows each clue on the clue bar and writes only the squares that are empty or wrong, letter by letter. Squares the player already got right are left alone and skipped. Pause, next clue, stop and three speeds are under the board. Auto-filled letters count as hints; afterwards **గడి ఖాళీ చేసి మీరే ఆడండి** empties the grid to play it yourself.
 
 A puzzle opens at the biggest zoom (200%) with the keyboard hidden; the first tap on a square brings the keyboard back. The bar above the clue scrolls the board sideways (drag it or use its arrows). On a computer the arrow keys move the selected square across and down, and the board scrolls along.
 
@@ -66,8 +66,8 @@ Settings (అమరికలు) → **నిర్వాహణ** → **ని�
 
 On the admin page:
 - **కొత్త పద వినోదం**: give the puzzle (grid + clues) photo or PDF in box **1**, and the answers grid (Eenadu prints it the next week) in box **2** — optional; it can also be added later from the **జవాబులు** card in the draft. Then choose a reader; it reads the puzzle and then the answers into the same draft:
-  - **Gemini తో చదవండి**: Google Gemini reads the grid, numbers, clues (and a solved grid). Needs a free key from aistudio.google.com/apikey, saved once under సెట్టింగ్‌లు; it is kept in your Apps Script, not on phones.
-  - **ఫోన్‌లోనే చదవండి**: no key. Draw a box around the grid (the red lines must sit on the grid lines; drag the corner dots to fix a tilted photo), and boxes around the అడ్డం and నిలువు clues. The phone finds the black squares and reads the clues with Tesseract (about 5 MB downloaded the first time). Telugu reading has mistakes; fix them in the text boxes.
+  - **Gemini తో చదవండి**: Google Gemini reads the grid, numbers, clues (and a solved grid). Needs a free key from aistudio.google.com/apikey, saved once under సెట్టింగ్‌లు; it is kept in your Apps Script. When reading, the signed-in admin's phone gets the key for that moment only (never stored) and sends the pictures straight to Google; if Google cannot be reached from the phone, the Apps Script sends them instead.
+  - **ఫోన్‌లోనే చదవండి**: no key. For Eenadu web pages saved as PDF (like 01.11.2026) it works by itself: it finds the పదకేళి grid page, the blocked squares (stars, leaves, flowers), the clue columns on the pages around it (stopping at సుడోకు), and reads them with Tesseract (about 5 MB downloaded the first time). Clue numbers and lengths come from the grid, including Eenadu's one-letter clues (a white square boxed in on all four sides). It then opens the answers file, finds the solved grid under గతవారం సమాధానాలు, checks it matches, and fills the answers into the draft. Everything stays editable: on the reading screen drag, resize or delete (×) the clue boxes, remove the grid box (గడి పెట్టె తీసివేయండి) and draw it again, then **మళ్ళీ చదవండి**; fix clue text in the text boxes. For photos or other layouts, draw the boxes yourself (the red lines must sit on the grid lines; drag the corner dots to fix a tilted photo). Telugu reading has mistakes, so always compare with the paper.
   - **Claude తో చదివించండి**: read it in the Claude studio, press **వెబ్‌సైట్ కోసం కాపీ** there and paste on the admin page under **Claude నుంచి**.
   - Then check the draft (black squares, numbers, clues), fill the answers (typing, or **జవాబుల చిత్రం · Gemini / ఫోన్‌లోనే**) and press **బ్లాగ్‌లో ప్రచురించండి** (or save it as a Blogger draft first).
 - A new post copies the layout of the latest blog post (scripts, సులభం/కష్టం switch, hint bulb, congratulation picture, record button, black-square picture), gets the next number for its element names, the address `…/YYYY/MM/DDMMYYYY.html`, a « link to the previous post, and the previous post's » button is linked to it. Before sending, the app reads the made post back and refuses to publish if the squares or clues do not come out the same.
@@ -91,6 +91,8 @@ A small Google Apps Script does the parts a website cannot do by itself: checkin
    - The link of this deployment is built into the app (`SVC_URL` in the code), so admins only type the password. If you ever make a *new* deployment (a new link), tell the developer or put `{"service": "<new link>"}` in a `config.json` file in this repository.
 
 If you later change `Code.gs`, use **Deploy → Manage deployments → Edit → Version: New version → Deploy** so the link stays the same.
+
+If the admin page shows an error, open the script → **Executions** (left bar): every call is listed with its error message.
 
 ## The Android app (APK)
 
