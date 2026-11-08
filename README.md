@@ -56,18 +56,41 @@ The magnifier buttons on the puzzle's top bar zoom the grid from 100% to 200% (i
 
 ## Keeping posts up to date
 
-- **New blog posts appear on their own.** Every time the app opens it reads the blog's feed (the blog must stay public).
-- **Posts made in the Claude studio** (from a newspaper photo or PDF, or a corrected blog post) live in `puzzles.json`. In the studio's admin page press **puzzles.json సేవ్ చేయండి**, then upload that file to the repository in place of the old one. A post in `puzzles.json` replaces the blog post with the same date.
-- **Correcting a clue's Telugu text:** in the Claude studio, open the puzzle, select the clue and tap the pencil on the clue bar (or use **మార్చు** in the admin list for the full editor). Type the fix in Telugu, or in English and it converts. Save publishes it in the studio at once; export `puzzles.json` as above to update the website. For blog posts, import them into the studio first (admin page → బ్లాగ్ నుంచి దిగుమతి) so there is a copy to correct.
+- **Blog posts appear on their own.** Every time the app opens it reads the blog's feed (the blog must stay public).
+- **New puzzles and corrections are made on the admin page** (website or Android app) and go straight to the blog; the app then shows them from there. No GitHub upload is needed for content.
+- `puzzles.json` still works for older posts made in the Claude studio; the admin page no longer writes it.
 
-## Admin on the website and in the app
+## Admin page
 
-Settings → **నిర్వాహకుడి ప్రవేశం** (at the bottom). Sign in once per device with a GitHub fine-grained token for this repository (Contents: Read and write); the page shows how to make one. After that:
-- **కొత్త పద వినోదం**: start from an empty 12×12 grid, set black squares, numbers, clues and answers, and publish;
-- **ఫైల్ నుంచి దిగుమతి**: a `puzzles.json` saved in the Claude studio (for posts read from newspaper photos), a blog feed or a post page;
-- **మార్చు / తొలగించు** on any post, including blog posts (to add answers or fix clues), and the pencil on the clue bar to correct one clue while playing.
+Settings (అమరికలు) → **నిర్వాహణ** → **నిర్వాహకుడి ప్రవేశం**. The first password is **uvs-2026**; change it under నిర్వాహణ → సెట్టింగ్‌లు. **పాస్‌వర్డ్ మర్చిపోయారా?** emails a new password to blogofrulings@gmail.com (the old one keeps working until the new one is used, so a stranger pressing it cannot lock you out).
 
-Publishing writes `puzzles.json` in this repository through GitHub's API; the site picks it up within a minute or two. The token stays on that device only; revoke it on GitHub if a device is lost. Reading newspaper photos with AI is only in the Claude studio.
+On the admin page:
+- **కొత్త పద వినోదం**: give a newspaper photo or PDF, then choose a reader:
+  - **Gemini తో చదవండి**: Google Gemini reads the grid, numbers, clues (and a solved grid). Needs a free key from aistudio.google.com/apikey, saved once under సెట్టింగ్‌లు; it is kept in your Apps Script, not on phones.
+  - **ఫోన్‌లోనే చదవండి**: no key. Draw a box around the grid (the red lines must sit on the grid lines; drag the corner dots to fix a tilted photo), and boxes around the అడ్డం and నిలువు clues. The phone finds the black squares and reads the clues with Tesseract (about 5 MB downloaded the first time). Telugu reading has mistakes; fix them in the text boxes.
+  - **Claude తో చదివించండి**: read it in the Claude studio, press **వెబ్‌సైట్ కోసం కాపీ** there and paste on the admin page under **Claude నుంచి**.
+  - Then check the draft (black squares, numbers, clues), fill the answers (typing, or **జవాబుల చిత్రం · Gemini / ఫోన్‌లోనే**) and press **బ్లాగ్‌లో ప్రచురించండి** (or save it as a Blogger draft first).
+- A new post copies the layout of the latest blog post (scripts, సులభం/కష్టం switch, hint bulb, congratulation picture, record button, black-square picture), gets the next number for its element names, the address `…/YYYY/MM/DDMMYYYY.html`, a « link to the previous post, and the previous post's » button is linked to it. Before sending, the app reads the made post back and refuses to publish if the squares or clues do not come out the same.
+- **మార్చు** on a blog post rewrites that post's squares and clues in place; the old version is saved first as a Blogger draft named “బ్యాకప్ · …”. The pencil on the clue bar does the same for one clue while playing. **దాచు** turns a post back into a draft.
+
+## Admin service (one-time setup, about 10 minutes, free, no card)
+
+A small Google Apps Script does the parts a website cannot do by itself: checking the password, sending the reset email, posting to Blogger and calling Gemini. Do all of this **signed in to the Google account that manages the blog**.
+
+1. **Google Cloud project** (needed for Blogger): open console.cloud.google.com → project picker → **New project** → name `e-padavinodam` → Create. Then:
+   - **APIs & Services → Library** → search **Blogger API v3** → **Enable**.
+   - **Google Auth Platform** (or *OAuth consent screen*) → **Get started**: app name `e-padavinodam admin`, your email, Audience **External**, contact email → Create. Then **Audience → Publish app** → Confirm (this stops Google asking you to sign in again every 7 days).
+   - Note the **Project number** (Cloud console home → Project info).
+2. **The script**: open script.google.com → **New project** → name it `e-padavinodam admin`.
+   - Replace everything in `Code.gs` with `Code.gs` from **e-padavinodam-admin-service.zip**.
+   - **Project Settings** (gear) → tick **Show "appsscript.json" manifest file**; back in the Editor open `appsscript.json` and replace it with `appsscript.json` from the same zip.
+   - **Project Settings → Google Cloud Platform (GCP) Project → Change project** → paste the project number → Set project.
+3. **Allow it once**: in the Editor choose the function `setup` and press **Run** → Review permissions → choose the blog's account → *Google hasn't verified this app* → **Advanced → Go to e-padavinodam admin (unsafe)** → Allow. (It is your own script.) The log should show your blog's name.
+4. **Deploy**: **Deploy → New deployment** → type **Web app** → Execute as **Me**, Who has access **Anyone** → Deploy → copy the **Web app URL** (`https://script.google.com/macros/s/…/exec`).
+5. In the app: Settings → నిర్వాహకుడి ప్రవేశం → paste the link (asked only the first time on each device) → password **uvs-2026**.
+   - Optional: to skip pasting the link on every device, create a file `config.json` in this repository with `{"service": "<the Web app URL>"}`.
+
+If you later change `Code.gs`, use **Deploy → Manage deployments → Edit → Version: New version → Deploy** so the link stays the same.
 
 ## The Android app (APK)
 
@@ -77,6 +100,8 @@ The APK built in Android Studio opens this site full-screen. Name the signed rel
 - both appear only once the file is really there.
 
 For an update, raise `versionCode` (and `versionName`) in `app/build.gradle.kts`, build with the **same keystore**, and upload with the same file name. Content changes never need a new APK: the app always shows the live site.
+
+Version 3 of `MainActivity.kt` adds the file picker, so the admin page's **ఫోటో లేదా PDF** button works inside the app (older APKs ignore the button; use Chrome there).
 
 ## Putting it on the Play Store (optional)
 
