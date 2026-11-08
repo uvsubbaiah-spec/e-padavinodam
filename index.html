@@ -1694,6 +1694,49 @@ html.vv-short #view.typing .tlc{min-height:38px}
     host.parentNode.insertBefore(bar, host.nextSibling);
     bar.innerHTML = '<small>వేరే రూపం?</small>' + alts.map(function (a, i) { return '<button type="button" data-act="tl-alt" data-v="' + i + '"' + (a === tel ? ' aria-pressed="true"' : '') + '>' + esc(a) + '</button>'; }).join('');
   }
+  // live suggestions: while an English word is being typed, Telugu words appear under the box (the sound-alikes first,
+  // then words already used in the blog's clues that start the same way); one tap puts the chosen word in
+  var WORDS = null, WORDS_N = -1;
+  function wordList() {
+    var n = PUZZLES.length; if (WORDS && WORDS_N === n) return WORDS;
+    var cnt = {};
+    PUZZLES.forEach(function (p) { (p.clues || []).forEach(function (c) {
+      String(c.text || '').split(/[\s,.;:()\-–\/…!?"“”‘’]+/).forEach(function (w) { if (w.length >= 2 && /[ఀ-౿]/.test(w) && !/[A-Za-z0-9]/.test(w)) cnt[w] = (cnt[w] || 0) + 1; });
+    }); });
+    WORDS = Object.keys(cnt).sort(function (a, b) { return cnt[b] - cnt[a] || a.length - b.length; }); WORDS_N = n; return WORDS;
+  }
+  function liveBar(el) {
+    var bar = document.getElementById('tlalts');
+    if (!bar) { bar = document.createElement('div'); bar.id = 'tlalts'; bar.className = 'tlalts'; bar.addEventListener('pointerdown', function (ev) { ev.preventDefault(); }); bar.addEventListener('mousedown', function (ev) { ev.preventDefault(); }); }
+    var host = el.closest('.cluerow') || el;
+    if (bar.previousSibling !== host) host.parentNode.insertBefore(bar, host.nextSibling);
+    return bar;
+  }
+  function liveSuggest(el) {
+    var pos = el.selectionStart; if (pos == null) return;
+    var m = el.value.slice(0, pos).match(/[A-Za-z]+$/);
+    if (!m) { if (U.tlLive) { U.tlLive = null; var b0 = document.getElementById('tlalts'); if (b0 && !U.tlAlt) b0.remove(); } return; }
+    var w = m[0], seen = {}, out = [];
+    function add(x) { if (x && !seen[x]) { seen[x] = 1; out.push(x); } }
+    var cands = TL.convert(w).map(function (c) { return c.join(''); });
+    cands.slice(0, 4).forEach(add);
+    var pre = cands.map(function (x) { return x.replace(/్$/, ''); }).filter(function (x) { return x.length >= 1; });
+    wordList().some(function (x) { if (out.length >= 8) return true; if (pre.some(function (q) { return x.length > q.length && x.indexOf(q) === 0; })) add(x); return false; });
+    if (!out.length) { U.tlLive = null; var b1 = document.getElementById('tlalts'); if (b1 && !U.tlAlt) b1.remove(); return; }
+    U.tlAlt = null; U.tlLive = { el: el, start: pos - w.length, word: w, alts: out };
+    var bar = liveBar(el);
+    bar.innerHTML = '<small>తెలుగు పదాలు:</small>' + out.map(function (a, i) { return '<button type="button" data-act="tl-live" data-v="' + i + '">' + esc(a) + '</button>'; }).join('');
+  }
+  function pickLive(i) {
+    var L = U.tlLive; if (!L || !L.el || !document.body.contains(L.el)) return;
+    var el = L.el, alt = L.alts[i]; if (alt == null) return;
+    if (el.value.slice(L.start, L.start + L.word.length) !== L.word) return;   // the text has moved on
+    var rest = el.value.slice(L.start + L.word.length), sp = /^[\s,.;:!?()\-]/.test(rest) ? '' : ' ';
+    el.value = el.value.slice(0, L.start) + alt + sp + rest;
+    var np = L.start + alt.length + 1; try { el.focus(); el.setSelectionRange(np, np); } catch (e) {}
+    U.tlLive = null; var bar = document.getElementById('tlalts'); if (bar) bar.remove();
+    el.dispatchEvent(new Event('input', { bubbles: true }));
+  }
   function pickAlt(i) {
     var A = U.tlAlt; if (!A || !A.el || !document.body.contains(A.el)) return;
     var el = A.el, cur = el.value.slice(A.start, A.start + A.len), alt = A.alts[i]; if (alt == null) return;
@@ -1724,7 +1767,7 @@ html.vv-short #view.typing .tlc{min-height:38px}
   function teHintHTML() {
     var on = S.prefs.teType !== false;
     return '<div class="tehint"><button class="smallbtn" data-act="te-type" aria-pressed="' + on + '">' + (on ? '✓ ' : '') + 'English → తెలుగు</button><small>' +
-      (on ? 'ఆంగ్ల అక్షరాలతో టైప్ చేసి స్పేస్ నొక్కితే తెలుగు అవుతుంది: <b>dhanam</b> → ధనం, <b>vennela</b> → వెన్నెల, <b>Sh</b>=ష, <b>T</b>=ట, <b>D</b>=డ, <b>N</b>=ణ, <b>L</b>=ళ, <b>aa ee oo</b> దీర్ఘాలు. పదం కింద వేరే రూపాలు వస్తాయి — సరైనది నొక్కండి.' : 'ఆఫ్‌లో ఉంది — ఫోన్ తెలుగు కీబోర్డ్‌తో టైప్ చేయవచ్చు.') + '</small></div>';
+      (on ? 'ఆంగ్ల అక్షరాలతో టైప్ చేస్తుంటే కింద తెలుగు పదాలు వస్తాయి — సరైనది నొక్కండి; లేదా స్పేస్ నొక్కితే మొదటిది అవుతుంది: <b>dhanam</b> → ధనం, <b>vennela</b> → వెన్నెల, <b>Sh</b>=ష, <b>T</b>=ట, <b>D</b>=డ, <b>N</b>=ణ, <b>L</b>=ళ, <b>aa ee oo</b> దీర్ఘాలు.' : 'ఆఫ్‌లో ఉంది — ఫోన్ తెలుగు కీబోర్డ్‌తో టైప్ చేయవచ్చు.') + '</small></div>';
   }
   function teField(t) { return t && (t.id === 'fix-in' || (t.getAttribute && (t.getAttribute('data-f') === 'text' || t.hasAttribute('data-ocr') || t.getAttribute('data-df') === 'title'))); }
   function doneView(id) {
@@ -3599,7 +3642,7 @@ html.vv-short #view.typing .tlc{min-height:38px}
     }).join('');
     var nA = D.clues.filter(function (c) { return c.d === 'A'; }).length, nD = D.clues.length - nA;
     return '<section class="play" style="overflow-y:auto" data-scroll="edit">' +
-      '<header class="ebar"><a class="ghostbtn" href="#admin" aria-label="నిర్వాహణకు వెనక్కి">' + I.back + '</a><h1>' + (D.id ? 'పోస్ట్ మార్పు' : 'కొత్త పోస్ట్ డ్రాఫ్ట్') + ' <small style="font-size:11px;opacity:.6;font-weight:400">v0.26</small></h1></header>' +
+      '<header class="ebar"><a class="ghostbtn" href="#admin" aria-label="నిర్వాహణకు వెనక్కి">' + I.back + '</a><h1>' + (D.id ? 'పోస్ట్ మార్పు' : 'కొత్త పోస్ట్ డ్రాఫ్ట్') + ' <small style="font-size:11px;opacity:.6;font-weight:400">v0.27</small></h1></header>' +
       '<div class="page gutter" style="gap:18px">' + statusBox() +
         (U.srcUrls.length ? '<details' + (U.srcOpen ? ' open' : '') + '><summary class="lbl" style="cursor:pointer">మూల చిత్రం చూడండి' + (U.srcUrls.length > 1 ? ' (పద వినోదం, జవాబులు)' : '') + '</summary><div class="srcimgs">' + U.srcUrls.map(function (u) { return '<img src="' + u + '" alt="అప్‌లోడ్ చేసిన పద వినోదం చిత్రం">'; }).join('') + '</div></details>' : '') +
         '<div class="box"><div class="row2"><div class="fld"><label class="lbl" for="d-title">శీర్షిక</label><input id="d-title" class="inp" data-df="title" value="' + esc(D.title) + '"></div><div class="fld"><label class="lbl" for="d-date">తేదీ</label><input id="d-date" class="inp" data-df="date" inputmode="numeric" placeholder="DD.MM.YYYY" value="' + esc(D.date) + '"></div></div>' +
@@ -3874,6 +3917,7 @@ html.vv-short #view.typing .tlc{min-height:38px}
       case 'ai-read': var fl = document.getElementById('up-files'); if (!fl || !fl.files.length) { toast('ముందు పద వినోదం ఫోటో లేదా PDF (1) ఎంచుకోండి.'); break; } pendingAnswers(); aiRead('puzzle', fl.files); break;
       case 'ai-stop': if (U.ctl) U.ctl.abort(); break;
       case 'tl-alt': pickAlt(+v); break;
+      case 'tl-live': pickLive(+v); break;
       case 'go-posts': var ap = document.getElementById('adm-posts'); if (ap) { ap.scrollIntoView({ block: 'start', behavior: 'smooth' }); var aq = document.getElementById('adm-q'); if (aq) setTimeout(function () { aq.focus({ preventScroll: true }); }, 400); } break;
       case 'pic-open': U.picOpen = U.picOpen === v ? '' : v; render(); break;
       case 'pic-use': setPic(t.getAttribute('data-k'), t.getAttribute('data-u')); break;
@@ -3966,6 +4010,8 @@ html.vv-short #view.typing .tlc{min-height:38px}
       if (cl) { cl[f] = f === 'text' ? t.value : (parseInt(t.value, 10) || ''); saveDraft(); var ch = document.getElementById('checks'); if (ch) ch.innerHTML = draftChecks(); }
     }
   });
+  // after the field's own handling: show the live Telugu suggestions for the English word being typed
+  view.addEventListener('input', function (ev) { var t = ev.target; if (teField(t) && S.prefs.teType !== false) liveSuggest(t); });
   view.addEventListener('change', function (ev) {
     var t = ev.target;
     if (t.id === 'imp-files' && t.files.length) { Promise.all(Array.prototype.map.call(t.files, readFileText)).then(runImport, function () { U.status = { kind: 'err', text: 'ఫైల్ తెరవలేకపోయాం.' }; render(); }); }
@@ -3994,7 +4040,7 @@ html.vv-short #view.typing .tlc{min-height:38px}
     if (ev.target.hasAttribute && ev.target.hasAttribute('data-sr')) { sheetCommit(ev.target); return; }
     var t = ev.target; if (!teField(t) || S.prefs.teType === false) return;
     if (/[A-Za-z]/.test(t.value)) { var nv = convertLatin(t.value); if (nv !== t.value) { t.value = nv; t.dispatchEvent(new Event('input', { bubbles: true })); } }
-    setTimeout(function () { var bar = document.getElementById('tlalts'); if (bar && !(document.activeElement && (document.activeElement === t || teField(document.activeElement)))) { bar.remove(); U.tlAlt = null; } }, 250);
+    setTimeout(function () { var bar = document.getElementById('tlalts'); if (bar && !(document.activeElement && (document.activeElement === t || teField(document.activeElement)))) { bar.remove(); U.tlAlt = null; U.tlLive = null; } }, 250);
   });
   view.addEventListener('keydown', function (ev) {
     var t = ev.target;
