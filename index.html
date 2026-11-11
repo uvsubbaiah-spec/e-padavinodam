@@ -1767,13 +1767,31 @@ a.smallbtn{text-decoration:none;display:inline-flex;align-items:center;justify-c
     host.parentNode.insertBefore(bar, host.nextSibling);
     bar.innerHTML = '<small>వేరే రూపం?</small>' + alts.map(function (a, i) { return '<button type="button" data-act="tl-alt" data-v="' + i + '"' + (a === tel ? ' aria-pressed="true"' : '') + '>' + esc(a) + '</button>'; }).join('');
   }
+  // A phone keyboard (Gboard) holds the word being typed as "composing" text: a word put into the box by the app while that
+  // is going on is undone by the keyboard a moment later, so the tap seemed to need repeating. So: first let the keyboard
+  // finish its word (blur and focus again), then replace the text the way typing does (insertText), which keyboards follow.
+  var COMPOSING = null;
+  function settleIME(el, fn) {
+    if (!el || COMPOSING !== el) { fn(); return; }
+    U.imeSettle = true; try { el.blur(); } catch (e) {}
+    setTimeout(function () { COMPOSING = null; try { el.focus({ preventScroll: true }); } catch (e) {} U.imeSettle = false; fn(); }, 40);
+  }
+  function replaceRange(el, start, end, text) {
+    var ok = false;
+    try { el.focus({ preventScroll: true }); el.setSelectionRange(start, end); ok = document.execCommand && document.execCommand('insertText', false, text); } catch (e) { ok = false; }
+    if (ok && el.value.slice(start, start + text.length) === text) return;   // the browser fired 'input' itself
+    el.value = el.value.slice(0, start) + text + el.value.slice(end);
+    try { el.setSelectionRange(start + text.length, start + text.length); } catch (e) {}
+    el.dispatchEvent(new Event('input', { bubbles: true }));
+  }
   function pickAlt(i) {
     var A = U.tlAlt; if (!A || !A.el || !document.body.contains(A.el)) return;
     var el = A.el, cur = el.value.slice(A.start, A.start + A.len), alt = A.alts[i]; if (alt == null) return;
     if (cur !== A.alts.filter(function (x) { return x === cur; })[0]) return;   // the text has moved on since
-    el.value = el.value.slice(0, A.start) + alt + el.value.slice(A.start + A.len); A.len = alt.length;
-    var np = A.start + alt.length + 1; try { el.focus(); el.setSelectionRange(np, np); } catch (e) {}
-    el.dispatchEvent(new Event('input', { bubbles: true }));
+    settleIME(el, function () {
+      replaceRange(el, A.start, A.start + A.len, alt); A.len = alt.length;
+      var np = A.start + alt.length + 1; try { el.setSelectionRange(np, np); } catch (e) {}
+    });
     var bar = document.getElementById('tlalts'); if (bar) bar.querySelectorAll('button').forEach(function (b, j) { b.setAttribute('aria-pressed', String(A.alts[j] === alt)); });
   }
   // fields where English typing turns Telugu: clue text (draft and reading screen), title, the fix box
@@ -3883,11 +3901,18 @@ a.smallbtn{text-decoration:none;display:inline-flex;align-items:center;justify-c
   }
   function tePick(i) {
     var bar = document.getElementById('teopts'); if (!TE || !bar || !bar._opts || bar._opts[i] == null) return;
-    var el = TE.el, o = bar._opts[i], v = el.value;
-    el.value = v.slice(0, TE.start) + o + v.slice(TE.end); var np = TE.start + o.length;
-    try { el.focus(); el.setSelectionRange(np, np); } catch (e) {}
-    var wasWord = TE.word; el.dispatchEvent(new Event('input', { bubbles: true }));
-    if (wasWord) teHide(); else teStrip(el);
+    var el = TE.el, o = bar._opts[i], word = TE.word, s0 = TE.start, e0 = TE.end, v0 = el.value;
+    if (word) teHide();
+    settleIME(el, function () {
+      var v = el.value, start = s0, end = e0;
+      if (v !== v0) {   // the keyboard changed the text while finishing its word: find the piece before the cursor again
+        var pos = el.selectionStart != null ? el.selectionStart : v.length, before = v.slice(0, pos), m = word ? before.match(/[A-Za-z]+$/) : null;
+        if (word && m) { start = pos - m[0].length; end = pos; }
+        else if (!word) { var parts = before.slice(-14).normalize('NFC').match(AKSHARA) || [], last = parts[parts.length - 1] || ''; if (last && before.slice(-last.length) === last) { start = pos - last.length; end = pos; } }
+      }
+      replaceRange(el, start, end, o);
+      if (word) teHide(); else teStrip(el);
+    });
   }
   document.addEventListener('click', function (ev) { var b = ev.target.closest && ev.target.closest('#teopts button[data-te]'); if (b) { ev.preventDefault(); tePick(+b.getAttribute('data-te')); } });
   if (window.visualViewport) { window.visualViewport.addEventListener('resize', placeTe); window.visualViewport.addEventListener('scroll', placeTe); }
@@ -4181,9 +4206,11 @@ a.smallbtn{text-decoration:none;display:inline-flex;align-items:center;justify-c
       case 'tl-commit': case 'tl-pick':
         var tli = document.getElementById('tl-in'); if (!tli) break;
         var cand = a === 'tl-pick' ? (U.tlC || [])[+t.getAttribute('data-i')] : pickFor(tli.value);
-        tli.value = '';
-        if (cand) commitTyped(cand); else updateCands();
-        var tli2 = document.getElementById('tl-in'); if (tli2) { tli2.focus(); updateCands(); }
+        settleIME(tli, function () {
+          tli.value = '';
+          if (cand) commitTyped(cand); else updateCands();
+          var tli2 = document.getElementById('tl-in'); if (tli2) { tli2.value = ''; tli2.focus(); updateCands(); }
+        });
         break;
       case 'fix-open': U.panel = 'fix'; render(); var fxi = document.getElementById('fix-in'); if (fxi) { fxi.focus(); fxi.setSelectionRange(fxi.value.length, fxi.value.length); } break;
       case 'fix-save':
@@ -4212,7 +4239,8 @@ a.smallbtn{text-decoration:none;display:inline-flex;align-items:center;justify-c
       case 'replay':
         if (U.confirm !== 'replay') { U.confirm = 'replay'; render(); break; }
         S.prog[t.getAttribute('data-id')] = freshProgress(); U.confirm = ''; save(); location.hash = '#play-' + t.getAttribute('data-id'); break;
-      case 'sh-opt': var sin = U.shIn; if (!sin || !document.body.contains(sin)) break; sin.value = v; sheetCommit(sin); var sb = document.getElementById('shopts'); if (sb) sb.remove(); U.shIn = null; sheetNext(sin); break;
+      case 'sh-opt': var sin = U.shIn; if (!sin || !document.body.contains(sin)) break; var shv = v; var sb = document.getElementById('shopts'); if (sb) sb.remove(); U.shIn = null;
+        settleIME(sin, function () { replaceRange(sin, 0, sin.value.length, shv); sin.value = shv; sheetCommit(sin); var sb2 = document.getElementById('shopts'); if (sb2) sb2.remove(); U.shIn = null; sheetNext(sin); }); break;
       case 'relink': if (U.busy) break; if (U.confirm !== 'relink') { U.confirm = 'relink'; render(); break; } U.confirm = ''; runRelink(0); break;
       case 'reset-post':
         var rid = t.getAttribute('data-id');
@@ -4348,8 +4376,9 @@ a.smallbtn{text-decoration:none;display:inline-flex;align-items:center;justify-c
     if ((t.id === 'sc-r' || t.id === 'sc-c') && SC) { var nv2 = Math.max(3, Math.min(25, parseInt(t.value, 10) || 12)); if (t.id === 'sc-r') SC.R = nv2; else SC.C = nv2; SC.flip = {}; scanDetect(); render(); }
   });
 
+  view.addEventListener('compositionstart', function (ev) { COMPOSING = ev.target; });
   view.addEventListener('compositionend', function (ev) {
-    var t = ev.target;
+    var t = ev.target; COMPOSING = null; if (U.imeSettle) return;
     if (t.id === 'tl-in') tlInput(t);
     else if (teField(t) && S.prefs.teType !== false) { autoConvertField(t); t.dispatchEvent(new Event('input', { bubbles: true })); }
   });
@@ -4363,6 +4392,7 @@ a.smallbtn{text-decoration:none;display:inline-flex;align-items:center;justify-c
   view.addEventListener('touchend', function (ev) { var t = ev.target; if (t.getAttribute && t.getAttribute('data-fresh') === '1') { t.removeAttribute('data-fresh'); setTimeout(function () { try { if (!t._typed) t.select(); } catch (e) {} }, 0); } });
   // leaving a field: a last English word with no space after it turns Telugu too
   view.addEventListener('focusout', function (ev) {
+    if (U.imeSettle) return;   // only letting the keyboard finish its word
     if (teField(ev.target)) setTimeout(function () { if (TE && document.activeElement !== TE.el) teHide(); }, 250);
     if (ev.target.hasAttribute && ev.target.hasAttribute('data-sr')) { sheetCommit(ev.target); var sht = ev.target; setTimeout(function () { var b = document.getElementById('shopts'); if (b && U.shIn === sht && document.activeElement !== sht) { b.remove(); U.shIn = null; } }, 200); return; }
     var t = ev.target; if (!teField(t) || S.prefs.teType === false) return;
