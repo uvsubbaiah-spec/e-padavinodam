@@ -2208,14 +2208,38 @@ html.vv-short #view.typing .tlc{min-height:38px}
       U.busy = ''; U.status = { kind: 'ok', text: p.date + ' పోస్ట్ బ్లాగ్ నుంచి తీసి డ్రాఫ్ట్‌గా పెట్టాం. Blogger లో మళ్ళీ Publish చేస్తే తిరిగి వస్తుంది.' }; render();
     }, function (e) { U.busy = ''; U.status = { kind: 'err', text: svcErr(e) }; render(); });
   }
-  function draftReadyForBlog(pz) {
-    if (!pz.date) return 'ముందు తేదీ (DD.MM.YYYY) ఇవ్వండి.';
-    if (!/^\d{2}\.\d{2}\.\d{4}$/.test(pz.date)) return 'తేదీ DD.MM.YYYY రూపంలో ఉండాలి, ఉదా: 25.05.2025.';
+  // everything that must be complete before a post goes to the blog: the date, a number on every clue square, a clue (with text)
+  // for every across and down word the grid has, no clue the grid does not have, and an answer in every white square
+  function blogBlockers(pz) {
+    var out = [], R = pz.grid.length, C = R ? pz.grid[0].length : 0, nums = pz.nums || {}, slots = [], noNum = 0;
+    if (!pz.date) out.push('తేదీ (DD.MM.YYYY) ఇవ్వలేదు');
+    else if (!/^\d{2}\.\d{2}\.\d{4}$/.test(pz.date)) out.push('తేదీ DD.MM.YYYY రూపంలో లేదు (ఉదా: 25.05.2025)');
+    function w(r, c) { return r >= 0 && c >= 0 && r < R && c < C && pz.grid[r][c] !== '#'; }
+    for (var r = 0; r < R; r++) for (var c = 0; c < C; c++) {
+      if (!w(r, c)) continue;
+      var a = (!w(r, c - 1) && w(r, c + 1)) || lone(w, r, c), d = !w(r - 1, c) && w(r + 1, c);
+      if (!a && !d) continue;
+      var n = nums[key(r, c)]; if (!n) { noNum++; continue; }
+      if (a) slots.push({ d: 'A', n: +n }); if (d) slots.push({ d: 'D', n: +n });
+    }
+    if (noNum) out.push(noNum + ' గడులకు సంఖ్య లేదు (“సంఖ్యలు ఆటోగా వేయండి” నొక్కండి)');
+    var have = {}, slotOf = {};
+    (pz.clues || []).forEach(function (cl) { if (String(cl.text || '').trim()) have[cl.d + cl.n] = (have[cl.d + cl.n] || 0) + 1; });
+    slots.forEach(function (sl) { slotOf[sl.d + sl.n] = 1; });
+    var noA = [], noD = []; slots.forEach(function (sl) { if (!have[sl.d + sl.n]) (sl.d === 'A' ? noA : noD).push(sl.n); });
+    if (noA.length) out.push(noA.length + ' అడ్డం ఆధారాలు లేవు: ' + noA.join(', '));
+    if (noD.length) out.push(noD.length + ' నిలువు ఆధారాలు లేవు: ' + noD.join(', '));
+    var extra = [], twice = [];
+    (pz.clues || []).forEach(function (cl) { var k = cl.d + cl.n; if (String(cl.text || '').trim() && !slotOf[k] && extra.indexOf(dirName(cl.d) + ' ' + cl.n) < 0) extra.push(dirName(cl.d) + ' ' + cl.n); if (have[k] > 1 && twice.indexOf(dirName(cl.d) + ' ' + cl.n) < 0) twice.push(dirName(cl.d) + ' ' + cl.n); });
+    if (extra.length) out.push('గడిలో లేని ఆధారాలు: ' + extra.join(', '));
+    if (twice.length) out.push('రెండుసార్లు ఉన్న ఆధారాలు: ' + twice.join(', '));
     var m = model(Object.assign({}, pz, { id: 'draft' }));
-    if (!m.hasAns) return 'బ్లాగ్ పోస్ట్‌కు అన్ని గడుల జవాబులూ కావాలి (' + m.missingAns + ' లేవు). “జవాబులు” లో నింపండి.';
-    if (!pz.clues.length) return 'ఆధారాలు ఇంకా లేవు.';
-    return '';
+    if (!m.whites) out.push('గడి ఖాళీగా ఉంది');
+    else if (m.missingAns) out.push(m.missingAns + ' గడులకు జవాబులు లేవు (“జవాబులు” / పట్టిక లో నింపండి)');
+    m.problems.forEach(function (x) { if (/పొడవు|ఏ ఆధారంలోనూ లేవు/.test(x) && out.indexOf(x) < 0) out.push(x); });
+    return out;
   }
+  function draftReadyForBlog(pz) { var b = blogBlockers(pz); return b.length ? 'ఇంకా పూర్తి కాలేదు, అందుకే ప్రచురించలేదు — ' + b.join('; ') + '.' : ''; }
   function savePuzzles(list, okMsg, after) {
     if (!IS_CLAUDE) { toast('వెబ్‌సైట్ నుంచి మార్పులు బ్లాగ్‌లోకి వెళ్తాయి.'); return; }
     U.busy = 'publish'; U.status = { kind: 'wait', text: 'ప్రచురిస్తున్నాం…' }; render();
@@ -3615,13 +3639,19 @@ html.vv-short #view.typing .tlc{min-height:38px}
       '<p class="note">ప్రచురించిన మార్పులు ఈ యాప్ తెరిచిన అందరికీ వెంటనే కనిపిస్తాయి. ఈనాడు పద వినోదం హక్కులు ఈనాడువి — పబ్లిక్‌గా పంచే ముందు అనుమతి సంగతి చూసుకోండి.</p>' +
     '</div>';
   }
+  // after a change typed in place (no full redraw): the checks box and whether the publish buttons may be pressed
+  function refreshChecks() {
+    var ck = document.getElementById('checks'); if (!ck || !D) return;
+    ck.innerHTML = draftChecks();
+    var off = !!U.busy || blogBlockers(draftToPuzzle(D, false)).length > 0;
+    view.querySelectorAll('[data-act="update-blog"], [data-act="publish-blog"]:not([data-v])').forEach(function (b) { b.disabled = off; });
+    var bn = view.querySelector('.blocknote'); if (bn) bn.hidden = !off;
+  }
   function draftChecks() {
-    var p = draftToPuzzle(D, true), m = model(p), out = m.problems.slice();
-    var noClue = []; Object.keys(p.nums).forEach(function (k) { var n = p.nums[k]; if (!p.clues.some(function (c) { return c.n === n; })) noClue.push(n); });
-    if (noClue.length) out.push('ఆధారం లేని సంఖ్యలు: ' + noClue.sort(function (a, b) { return a - b; }).slice(0, 12).join(', ') + (noClue.length > 12 ? '…' : ''));
-    // what still stops it going to the blog
-    if (!m.hasAns && m.whites) out.push('బ్లాగ్‌కు ముందు: ' + m.missingAns + ' గడులకు జవాబులు లేవు — పైన “జవాబులు” కార్డ్‌లో జవాబుల గడి ఫోటో / PDF ఇవ్వండి, లేదా “జవాబులు” మోడ్‌లో టైప్ చేయండి.');
-    if (!/^\d{2}\.\d{2}\.\d{4}$/.test(p.date || '')) out.push('బ్లాగ్‌కు ముందు: తేదీ DD.MM.YYYY గా ఇవ్వండి (పైన “తేదీ”).');
+    var p = draftToPuzzle(D, true), m = model(p), out = [];
+    // what still stops it going to the blog (all of it is checked again when publishing)
+    blogBlockers(draftToPuzzle(D, false)).forEach(function (x) { out.push('ప్రచురణకు ముందు: ' + x); });
+    m.problems.forEach(function (x) { if (!/పొడవు|ఏ ఆధారంలోనూ లేవు/.test(x)) out.push(x); });
     var info = m.whites + ' తెల్ల గడులు · అడ్డం ' + m.order.A.length + ' · నిలువు ' + m.order.D.length + ' · ' + (m.hasAns ? 'అన్ని జవాబులూ ఉన్నాయి' : 'జవాబులు లేని గడులు ' + m.missingAns);
     return '<div class="status ' + (out.length ? '' : 'ok') + '"><span>' + esc(info) + '</span>' + (out.length ? '<ul class="problems">' + out.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>' : '<span>సమస్యలేమీ కనిపించలేదు.</span>') + '</div>';
   }
@@ -3674,7 +3704,7 @@ html.vv-short #view.typing .tlc{min-height:38px}
     if (D.low) delete D.low[k]; D.chg = D.chg || {}; D.chg[k] = 1;
     var lab = t.parentNode; if (lab) { lab.classList.remove('low'); lab.classList.add('chg'); }
     saveDraft();
-    var ck = document.getElementById('checks'); if (ck) ck.innerHTML = draftChecks();
+    refreshChecks();
   }
   // English in a square: every Telugu letter it could be (short/long vowel, ట/త, ల/ళ, ం …), one tap puts it in
   var VLEN = { a: 'aa', aa: 'a', A: 'a', i: 'ee', ee: 'i', ii: 'i', I: 'i', u: 'oo', oo: 'u', uu: 'u', U: 'u', e: 'E', ae: 'e', E: 'e', o: 'O', oa: 'o', O: 'o', ai: 'a', au: 'o', ou: 'o' };
@@ -3784,7 +3814,7 @@ html.vv-short #view.typing .tlc{min-height:38px}
   function editView() {
     if (!ADMIN) return adminView();
     if (!D) return '<div class="page gutter"><p class="note">డ్రాఫ్ట్ లేదు.</p><a class="wide-btn pri" href="#admin">నిర్వాహణకు వెళ్ళండి</a></div>';
-    var p = draftToPuzzle(D, true), m = model(p), busy = !!U.busy;
+    var p = draftToPuzzle(D, true), m = model(p), busy = !!U.busy, notReady = blogBlockers(draftToPuzzle(D, false)).length > 0;
     var runs = {};
     if (U.emode === 'ans') { var dr = U.edir === 'D' ? 1 : 0, dc = U.edir === 'A' ? 1 : 0, r0 = U.er, c0 = U.ec; while (m.isW(r0 - dr, c0 - dc)) { r0 -= dr; c0 -= dc; } while (m.isW(r0, c0)) { runs[key(r0, c0)] = true; r0 += dr; c0 += dc; } }
     var cells = '';
@@ -3813,10 +3843,10 @@ html.vv-short #view.typing .tlc{min-height:38px}
         '<section class="sec"><div class="sec-row"><h2 class="sec-h">ఆధారాలు</h2><div class="seg" role="group" aria-label="ఆధారాల దిశ"><button data-act="etab" data-v="A" aria-pressed="' + (U.etab === 'A') + '">అడ్డం · ' + nA + '</button><button data-act="etab" data-v="D" aria-pressed="' + (U.etab === 'D') + '">నిలువు · ' + nD + '</button></div></div>' +
           teHintHTML() + '<div class="cluerow" style="font-size:12px;color:var(--muted)"><span>సంఖ్య</span><span>ఆధారం</span><span>పొడవు</span><span></span></div>' + clueRows +
           '<button class="wide-btn ter" data-act="clue-add">' + dirName(U.etab) + ' ఆధారం జోడించండి</button></section>' + (IS_CLAUDE ? '' : picsHTML()) +
-        '<div id="checks">' + draftChecks() + '</div>' +
+        '<div id="checks">' + draftChecks() + '</div>' + (notReady && !IS_CLAUDE ? '<p class="note blocknote">పైన “ప్రచురణకు ముందు” లో ఉన్నవన్నీ పూర్తయ్యే వరకు బ్లాగ్‌లో ప్రచురించే బటన్ ఆగి ఉంటుంది (లోపాలున్న పోస్ట్ బ్లాగ్‌కు వెళ్ళదు). Blogger డ్రాఫ్ట్‌గా మాత్రం సేవ్ చేయవచ్చు.</p>' : '') +
         '<div class="btnrow"><a class="wide-btn ter" href="#play-draft" data-act="try">పరీక్షగా ఆడండి</a>' + (IS_CLAUDE ? '<button class="wide-btn pri" data-act="publish-draft"' + (busy ? ' disabled' : '') + '>' + (D.id ? 'మార్పులు ప్రచురించండి' : 'పోస్ట్‌గా ప్రచురించండి') + '</button></div><button class="wide-btn ter" data-act="copy-site-draft">వెబ్‌సైట్ కోసం కాపీ (బ్లాగ్‌లో వేయడానికి)</button>'
-          : D.postId ? '<button class="wide-btn pri" data-act="update-blog"' + (busy ? ' disabled' : '') + '>బ్లాగ్ పోస్ట్ సరిదిద్దండి</button></div>'
-          : '<button class="wide-btn pri" data-act="publish-blog"' + (busy ? ' disabled' : '') + '>బ్లాగ్‌లో ప్రచురించండి</button></div><button class="wide-btn ter" data-act="publish-blog" data-v="draft"' + (busy ? ' disabled' : '') + '>బ్లాగ్‌లో డ్రాఫ్ట్‌గా సేవ్ చేయండి (Blogger లో చూసి ప్రచురించడానికి)</button>') +
+          : D.postId ? '<button class="wide-btn pri" data-act="update-blog"' + (busy || notReady ? ' disabled' : '') + '>బ్లాగ్ పోస్ట్ సరిదిద్దండి</button></div>'
+          : '<button class="wide-btn pri" data-act="publish-blog"' + (busy || notReady ? ' disabled' : '') + '>బ్లాగ్‌లో ప్రచురించండి</button></div><button class="wide-btn ter" data-act="publish-blog" data-v="draft"' + (busy ? ' disabled' : '') + '>బ్లాగ్‌లో డ్రాఫ్ట్‌గా సేవ్ చేయండి (Blogger లో చూసి ప్రచురించడానికి)</button>') +
         (busy ? '<div class="status"><span>' + (U.busy === 'ai' ? 'Gemini ఇంకా చదువుతోంది — అది ముగిసే వరకు ప్రచురించే బటన్లు ఆగుతాయి.' : U.busy === 'ocr' || U.busy === 'scan' ? 'ఫోన్ ఇంకా చదువుతోంది — అది ముగిసే వరకు ప్రచురించే బటన్లు ఆగుతాయి.' : 'పని జరుగుతోంది — ముగిసే వరకు ప్రచురించే బటన్లు ఆగుతాయి.') + '</span>' + (U.busy === 'ai' ? '<button class="smallbtn" data-act="ai-stop">ఆపండి</button>' : '') + '</div>' : '') +
         '<div class="savebar"><button class="wide-btn sec" data-act="draft-save">' + I.save + ' డ్రాఫ్ట్ సేవ్ చేయండి</button><small>' + (D.edited ? 'మార్పులు ఈ ఫోన్‌లో తానుగా సేవ్ అవుతాయి · చివరి మార్పు ' + hhmm(D.edited) : '') + ((S.drafts || []).some(function (x) { return x.uid === D.uid; }) ? ' · సేవ్ చేసిన డ్రాఫ్ట్‌ల్లో ఉంది' : '') + '</small></div>' +
         '<button class="wide-btn link" data-act="draft-drop">' + (U.confirm === 'drop' ? 'ఖచ్చితమా? డ్రాఫ్ట్ పోతుంది — మళ్ళీ నొక్కండి' : 'డ్రాఫ్ట్ వదిలేయండి') + '</button>' +
@@ -4005,13 +4035,13 @@ html.vv-short #view.typing .tlc{min-height:38px}
       case 'scan-draft': if (SC && SC.vals && !U.busy) scanMakeDraft(); break;
       case 'scan-answers': if (SC && SC.vals && !U.busy) scanAnswers(); break;
       case 'publish-blog':
-        var bp = draftToPuzzle(D, false), why = draftReadyForBlog(bp);
-        if (why) { toast(why); break; }
+        var bp = draftToPuzzle(D, false), why = v === 'draft' ? (bp.date && /^\d{2}\.\d{2}\.\d{4}$/.test(bp.date) ? '' : 'ముందు తేదీ (DD.MM.YYYY) ఇవ్వండి.') : draftReadyForBlog(bp);
+        if (why) { U.status = { kind: 'err', text: why }; render(); toast(why); break; }
         if (PUZZLES.some(function (p) { return p.date === bp.date && p.postId; }) && U.confirm !== 'dup') { U.confirm = 'dup'; toast(bp.date + ' తేదీతో బ్లాగ్‌లో ఇప్పటికే పోస్ట్ ఉంది. అయినా కొత్తగా వేయాలంటే మళ్ళీ నొక్కండి.'); break; }
         U.confirm = ''; blogPublish(bp, v === 'draft'); break;
       case 'update-blog':
         var up = draftToPuzzle(D, false), why2 = draftReadyForBlog(up);
-        if (why2) { toast(why2); break; }
+        if (why2) { U.status = { kind: 'err', text: why2 }; render(); toast(why2); break; }
         blogUpdate(up, up.date + ' బ్లాగ్ పోస్ట్ సరిదిద్దాం.', function () { keepPublished(D, up.url); D = null; S.draft = null; delete S.prog.draft; save(); location.hash = '#admin'; }); break;
       case 'unpub':
         var upp = findPuzzle(t.getAttribute('data-id')); if (!upp || !upp.postId) break;
@@ -4138,7 +4168,8 @@ html.vv-short #view.typing .tlc{min-height:38px}
       case 'clue-del': D.clues.splice(+t.getAttribute('data-i'), 1); saveDraft(); render(); break;
       case 'try': S.prog.draft = freshProgress(); save(); break;
       case 'publish-draft':
-        var pz = draftToPuzzle(D, false);
+        var pz = draftToPuzzle(D, false), why3 = draftReadyForBlog(pz);
+        if (why3) { U.status = { kind: 'err', text: why3 }; render(); toast(why3); break; }
         if (!pz.date) { toast('ముందు తేదీ (DD.MM.YYYY) ఇవ్వండి.'); break; }
         if (!/^\d{2}\.\d{2}\.\d{4}$/.test(pz.date)) { toast('తేదీ DD.MM.YYYY రూపంలో ఉండాలి, ఉదా: 25.05.2025.'); break; }
         var taken = {}; PUZZLES.forEach(function (p) { if (p.id !== D.id) taken[p.id] = true; });
@@ -4177,7 +4208,7 @@ html.vv-short #view.typing .tlc{min-height:38px}
     if (t.hasAttribute('data-ci')) {
       var f = t.getAttribute('data-f'); if (f === 'text' && !ev.isComposing && S.prefs.teType !== false) autoConvertField(t); if (f === 'text') teStrip(t);
       var cl = D.clues[+t.getAttribute('data-ci')];
-      if (cl) { cl[f] = f === 'text' ? t.value : (parseInt(t.value, 10) || ''); saveDraft(); var ch = document.getElementById('checks'); if (ch) ch.innerHTML = draftChecks(); }
+      if (cl) { cl[f] = f === 'text' ? t.value : (parseInt(t.value, 10) || ''); saveDraft(); refreshChecks(); }
     }
   });
   view.addEventListener('change', function (ev) {
