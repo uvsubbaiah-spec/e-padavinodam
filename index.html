@@ -355,8 +355,9 @@ textarea.inp{min-height:110px;resize:vertical;font-family:ui-monospace,Menlo,Con
 .ecell.sel{box-shadow:inset 0 0 0 3px var(--accent)}
 .ecell.run{background:var(--word)}
 .ecell.miss{color:var(--wrong)}
-.cluerow{display:grid;grid-template-columns:56px minmax(0,1fr) 52px 40px;gap:6px;align-items:center}
-.cluerow .x{width:40px;height:40px;border:0;border-radius:10px;background:var(--wrong-bg);color:var(--wrong);font-size:18px;font-weight:700}
+.cluerow{display:grid;grid-template-columns:50px minmax(0,1fr) 46px 36px 36px;gap:5px;align-items:center}
+.cluerow .plus{width:36px;height:40px;border:0;border-radius:10px;background:var(--leaf-tint);color:var(--leaf-ink);font-size:22px;font-weight:700;line-height:1}
+.cluerow .x{width:36px;height:40px;border:0;border-radius:10px;background:var(--wrong-bg);color:var(--wrong);font-size:18px;font-weight:700}
 .problems{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:3px;font-size:13.5px;line-height:1.5}
 .srcimgs{display:flex;gap:8px;overflow-x:auto}
 .srcimgs img{height:140px;border-radius:10px;border:1px solid var(--line)}
@@ -2236,6 +2237,19 @@ a.smallbtn{text-decoration:none;display:inline-flex;align-items:center;justify-c
   }
   // everything that must be complete before a post goes to the blog: the date, a number on every clue square, a clue (with text)
   // for every across and down word the grid has, no clue the grid does not have, and an answer in every white square
+  // the grid's across and down words of the open draft (number, length), in number order
+  function draftSlots() {
+    if (!D) return [];
+    var pz = draftToPuzzle(D, false), R = pz.grid.length, C = R ? pz.grid[0].length : 0, nums = pz.nums || {}, out = [];
+    function w(r, c) { return r >= 0 && c >= 0 && r < R && c < C && pz.grid[r][c] !== '#'; }
+    for (var r = 0; r < R; r++) for (var c = 0; c < C; c++) {
+      if (!w(r, c)) continue;
+      var n = +nums[key(r, c)]; if (!n) continue;
+      if ((!w(r, c - 1) && w(r, c + 1)) || lone(w, r, c)) { var l = 0; for (var x = c; w(r, x); x++) l++; out.push({ d: 'A', n: n, len: l }); }
+      if (!w(r - 1, c) && w(r + 1, c)) { var l2 = 0; for (var y = r; w(y, c); y++) l2++; out.push({ d: 'D', n: n, len: l2 }); }
+    }
+    return out.sort(function (a, b) { return a.n - b.n; });
+  }
   function blogBlockers(pz) {
     var out = [], R = pz.grid.length, C = R ? pz.grid[0].length : 0, nums = pz.nums || {}, slots = [], noNum = 0;
     if (!pz.date) out.push('తేదీ (DD.MM.YYYY) ఇవ్వలేదు');
@@ -2609,17 +2623,40 @@ a.smallbtn{text-decoration:none;display:inline-flex;align-items:center;justify-c
     return keep;
   }
   function findGrid(d, W, H) {
-    var m = lineMask(d, W, H), hc = new Uint32Array(H), x, y, best = null;
-    for (y = 0; y < H; y++) { var s = 0, o = y * W; for (x = 0; x < W; x++) s += m[o + x]; hc[y] = s; }
-    // 0.3: rows with many blocked squares have short lines (27.09.2026: blue blocks, a heavy top border)
-    evenRuns(lineCenters(hc, 0.3, 20), 6).slice(0, 8).forEach(function (rr) {
-      var y0 = Math.round(rr[0]), y1 = Math.round(rr[rr.length - 1]), gy = (y1 - y0) / (rr.length - 1), vc = new Uint32Array(W);
-      for (y = y0; y <= y1; y++) { var o2 = y * W; for (x = 0; x < W; x++) vc[x] += m[o2 + x]; }
-      evenRuns(lineCenters(vc, 0.3, Math.round(0.25 * (y1 - y0))), 6, gy).forEach(function (cc) {
-        var n = Math.min(rr.length, cc.length) - 1, score = n * 1000 + (rr.length - 1) * (cc.length - 1);
-        if (!best || score > best.score) best = { score: score, R: rr.length - 1, C: cc.length - 1, x0: cc[0], x1: cc[cc.length - 1], y0: y0, y1: y1 };
+    var m0 = lineMask(d, W, H), mh = new Uint8Array(W * H), mv = new Uint8Array(W * H), x, y, T = 4;
+    // a second reading with only thin strokes: a pink banner touching the grid is filled, not a line. Whichever finds the
+    // bigger grid wins (shaded blocked squares can hide lines in the thin reading instead).
+    for (y = 0; y < H; y++) for (x = 0; x < W; x++) { var i = y * W + x; if (!m0[i]) continue;
+      if (!(y >= T && y + T < H && m0[i - T * W] && m0[i + T * W])) mh[i] = 1;
+      if (!(x >= T && x + T < W && m0[i - T] && m0[i + T])) mv[i] = 1; }
+    function scan(m, n2) {
+      var hc = new Uint32Array(H), best = null;
+      for (y = 0; y < H; y++) { var s = 0, o = y * W; for (x = 0; x < W; x++) s += m[o + x]; hc[y] = s; }
+      // 0.3: rows with many blocked squares have short lines (27.09.2026: blue blocks, a heavy top border)
+      evenRuns(lineCenters(hc, 0.3, 20), 6).slice(0, 8).forEach(function (rr) {
+        var y0 = Math.round(rr[0]), y1 = Math.round(rr[rr.length - 1]), gy = (y1 - y0) / (rr.length - 1), vc = new Uint32Array(W);
+        for (y = y0; y <= y1; y++) { var o2 = y * W; for (x = 0; x < W; x++) vc[x] += n2[o2 + x]; }
+        evenRuns(lineCenters(vc, 0.3, Math.round(0.25 * (y1 - y0))), 6, gy).forEach(function (cc) {
+          var n = Math.min(rr.length, cc.length) - 1, score = n * 1000 + (rr.length - 1) * (cc.length - 1);
+          if (!best || score > best.score) best = { score: score, R: rr.length - 1, C: cc.length - 1, x0: cc[0], x1: cc[cc.length - 1], y0: y0, y1: y1, mh: m, mv: n2 };
+        });
       });
-    });
+      return best;
+    }
+    var a = scan(m0, m0), b2 = scan(mh, mv), best = !a ? b2 : !b2 ? a : b2.score > a.score ? b2 : a;
+    if (!best) return best;
+    // the number of rows / columns: the count whose evenly spaced lines fall on the strongest strokes (a line the first pass
+    // missed or a stray one it took makes the squares drift otherwise)
+    function refine(prof, lo, hi, n0) {
+      function sc(n) { var gap = (hi - lo) / n, t = 0; for (var k = 1; k < n; k++) { var c = Math.round(lo + k * gap), mx = 0; for (var q = c - 2; q <= c + 2; q++) mx = Math.max(mx, prof[q] || 0); t += mx; } return t / (n - 1); }
+      var bn = n0, bs = sc(n0);
+      for (var n = Math.max(5, n0 - 3); n <= n0 + 3; n++) { if (n === n0 || (hi - lo) / n < 8) continue; var v = sc(n); if (v > 1.15 * bs) { bn = n; bs = v; } }
+      return bn;
+    }
+    var ph = new Float32Array(H), pv = new Float32Array(W), X0 = Math.round(best.x0), X1 = Math.round(best.x1), Y0 = Math.round(best.y0), Y1 = Math.round(best.y1);
+    for (y = 0; y < H; y++) for (x = X0; x <= X1; x++) ph[y] += best.mh[y * W + x];
+    for (y = Y0; y <= Y1; y++) for (x = 0; x < W; x++) pv[x] += best.mv[y * W + x];
+    best.R = refine(ph, Y0, Y1, best.R); best.C = refine(pv, X0, X1, best.C); delete best.mh; delete best.mv;
     return best;
   }
   // per square: share of coloured samples (Eenadu's stars, leaves, flowers) and of dark ones (black squares or letters)
@@ -3907,7 +3944,7 @@ a.smallbtn{text-decoration:none;display:inline-flex;align-items:center;justify-c
       '<div class="ppanel" style="border-top:0;padding-top:0">' + keypadHTML('<button class="k" data-act="ottu" aria-pressed="' + (!!U.conj) + '">ఒత్తులు</button><button class="k" data-act="vowels">అచ్చులు</button><button class="k" data-act="eflip">' + I.swap + dirName(U.edir) + '</button><button class="k" data-act="back" aria-label="తొలగించు">' + I.del + '</button>') + '</div>';
     var clueRows = D.clues.map(function (cl, i) {
       if (cl.d !== U.etab) return '';
-      return '<div class="cluerow"><input class="inp sm" type="number" inputmode="numeric" aria-label="సంఖ్య" data-ci="' + i + '" data-f="n" value="' + esc(cl.n || '') + '"><input class="inp" style="min-height:40px;padding:6px 10px;font-size:15px" type="text" aria-label="ఆధారం" data-ci="' + i + '" data-f="text" value="' + esc(cl.text || '') + '"><input class="inp sm" type="number" inputmode="numeric" aria-label="పొడవు" data-ci="' + i + '" data-f="len" value="' + esc(cl.len || '') + '"><button class="x" data-act="clue-del" data-i="' + i + '" aria-label="ఈ ఆధారం తొలగించు">×</button></div>';
+      return '<div class="cluerow"><input class="inp sm" type="number" inputmode="numeric" aria-label="సంఖ్య" data-ci="' + i + '" data-f="n" value="' + esc(cl.n || '') + '"><input class="inp" style="min-height:40px;padding:6px 10px;font-size:15px" type="text" aria-label="ఆధారం" data-ci="' + i + '" data-f="text" value="' + esc(cl.text || '') + '"><input class="inp sm" type="number" inputmode="numeric" aria-label="పొడవు" data-ci="' + i + '" data-f="len" value="' + esc(cl.len || '') + '"><button class="plus" data-act="clue-ins" data-i="' + i + '" aria-label="దీని తర్వాత ఆధారం జోడించు">+</button><button class="x" data-act="clue-del" data-i="' + i + '" aria-label="ఈ ఆధారం తొలగించు">×</button></div>';
     }).join('');
     var nA = D.clues.filter(function (c) { return c.d === 'A'; }).length, nD = D.clues.length - nA;
     return '<section class="play" style="overflow-y:auto" data-scroll="edit">' +
@@ -3919,7 +3956,7 @@ a.smallbtn{text-decoration:none;display:inline-flex;align-items:center;justify-c
         '<div class="seg wide" role="group" aria-label="మార్పు రకం"><button data-act="emode" data-v="black" aria-pressed="' + (U.emode === 'black') + '">నలుపు గడులు</button><button data-act="emode" data-v="num" aria-pressed="' + (U.emode === 'num') + '">సంఖ్యలు</button><button data-act="emode" data-v="ans" aria-pressed="' + (U.emode === 'ans') + '">జవాబులు</button><button data-act="emode" data-v="sheet" aria-pressed="' + (U.emode === 'sheet') + '">పట్టిక</button></div>' +
         ansCardHTML(m) + (U.emode === 'sheet' ? sheetHTML(p) : '<div class="egrid" style="--n:' + D.C + '">' + cells + '</div>' + tool) +
         '<section class="sec"><div class="sec-row"><h2 class="sec-h">ఆధారాలు</h2><div class="seg" role="group" aria-label="ఆధారాల దిశ"><button data-act="etab" data-v="A" aria-pressed="' + (U.etab === 'A') + '">అడ్డం · ' + nA + '</button><button data-act="etab" data-v="D" aria-pressed="' + (U.etab === 'D') + '">నిలువు · ' + nD + '</button></div></div>' +
-          teHintHTML() + '<div class="cluerow" style="font-size:12px;color:var(--muted)"><span>సంఖ్య</span><span>ఆధారం</span><span>పొడవు</span><span></span></div>' + clueRows +
+          teHintHTML() + '<div class="cluerow" style="font-size:12px;color:var(--muted)"><span>సంఖ్య</span><span>ఆధారం</span><span>పొడవు</span><span></span><span></span></div>' + clueRows +
           '<button class="wide-btn ter" data-act="clue-add">' + dirName(U.etab) + ' ఆధారం జోడించండి</button></section>' + (IS_CLAUDE ? '' : picsHTML()) +
         '<div id="checks">' + draftChecks() + '</div>' + (notReady && !IS_CLAUDE ? '<p class="note blocknote">పైన “ప్రచురణకు ముందు” లో ఉన్నవన్నీ పూర్తయ్యే వరకు బ్లాగ్‌లో ప్రచురించే బటన్ ఆగి ఉంటుంది (లోపాలున్న పోస్ట్ బ్లాగ్‌కు వెళ్ళదు). Blogger డ్రాఫ్ట్‌గా మాత్రం సేవ్ చేయవచ్చు.</p>' : '') +
         '<div class="btnrow"><a class="wide-btn ter" href="#play-draft" data-act="try">పరీక్షగా ఆడండి</a>' + (IS_CLAUDE ? '<button class="wide-btn pri" data-act="publish-draft"' + (busy ? ' disabled' : '') + '>' + (D.id ? 'మార్పులు ప్రచురించండి' : 'పోస్ట్‌గా ప్రచురించండి') + '</button></div><button class="wide-btn ter" data-act="copy-site-draft">వెబ్‌సైట్ కోసం కాపీ (బ్లాగ్‌లో వేయడానికి)</button>'
@@ -4240,9 +4277,18 @@ a.smallbtn{text-decoration:none;display:inline-flex;align-items:center;justify-c
       case 'num-clear': delete D.nums[key(U.er, U.ec)]; saveDraft(); render(); break;
       case 'resize': resizeDraft(+(document.getElementById('d-rows') || {}).value, +(document.getElementById('d-cols') || {}).value); U.er = 0; U.ec = 0; render(); break;
       case 'etab': U.etab = v; render(); break;
-      case 'clue-add': D.clues.push({ d: U.etab, n: '', len: null, text: '' }); saveDraft(); render();
-        var nci = view.querySelector('input[data-ci="' + (D.clues.length - 1) + '"][data-f="n"]');
+      case 'clue-add': case 'clue-ins':
+        // a new clue row: right after the tapped row (+) or at the end; its number and length are the next of the grid's
+        // across / down words that has no clue yet, so only the text is left to type
+        var at = t.getAttribute('data-i') != null ? +t.getAttribute('data-i') : -1, dirN = at >= 0 && D.clues[at] ? D.clues[at].d : U.etab;
+        var used = {}; D.clues.forEach(function (c) { if (c.d === dirN) used[+c.n] = 1; });
+        var after = at >= 0 && D.clues[at] ? +D.clues[at].n || 0 : 0, sl = draftSlots().filter(function (x) { return x.d === dirN && !used[x.n]; });
+        var pick = sl.filter(function (x) { return x.n > after; })[0] || (at < 0 ? sl[0] : null);
+        var nc = { d: dirN, n: pick ? pick.n : '', len: pick ? pick.len : null, text: '' }, ni = at >= 0 ? at + 1 : D.clues.length;
+        D.clues.splice(ni, 0, nc); saveDraft(); render();
+        var nci = view.querySelector('input[data-ci="' + ni + '"][data-f="' + (pick ? 'text' : 'n') + '"]');
         if (nci) { nci.focus({ preventScroll: true }); nci.scrollIntoView({ block: 'center' }); }
+        if (!pick) toast('గడిలో ' + dirName(dirN) + ' పదాలన్నింటికీ ఆధారాలు ఉన్నాయి — సంఖ్య మీరే ఇవ్వండి.');
         break;
       case 'clue-del': D.clues.splice(+t.getAttribute('data-i'), 1); saveDraft(); render(); break;
       case 'try': S.prog.draft = freshProgress(); save(); break;
