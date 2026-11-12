@@ -9,6 +9,7 @@ No server, database or payment card is needed: these are plain static files.
 | File | Purpose |
 |---|---|
 | `index.html` | The whole app (layout, styles and code in one file) |
+| `epv-blog.js` | The same app for the blog itself: the blog's new theme loads it (styles, screens and code in one file) |
 | `puzzles.json` | Extra posts made in the Claude studio (uploads, corrections). Starts empty. |
 | `rain.webp` | Animated rain for the black squares (from the blog's GIF, compressed) |
 | `sw.js` | Offline support |
@@ -121,11 +122,24 @@ Skipping step 3 makes every admin call fail until it is done.
 
 If the admin page shows an error, open the script → **Executions** (left bar): every call is listed with its error message.
 
-## The blog on phones (version 4 of the theme snippet)
+## The blog itself in the app's design (new theme, replaces the phone snippet)
 
-`blogger-mobile-theme-snippet.xml` makes the blog fit a phone and, new in version 4, plays each post's crossword in the app's own player **inside the post**: the same keypad (తెలుగు / ENG), clue bar, hints, ఆటో, cursor rules and congratulations as the app. A single post opens straight in the player; on pages with several posts each crossword gets a **యాప్‌లా ఇక్కడే ఆడండి** button. **బ్లాగ్ గడి చూపించు** switches back to the blog's own grid. Computers are unchanged. The player is this website (`?embed=1`); the post hands its own content to it, so the blog feed is not downloaded.
+`e-padavinodam-blogger-theme.xml` is the blog's own theme (as exported on 7 Nov) with one change: just above `</head>` the old phone snippet is replaced by a small loader. On every page of the blog it loads `epv-blog.js` from this website and shows the app's own screens over the old layout — home with search and the latest puzzle, ఆర్కైవ్, నేను, అమరికలు, and the full player — on phones and computers alike. The posts, labels, comments, gadgets and settings in Blogger are untouched; the old layout is still in each page (hidden), so search engines read the posts as before.
 
-To install: Blogger → **Theme** → ▾ next to Customize → **Edit HTML** → find the old block that starts with `<!-- ఈ-పద వినోదం: phone layout` and ends with `<!-- ఈ-పద వినోదం: end -->` (version 3) and replace all of it with the new file's contents (if there is no old block, paste it just above `</head>`) → **Save**. Open a post on a phone to check. The website must be updated first (it carries the player).
+- **A post's own address** (from Google, WhatsApp, the blog list) opens that puzzle straight away; only that post is fetched first, the rest of the blog after, for the lists. While a puzzle is open the address bar shows its post's address, so reload and share open the same puzzle.
+- **Old layout when needed:** add `?classic=1` to any address (or use the link at the foot of a puzzle / in అమరికలు). It stays for that browser tab; the **కొత్త రూపం** button (or `?app=1`) brings the new one back. The blog's pages (`/p/...`) always keep the old layout.
+- **If this website cannot be reached** (or takes longer than 12 seconds), the blog simply shows the old layout, as before.
+- **Admin** stays on this website: `#admin` on the blog goes here.
+- Progress on the blog is kept in that browser for the blog (separate from this website's progress, as browsers keep each site's data apart).
+- Updating the app (a new `epv-blog.js` here) updates the blog too; the theme does not need to change again.
+
+**Order:** upload the website files first (so `epv-blog.js` is online), then the theme. Before uploading the theme, take a full backup (below).
+
+**Backup first:** Blogger → **Settings** → *Manage blog* → **Back up content** → Download (posts, pages, comments). Blogger → **Theme** → ▾ next to *Customize* → **Backup** → Download (the theme now in use). For a copy that also keeps the pictures as files: takeout.google.com → *Deselect all* → tick **Blogger** → export.
+
+**Install:** Blogger → **Theme** → ▾ next to *Customize* → **Restore** → upload `e-padavinodam-blogger-theme.xml`. If Blogger offers to keep or delete widgets, choose **Keep widgets**. Open the blog on a phone and a computer. To go back: the same **Restore** with the theme file you downloaded in the backup.
+
+If you changed the theme after 7 Nov (installed snippet v4, added gadgets), send that backup and the theme will be rebuilt from it, so nothing of yours is lost. The phone snippet (`blogger-mobile-theme-snippet.xml`) is not needed with this theme.
 
 ## The Android app (APK)
 

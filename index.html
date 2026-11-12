@@ -826,7 +826,11 @@ a.smallbtn{text-decoration:none;display:inline-flex;align-items:center;justify-c
   var IS_CLAUDE = !!(window.claude && typeof window.claude.use === 'function');
   // the Android app (APK) opens this same site; it adds "EPadavinodamApp" to its browser name
   var IN_APK = /EPadavinodamApp|; wv\)/.test(navigator.userAgent), IS_ANDROID = /Android/i.test(navigator.userAgent);
-  var APK = { file: 'e-padavinodam.apk', ok: false, mb: 0 };
+  // the blog itself (telugupadavinodam.blogspot.com, its new theme loads this app over the old layout): the same screens; files from the website
+  var IN_BLOG = !IS_CLAUDE && !!window.EPV_IN_BLOG && !/[?&]embed=1(&|$)/.test(location.search);
+  var APPBASE = IN_BLOG ? 'https://uvsubbaiah-spec.github.io/e-padavinodam/' : '';
+  if (IN_BLOG) document.documentElement.classList.add('inblog');
+  var APK = { file: APPBASE + 'e-padavinodam.apk', ok: false, mb: 0 };
   // inside a blog post on a phone (the blog's theme puts this page in a frame): only that post is played, the blog hands it over
   var EMBED = !IS_CLAUDE && /[?&]embed=1(&|$)/.test(location.search);
   if (EMBED) document.documentElement.classList.add('embed');
@@ -1576,7 +1580,8 @@ a.smallbtn{text-decoration:none;display:inline-flex;align-items:center;justify-c
     }
     var z = zoomLevel(), base = m.C > 8 ? 'min(calc(100vw - 32px),520px)' : 'min(calc(100vw - 32px),460px,max(250px,calc(100dvh - 520px)))';
     return '<div class="gridwrap"><div class="grid" style="' + (pimg ? '--pimg:url(&quot;' + esc(pimg) + '&quot;);' : '') + '--n:' + m.C + ';--gw:calc(' + base + ' * ' + z + ')' + (z > 1 ? ';max-width:none' : '') + '" role="group" aria-label="పద వినోదం గడి">' + cells + '</div></div>' +
-      (p.url && !EMBED ? '<a class="note" href="' + esc(p.url) + '" target="_blank" rel="noopener" style="text-align:center">ఈ పోస్ట్‌ను బ్లాగ్‌లో తెరవండి</a>' : '');
+      (p.url && IN_BLOG ? '<a class="note" href="' + esc(p.url.split('#')[0].split('?')[0]) + '?classic=1" style="text-align:center">ఈ పోస్ట్‌ను బ్లాగ్ పాత రూపంలో చూడండి</a>'
+        : p.url && !EMBED ? '<a class="note" href="' + esc(p.url) + '" target="_blank" rel="noopener" style="text-align:center">ఈ పోస్ట్‌ను బ్లాగ్‌లో తెరవండి</a>' : '');
   }
   function clueBarHTML() {
     var e = cur();
@@ -1935,7 +1940,7 @@ a.smallbtn{text-decoration:none;display:inline-flex;align-items:center;justify-c
       '<section class="sec"><h2 class="sec-h">Android యాప్‌లో రాబోయేవి</h2><div class="box"><ul class="soon"><li>కొత్త పద వినోదం వస్తే నోటిఫికేషన్</li><li>English భాషలో యాప్</li></ul>' + (IS_CLAUDE ? '' : '<p class="note">ఆఫ్‌లైన్: ఒకసారి తెరిచిన తర్వాత ఇంటర్నెట్ లేకున్నా యాప్, చివరిసారి లోడ్ అయిన పోస్టులు తెరుచుకుంటాయి.</p>') + '</div></section>' +
       '<section class="sec"><h2 class="sec-h">ఆట పురోగతి</h2><div class="box"><p class="note">మీ అమరికలు, ఆట పురోగతి ఈ పరికరంలోనే సేవ్ అవుతాయి.</p><button class="wide-btn ter" data-act="resetall">' + (U.confirm === 'resetall' ? 'ఖచ్చితమా? అన్ని ఆటల పురోగతి పోతుంది — మళ్ళీ నొక్కండి' : 'అన్ని ఆటల పురోగతి తుడిచివేయండి') + '</button></div></section>' +
       (!IS_CLAUDE ? '<section class="sec"><h2 class="sec-h">నిర్వాహణ</h2><div class="box"><p class="note">' + (ADMIN ? 'ఈ పరికరంలో నిర్వాహకుడిగా ప్రవేశించారు: కొత్త పద వినోదం (ఫోటో / PDF నుంచి కూడా), మార్పులు, ప్రచురణ.' : 'బ్లాగ్ నిర్వాహకుడి కోసం మాత్రమే: కొత్త పద వినోదం చేర్చడం, ఆధారాలు సరిదిద్దడం.') + '</p><a class="wide-btn ' + (ADMIN ? 'pri' : 'ter') + '" href="#admin">' + I.lock + (ADMIN ? ' నిర్వాహణ పేజీ తెరవండి' : ' నిర్వాహకుడి ప్రవేశం') + '</a></div></section>' : '') +
-      '<footer style="display:flex;flex-direction:column;align-items:center;gap:2px;text-align:center"><a href="' + BLOG + '" target="_blank" rel="noopener" style="font-weight:600;padding:10px 0">బ్లాగ్ తెరవండి · telugupadavinodam.blogspot.com</a><span style="font-family:var(--font-display);font-size:22px;color:var(--title)">ఈ-పద వినోదం</span><span class="note">వెర్షన్ 0.24' + (IS_CLAUDE ? ' · స్టూడియో' : '') + '</span></footer></div>';
+      '<footer style="display:flex;flex-direction:column;align-items:center;gap:2px;text-align:center">' + (IN_BLOG ? '<a href="/?classic=1" style="font-weight:600;padding:10px 0">బ్లాగ్‌ను పాత రూపంలో చూడండి</a><a href="' + APPBASE + '" target="_blank" rel="noopener" style="padding:4px 0 10px">వెబ్‌సైట్ / ఆండ్రాయిడ్ యాప్</a>' : '<a href="' + BLOG + '" target="_blank" rel="noopener" style="font-weight:600;padding:10px 0">బ్లాగ్ తెరవండి · telugupadavinodam.blogspot.com</a>') + '<span style="font-family:var(--font-display);font-size:22px;color:var(--title)">ఈ-పద వినోదం</span><span class="note">వెర్షన్ 0.25' + (IS_CLAUDE ? ' · స్టూడియో' : IN_BLOG ? ' · బ్లాగ్' : '') + '</span></footer></div>';
   }
 
   /* ================= admin: who may manage ================= */
@@ -2093,16 +2098,31 @@ a.smallbtn{text-decoration:none;display:inline-flex;align-items:center;justify-c
     });
   }
   // Blogger allows its feed to be read from other websites only in this script form
-  function loadBlogFeed() {
+  function loadBlogFeed() { return jsonp(BLOG + 'feeds/posts/default?alt=json-in-script&max-results=500&callback=epvFeed', 'epvFeed', 45000); }
+  function jsonp(url, cb, ms) {
     return new Promise(function (res, rej) {
       var s = document.createElement('script'), done = false;
-      var timer = setTimeout(function () { if (!done) { done = true; s.remove(); rej(new Error('timeout')); } }, 45000);
-      window.epvFeed = function (j) { if (done) return; done = true; clearTimeout(timer); s.remove(); res(j); };
+      var timer = setTimeout(function () { if (!done) { done = true; s.remove(); rej(new Error('timeout')); } }, ms);
+      window[cb] = function (j) { if (done) return; done = true; clearTimeout(timer); s.remove(); res(j); };
       s.onerror = function () { if (done) return; done = true; clearTimeout(timer); s.remove(); rej(new Error('feed')); };
-      s.src = BLOG + 'feeds/posts/default?alt=json-in-script&max-results=500&callback=epvFeed';
+      s.src = url;
       document.head.appendChild(s);
     });
   }
+  // on a blog post page: that post's id (Blogger writes it into the page) — only that post is fetched first, the rest after
+  var BLOG_POST_PAGE = IN_BLOG && /\/\d{4}\/\d{2}\/[^\/]+\.html$/.test(location.pathname);
+  function pagePostId() {
+    var m = document.querySelector('meta[itemprop="postId"]'), b = document.querySelector('[id^="post-body-"]');
+    var id = (m && m.getAttribute('content')) || (b && b.id.replace('post-body-', '')) || '';
+    return /^\d+$/.test(id) ? id : '';
+  }
+  function loadOnePost(id) {
+    return jsonp(BLOG + 'feeds/posts/default/' + id + '?alt=json-in-script&callback=epvOne', 'epvOne', 20000).then(function (j) {
+      if (!j || !j.entry) throw new Error('no post'); return { feed: { entry: [j.entry] } };
+    });
+  }
+  var PAGE_PATH = location.pathname;   // the address the blog page was opened at (the address bar follows the screens later)
+  function samePath(u) { try { var a = new URL(u, location.href); return a.hostname === location.hostname && a.pathname === PAGE_PATH; } catch (e) { return false; } }
   function importFromText(text) {
     var out = [];
     function add(title, html, url) { var p = postFrom(title, html, url); if (p) out.push(p); }
@@ -4113,6 +4133,15 @@ a.smallbtn{text-decoration:none;display:inline-flex;align-items:center;justify-c
 
   /* ================= render & routing ================= */
   function route() { var h = location.hash.replace('#', ''); return h || 'home'; }
+  // in the blog: a puzzle shows its own post's address (reload or share opens that post); the lists show the blog's home address
+  function blogAddress(r) {
+    try {
+      var m = /^(?:play|done)-(.+)$/.exec(r), p = m ? findPuzzle(m[1]) : null, path = '/';
+      if (p && p.url) { var u = new URL(p.url, location.href); if (u.hostname === location.hostname) path = u.pathname; else return; }
+      else if (m) return;
+      if (path !== location.pathname) history.replaceState(history.state, '', path + location.hash);
+    } catch (e) {}
+  }
   // how to find "the same field" again after the screen is redrawn
   function focusKey(el) {
     if (el.id) return '#' + el.id;
@@ -4157,6 +4186,8 @@ a.smallbtn{text-decoration:none;display:inline-flex;align-items:center;justify-c
   var lastRoute = null;
   function onRoute() {
     var r = route();
+    if (IN_BLOG && /^(admin|edit|scan)$/.test(r)) { location.href = APPBASE + '#admin'; return; }
+    if (IN_BLOG && lastRoute && r !== lastRoute) blogAddress(r);
     if (r !== lastRoute && !IS_CLAUDE && ADMIN && !ADMIN_ROUTES[r] && lastRoute && ADMIN_ROUTES[lastRoute]) {
       var tk = sesGet(); adminOut(); U.status = null;
       if (tk) { try { fetch(svcUrl(), { method: 'POST', body: JSON.stringify({ action: 'logout', token: tk }), keepalive: true }).catch(function () {}); } catch (e) {} }
@@ -4613,14 +4644,21 @@ a.smallbtn{text-decoration:none;display:inline-flex;align-items:center;justify-c
   window.addEventListener('hashchange', onRoute);
 
   // Posts = everything on the blog (website only) + puzzles.json (studio uploads and corrections, which win on the same date)
-  if (!IS_CLAUDE) fetch('config.json', { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : {}; }).then(function (j) { CONFIG = j || {}; if (route() === 'admin') render(); }).catch(function () {});
-  var extraP = fetch('puzzles.json', { cache: 'no-store' }).then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); }).then(function (j) {
+  if (!IS_CLAUDE) fetch(APPBASE + 'config.json', { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : {}; }).then(function (j) { CONFIG = j || {}; if (route() === 'admin') render(); }).catch(function () {});
+  var extraP = fetch(APPBASE + 'puzzles.json', { cache: 'no-store' }).then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); }).then(function (j) {
     HIDDEN = Array.isArray(j.hidden) ? j.hidden.slice() : [];
     return Array.isArray(j.puzzles) ? j.puzzles.filter(function (p) { return p && p.id && Array.isArray(p.grid) && p.grid.length; }) : [];
   }).catch(function () { return []; });
-  var blogP = IS_CLAUDE ? Promise.resolve([]) : (EMBED ? embedPost() : loadBlogFeed()).then(function (j) { BLOG_STATE = 'ready'; return postsFromFeed(j); }, function () { BLOG_STATE = 'error'; return []; });
+  var ONE_ID = BLOG_POST_PAGE ? pagePostId() : '', ONE = false;
+  var firstLoad = IS_CLAUDE ? null : EMBED ? embedPost() : ONE_ID ? loadOnePost(ONE_ID).then(function (j) { ONE = true; return j; }, function () { return loadBlogFeed(); }) : loadBlogFeed();
+  var blogP = IS_CLAUDE ? Promise.resolve([]) : firstLoad.then(function (j) { BLOG_STATE = 'ready'; return postsFromFeed(j); }, function () { BLOG_STATE = 'error'; return []; });
   Promise.all([extraP, blogP]).then(function (res) {
     EXTRAS = res[0]; BLOGPOSTS = res[1]; mergePuzzles(); DATA_STATE = 'ready';
+    if (ONE) {   // the rest of the blog, for the lists; the game on screen is not disturbed
+      loadBlogFeed().then(function (j) { var all = postsFromFeed(j); if (!all.length) return; BLOGPOSTS = all; mergePuzzles(); if (!/^(play|done)-/.test(route())) render(); }, function () {});
+    }
+    var mine = BLOG_POST_PAGE ? PUZZLES.filter(function (p) { return p.url && samePath(p.url); })[0] : null;
+    if (mine && (!location.hash || route() === 'home')) { location.replace('#play-' + mine.id); return; }
     if (EMBED && BLOGPOSTS.length && !/^(play|done)-/.test(route())) { location.replace('#play-' + BLOGPOSTS[0].id); return; }
     render();
   });
@@ -4636,7 +4674,7 @@ a.smallbtn{text-decoration:none;display:inline-flex;align-items:center;justify-c
     });
     PUZZLES = list; MODELS = {};
   }
-  if (!IS_CLAUDE && !EMBED && 'serviceWorker' in navigator && location.protocol === 'https:') {
+  if (!IS_CLAUDE && !EMBED && !IN_BLOG && 'serviceWorker' in navigator && location.protocol === 'https:') {
     // when a newer version of the app takes over, reload once so the new screens show straight away
     var hadSW = !!navigator.serviceWorker.controller, reloaded = false;
     navigator.serviceWorker.addEventListener('controllerchange', function () { if (hadSW && !reloaded) { reloaded = true; location.reload(); } });
