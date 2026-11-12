@@ -2121,7 +2121,23 @@ a.smallbtn{text-decoration:none;display:inline-flex;align-items:center;justify-c
       if (!j || !j.entry) throw new Error('no post'); return { feed: { entry: [j.entry] } };
     });
   }
-  var PAGE_PATH = location.pathname;   // the address the blog page was opened at (the address bar follows the screens later)
+  var PAGE_PATH = location.pathname;
+  // in the blog, every puzzle link carries its post's real address (search engines follow those); a tap still opens it here at once
+  if (IN_BLOG && window.MutationObserver) {
+    var linkFix = function () {
+      Array.prototype.forEach.call(view.querySelectorAll('a[href^="#play-"],a[href^="#done-"]'), function (a) {
+        var h = a.getAttribute('href'), m = /^#(?:play|done)-(.+)$/.exec(h), p = m ? findPuzzle(m[1]) : null;
+        if (!p || !p.url) return;
+        try { var u = new URL(p.url, location.href); if (u.hostname !== location.hostname) return; a.setAttribute('data-h', h); a.setAttribute('href', u.origin + u.pathname + h); } catch (e) {}
+      });
+    };
+    new MutationObserver(linkFix).observe(view, { childList: true, subtree: true });
+    document.addEventListener('click', function (ev) {
+      var a = ev.target.closest && ev.target.closest('a[data-h]');
+      if (!a || ev.defaultPrevented || ev.button || ev.ctrlKey || ev.metaKey || ev.shiftKey || ev.altKey) return;
+      ev.preventDefault(); location.hash = a.getAttribute('data-h');
+    });
+  }   // the address the blog page was opened at (the address bar follows the screens later)
   function samePath(u) { try { var a = new URL(u, location.href); return a.hostname === location.hostname && a.pathname === PAGE_PATH; } catch (e) { return false; } }
   function importFromText(text) {
     var out = [];

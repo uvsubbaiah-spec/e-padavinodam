@@ -124,7 +124,7 @@ If the admin page shows an error, open the script → **Executions** (left bar):
 
 ## The blog itself in the app's design (new theme, replaces the phone snippet)
 
-`e-padavinodam-blogger-theme.xml` is the blog's own theme (as exported on 7 Nov) with one change: just above `</head>` the old phone snippet is replaced by a small loader. On every page of the blog it loads `epv-blog.js` from this website and shows the app's own screens over the old layout — home with search and the latest puzzle, ఆర్కైవ్, నేను, అమరికలు, and the full player — on phones and computers alike. The posts, labels, comments, gadgets and settings in Blogger are untouched; the old layout is still in each page (hidden), so search engines read the posts as before.
+`e-padavinodam-blogger-theme.xml` is the blog's own theme (your backup of 12 Nov) with two changes: just above `</head>` the old phone snippet (version 3) is replaced by a small loader, and the head gets search-engine and link-preview tags (below). On every page of the blog it loads `epv-blog.js` from this website and shows the app's own screens over the old layout — home with search and the latest puzzle, ఆర్కైవ్, నేను, అమరికలు, and the full player — on phones and computers alike. The posts, labels, comments, gadgets and settings in Blogger are untouched; the old layout is still in each page (hidden), so search engines read the posts as before.
 
 - **A post's own address** (from Google, WhatsApp, the blog list) opens that puzzle straight away; only that post is fetched first, the rest of the blog after, for the lists. While a puzzle is open the address bar shows its post's address, so reload and share open the same puzzle.
 - **Old layout when needed:** add `?classic=1` to any address (or use the link at the foot of a puzzle / in అమరికలు). It stays for that browser tab; the **కొత్త రూపం** button (or `?app=1`) brings the new one back. The blog's pages (`/p/...`) always keep the old layout.
@@ -139,7 +139,18 @@ If the admin page shows an error, open the script → **Executions** (left bar):
 
 **Install:** Blogger → **Theme** → ▾ next to *Customize* → **Restore** → upload `e-padavinodam-blogger-theme.xml`. If Blogger offers to keep or delete widgets, choose **Keep widgets**. Open the blog on a phone and a computer. To go back: the same **Restore** with the theme file you downloaded in the backup.
 
-If you changed the theme after 7 Nov (installed snippet v4, added gadgets), send that backup and the theme will be rebuilt from it, so nothing of yours is lost. The phone snippet (`blogger-mobile-theme-snippet.xml`) is not needed with this theme.
+If you change the theme in Blogger later (gadgets, layout), take a new backup and send it, so the next rebuild keeps those changes. The phone snippet (`blogger-mobile-theme-snippet.xml`) is not needed with this theme.
+
+### Search engines and link previews
+
+- **Titles:** a post shows as “ఈనాడు పద వినోదం - 08.11.2026 · Eenadu Padavinodam Telugu Crossword | ఈ-పద వినోదం”; the home page as “ఈ-పద వినోదం · ఈనాడు పద వినోదం ఆన్‌లైన్ | Eenadu Padavinodam Telugu Crossword” — Telugu and English searches both match.
+- **Descriptions:** every page has one (a post's search description from Blogger if you write one, otherwise one made from its title).
+- **Previews:** WhatsApp, Facebook, Telegram and X show the `og-card.png` picture (1200×630) with the title and description.
+- **Structured data:** the site as a whole (WebSite) and each post (BlogPosting: title, date, author, picture, language Telugu).
+- **Language:** the pages say they are Telugu (`lang="te"`).
+- **Links:** the puzzle lists link to each post's real address, so search engines can follow them; a tap still opens the puzzle in place. The old layout (with every post's text and the archive links) stays in each page for search engines; month archive pages are kept out of results (they only repeat posts).
+
+Blogger settings to set once: **Settings → Meta tags** → turn on *Enable search description* and write one for the blog. **Settings → Crawlers and indexing** → *Enable custom robots header tags* → Home page: `all`; Archive and search pages: `noindex`; Posts and pages: `all`. Then **Google Search Console** (search.google.com/search-console, signed in with the account that owns the blog) → add `https://telugupadavinodam.blogspot.com/` → **Sitemaps** → submit `sitemap.xml` → **URL inspection** → the home page and the latest posts → *Request indexing*. **Bing Webmaster Tools** → *Import from Google Search Console*.
 
 ## The Android app (APK)
 
