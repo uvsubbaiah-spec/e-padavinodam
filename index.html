@@ -420,11 +420,11 @@ textarea.inp.tel{font-family:var(--font-ui);font-size:17px;line-height:1.55;min-
 
 /* answer colours as on the blog: right = grey with a green border and blue letter, wrong = gold with a red border and red letter.
    The selected square gets a blue frame (not red), and the selected word a lavender tint with a violet border, so neither can be mistaken for a wrong answer. */
-:root{--ok-bg:#EEEEEE;--ok-bd:#008000;--ok-ink:#0000FF;--bad-bg:#FFD700;--bad-bd:#E00000;--bad-ink:#C00000;--sel:#0B57D0;--sel-bg:#FFFFFF;--word:#E4D6FF;--word-ring:#6B3FD4;--hint-ink:#A33A00;--hint-bg:#FFD9B3}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--ok-bg:#22322A;--ok-bd:#4CC26A;--ok-ink:#A9C4FF;--bad-bg:#5E4C00;--bad-bd:#FF6B6B;--bad-ink:#FFD2D2;--sel:#FFFFFF;--sel-bg:#2E5A7C;--word:#40326F;--word-ring:#BCA6FF;--hint-ink:#FFC48A;--hint-bg:#5A3510}}
-:root[data-theme="dark"]{--ok-bg:#22322A;--ok-bd:#4CC26A;--ok-ink:#A9C4FF;--bad-bg:#5E4C00;--bad-bd:#FF6B6B;--bad-ink:#FFD2D2;--sel:#FFFFFF;--sel-bg:#2E5A7C;--word:#40326F;--word-ring:#BCA6FF;--hint-ink:#FFC48A;--hint-bg:#5A3510}
-:root[data-app-theme="cozy"],:root[data-app-theme="white"]{--ok-bg:#EEEEEE;--ok-bd:#008000;--ok-ink:#0000FF;--bad-bg:#FFD700;--bad-bd:#E00000;--bad-ink:#C00000;--sel:#0B57D0;--sel-bg:#FFFFFF;--word:#E4D6FF;--word-ring:#6B3FD4;--hint-ink:#A33A00;--hint-bg:#FFD9B3}
-:root[data-app-theme="night"]{--ok-bg:#22322A;--ok-bd:#4CC26A;--ok-ink:#A9C4FF;--bad-bg:#5E4C00;--bad-bd:#FF6B6B;--bad-ink:#FFD2D2;--sel:#FFFFFF;--sel-bg:#2E5A7C;--word:#40326F;--word-ring:#BCA6FF;--hint-ink:#FFC48A;--hint-bg:#5A3510}
+:root{--ok-bg:#EEEEEE;--ok-bd:#008000;--ok-ink:#0000FF;--bad-bg:#FFD700;--bad-bd:#E00000;--bad-ink:#C00000;--sel:#0B57D0;--sel-bg:#FFFFFF;--word:#E4D6FF;--word-ring:#6B3FD4;--hint-ink:#D50000;--hint-bg:transparent}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--ok-bg:#22322A;--ok-bd:#4CC26A;--ok-ink:#A9C4FF;--bad-bg:#5E4C00;--bad-bd:#FF6B6B;--bad-ink:#FFD2D2;--sel:#FFFFFF;--sel-bg:#2E5A7C;--word:#40326F;--word-ring:#BCA6FF;--hint-ink:#FF6B6B;--hint-bg:transparent}}
+:root[data-theme="dark"]{--ok-bg:#22322A;--ok-bd:#4CC26A;--ok-ink:#A9C4FF;--bad-bg:#5E4C00;--bad-bd:#FF6B6B;--bad-ink:#FFD2D2;--sel:#FFFFFF;--sel-bg:#2E5A7C;--word:#40326F;--word-ring:#BCA6FF;--hint-ink:#FF6B6B;--hint-bg:transparent}
+:root[data-app-theme="cozy"],:root[data-app-theme="white"]{--ok-bg:#EEEEEE;--ok-bd:#008000;--ok-ink:#0000FF;--bad-bg:#FFD700;--bad-bd:#E00000;--bad-ink:#C00000;--sel:#0B57D0;--sel-bg:#FFFFFF;--word:#E4D6FF;--word-ring:#6B3FD4;--hint-ink:#D50000;--hint-bg:transparent}
+:root[data-app-theme="night"]{--ok-bg:#22322A;--ok-bd:#4CC26A;--ok-ink:#A9C4FF;--bad-bg:#5E4C00;--bad-bd:#FF6B6B;--bad-ink:#FFD2D2;--sel:#FFFFFF;--sel-bg:#2E5A7C;--word:#40326F;--word-ring:#BCA6FF;--hint-ink:#FF6B6B;--hint-bg:transparent}
 .cell.is-word{background:var(--word);box-shadow:inset 0 0 0 2px var(--word-ring)}
 .cell.is-ok{background:var(--ok-bg);border-color:var(--ok-bd);color:var(--ok-ink)}
 .cell.is-wrong{background:var(--bad-bg);border-color:var(--bad-bd);color:var(--bad-ink)}
@@ -579,8 +579,8 @@ html.vv-short #view.typing .tlc{min-height:38px}
 @media (prefers-color-scheme: dark){:root[data-app-color="oodha"]:not([data-theme="light"]):not([data-app-theme="cozy"]):not([data-app-theme="white"]){--primary:#C3B0F0;--on-primary:#1E1530;--title:#C3B0F0;--hero:#2A2140;--hero-deep:#1B142B;--clue-bg:#2C2440;--gold-tint:#2C2440;--pill-bg:#2C2440;--pill-ink:#C3B0F0;--accent:#A48BD6;--sel:#FFFFFF;--word:#3E3466;--word-ring:#C3B0F0}}
 :root[data-app-color="oodha"][data-theme="dark"]:not([data-app-theme="cozy"]):not([data-app-theme="white"]),:root[data-app-color="oodha"][data-app-theme="night"]{--primary:#C3B0F0;--on-primary:#1E1530;--title:#C3B0F0;--hero:#2A2140;--hero-deep:#1B142B;--clue-bg:#2C2440;--gold-tint:#2C2440;--pill-bg:#2C2440;--pill-ink:#C3B0F0;--accent:#A48BD6;--sel:#FFFFFF;--word:#3E3466;--word-ring:#C3B0F0}
 :root[data-app-color="neelam"]:not([data-app-theme="night"]){--primary:#1F5F99;--title:#1F5F99;--hero:#1F5F99;--hero-deep:#154570;--hero-sub:#D6E8F7;--clue-bg:#E1EEFA;--gold-tint:#E1EEFA;--pill-bg:#E1EEFA;--pill-ink:#154570;--accent:#5DA9E9;--sel:#154570;--word:#CFE6FA;--word-ring:#5B9BE0}
-@media (prefers-color-scheme: dark){:root[data-app-color="neelam"]:not([data-theme="light"]):not([data-app-theme="cozy"]):not([data-app-theme="white"]){--primary:#8CC4F2;--on-primary:#0F1E2E;--title:#8CC4F2;--hero:#1A2C40;--hero-deep:#101C2A;--clue-bg:#1D2E42;--gold-tint:#1D2E42;--pill-bg:#1D2E42;--pill-ink:#8CC4F2;--accent:#5DA9E9;--sel:#FFFFFF;--word:#40326F;--word-ring:#BCA6FF;--hint-ink:#FFC48A;--hint-bg:#5A3510}}
-:root[data-app-color="neelam"][data-theme="dark"]:not([data-app-theme="cozy"]):not([data-app-theme="white"]),:root[data-app-color="neelam"][data-app-theme="night"]{--primary:#8CC4F2;--on-primary:#0F1E2E;--title:#8CC4F2;--hero:#1A2C40;--hero-deep:#101C2A;--clue-bg:#1D2E42;--gold-tint:#1D2E42;--pill-bg:#1D2E42;--pill-ink:#8CC4F2;--accent:#5DA9E9;--sel:#FFFFFF;--word:#40326F;--word-ring:#BCA6FF;--hint-ink:#FFC48A;--hint-bg:#5A3510}
+@media (prefers-color-scheme: dark){:root[data-app-color="neelam"]:not([data-theme="light"]):not([data-app-theme="cozy"]):not([data-app-theme="white"]){--primary:#8CC4F2;--on-primary:#0F1E2E;--title:#8CC4F2;--hero:#1A2C40;--hero-deep:#101C2A;--clue-bg:#1D2E42;--gold-tint:#1D2E42;--pill-bg:#1D2E42;--pill-ink:#8CC4F2;--accent:#5DA9E9;--sel:#FFFFFF;--word:#40326F;--word-ring:#BCA6FF;--hint-ink:#FF6B6B;--hint-bg:transparent}}
+:root[data-app-color="neelam"][data-theme="dark"]:not([data-app-theme="cozy"]):not([data-app-theme="white"]),:root[data-app-color="neelam"][data-app-theme="night"]{--primary:#8CC4F2;--on-primary:#0F1E2E;--title:#8CC4F2;--hero:#1A2C40;--hero-deep:#101C2A;--clue-bg:#1D2E42;--gold-tint:#1D2E42;--pill-bg:#1D2E42;--pill-ink:#8CC4F2;--accent:#5DA9E9;--sel:#FFFFFF;--word:#40326F;--word-ring:#BCA6FF;--hint-ink:#FF6B6B;--hint-bg:transparent}
 
 /* colour picker with names */
 .swatches{display:flex;flex-wrap:wrap;gap:10px 12px;padding-left:0}
@@ -743,7 +743,7 @@ html.vv-short #view.typing .tlc{min-height:38px}
 .resetbtn{font-size:20px;font-weight:700;min-width:40px}
 .seg.small button{min-height:32px;padding:0 10px;font-size:12.5px}
 .sec-row .seg.small{flex-shrink:0}
-.answ .hl{color:var(--hint-ink);background:var(--hint-bg);border-radius:5px;padding:0 2px;margin:0 1px}
+.answ .hl{color:var(--hint-ink);background:var(--hint-bg);font-weight:700;border-radius:5px;padding:0 1px}
 .hintkey{margin:2px 0 4px;font-size:12.5px;color:var(--muted);display:flex;align-items:center;gap:6px}
 .hintkey .answ{margin:0}
 .blk.pimg{background-image:var(--pimg);background-size:cover;background-position:center}
@@ -772,6 +772,26 @@ a.smallbtn{text-decoration:none;display:inline-flex;align-items:center;justify-c
 .note.scanwarn{background:var(--wrong-bg);color:var(--wrong);padding:10px 12px;border-radius:10px;line-height:1.55}
 .egrid.sheet .scell.run{box-shadow:inset 0 0 0 2px var(--word-ring)}
 .egrid.sheet .scell.run:not(.low):not(.chg){background:var(--word)}
+/* short screens with a keyboard open: smaller keys and bars so the board keeps its share (two steps, set by fitPlay) */
+#view.tight .ptools{display:none}
+#view.tight .pbottom{gap:5px;padding-top:5px}
+#view.tight .ppanel{gap:4px;padding-bottom:6px}
+#view.tight .keys{gap:3px}
+#view.tight .k{height:36px;border-radius:10px}
+#view.tight .strip{min-height:36px}
+#view.tight .kbbar .seg button{min-height:30px}
+#view.tight .kbbar .smallbtn{min-height:32px}
+#view.tight .hbar .ghostbtn{height:26px}
+#view.tight .cluebar > .mid{padding-bottom:6px}
+#view.tight2 .hbar{display:none!important}
+#view.tight2 .k{height:31px}
+#view.tight2 .keys .k,#view.tight2 .strip .k{font-size:17px}
+#view.tight2 .strip{min-height:31px}
+#view.tight2 .pmid{padding-bottom:4px}
+.tl-row .tl-te{flex-shrink:0;padding:0 10px;min-height:44px}
+/* the clue is always shown whole: no line limit and no scroll box (a box cuts off the tops and bottoms of Telugu letters) */
+.cluebar .txt,#view.typing .cluebar .txt,#view.tight .cluebar .txt{display:block;-webkit-line-clamp:unset;max-height:none;overflow:visible;line-height:1.55;padding-block:1px}
+#view.typing .cluebar .txt,#view.tight .cluebar .txt{font-size:calc(14.5px * var(--clue-scale,1))}
 /* black squares: animated nature and animal scenes (generated by scenes.py) */
 .blk.sc0,.scsample.sc0{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='xMidYMid slice'%3E%3Cdefs%3E%3ClinearGradient id='b' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%230D3436'/%3E%3Cstop offset='1' stop-color='%231E5A45'/%3E%3C/linearGradient%3E%3ClinearGradient id='n' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%2329B6F6'/%3E%3Cstop offset='1' stop-color='%230D47A1'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cstyle%3E.fan%7Banimation:fan 2.4s ease-in-out infinite;transform-origin:50px 64px%7D@keyframes fan%7B0%25,100%25%7Btransform:rotate(0) scale(1)%7D25%25%7Btransform:rotate(-4deg) scale(1.03)%7D50%25%7Btransform:rotate(0) scale(.96)%7D75%25%7Btransform:rotate(4deg) scale(1.03)%7D%7D.q%7Banimation:q .18s ease-in-out infinite alternate;transform-origin:50px 64px%7D@keyframes q%7Bto%7Btransform:rotate(1.6deg)%7D%7D.bd%7Banimation:bd 2.4s ease-in-out infinite;transform-origin:50px 86px%7D@keyframes bd%7B0%25,100%25%7Btransform:rotate(0)%7D25%25%7Btransform:rotate(-5deg) translateX(-1px)%7D75%25%7Btransform:rotate(5deg) translateX(1px)%7D%7D.hd%7Banimation:hd 1.2s ease-in-out infinite;transform-origin:51px 46px%7D@keyframes hd%7B50%25%7Btransform:rotate(-8deg)%7D%7D.sp%7Banimation:sp 2.4s ease-in-out infinite%7D@keyframes sp%7B0%25,100%25%7Bopacity:.15%7D50%25%7Bopacity:1%7D%7D%3C/style%3E%3Crect width='100' height='100' fill='url(%23b)'/%3E%3Ccircle class='sp' cx='12' cy='14' r='.9' fill='%23E0F2F1'/%3E%3Ccircle class='sp' cx='88' cy='12' r='.8' fill='%23E0F2F1' style='animation-delay:-1.2s'/%3E%3Cellipse cx='50' cy='92' rx='46' ry='7' fill='%23123A2C'/%3E%3Cg class='fan'%3E%3Cg transform='rotate(-80 50 64)'%3E%3Cg class='q' style='animation-delay:-0.00s'%3E%3Cpath d='M50 64 Q43 44 50 18 Q57 44 50 64Z' fill='%232F7D3B' opacity='.75'/%3E%3Cpath d='M50 64 V24' stroke='%239CCC65' stroke-width='.6'/%3E%3Cellipse cx='50' cy='22' rx='5.6' ry='7.4' fill='%231B5E20'/%3E%3Cellipse cx='50' cy='22.6' rx='4.2' ry='5.6' fill='%23F9A825'/%3E%3Cellipse cx='50' cy='23.2' rx='2.9' ry='3.9' fill='%231565C0'/%3E%3Cellipse cx='50' cy='23.6' rx='1.5' ry='2' fill='%230A1F44'/%3E%3C/g%3E%3C/g%3E%3Cg transform='rotate(-64 50 64)'%3E%3Cg class='q' style='animation-delay:-0.07s'%3E%3Cpath d='M50 64 Q43 44 50 18 Q57 44 50 64Z' fill='%232F7D3B' opacity='.75'/%3E%3Cpath d='M50 64 V24' stroke='%239CCC65' stroke-width='.6'/%3E%3Cellipse cx='50' cy='22' rx='5.6' ry='7.4' fill='%231B5E20'/%3E%3Cellipse cx='50' cy='22.6' rx='4.2' ry='5.6' fill='%23F9A825'/%3E%3Cellipse cx='50' cy='23.2' rx='2.9' ry='3.9' fill='%231565C0'/%3E%3Cellipse cx='50' cy='23.6' rx='1.5' ry='2' fill='%230A1F44'/%3E%3C/g%3E%3C/g%3E%3Cg transform='rotate(-48 50 64)'%3E%3Cg class='q' style='animation-delay:-0.14s'%3E%3Cpath d='M50 64 Q43 44 50 18 Q57 44 50 64Z' fill='%232F7D3B' opacity='.75'/%3E%3Cpath d='M50 64 V24' stroke='%239CCC65' stroke-width='.6'/%3E%3Cellipse cx='50' cy='22' rx='5.6' ry='7.4' fill='%231B5E20'/%3E%3Cellipse cx='50' cy='22.6' rx='4.2' ry='5.6' fill='%23F9A825'/%3E%3Cellipse cx='50' cy='23.2' rx='2.9' ry='3.9' fill='%231565C0'/%3E%3Cellipse cx='50' cy='23.6' rx='1.5' ry='2' fill='%230A1F44'/%3E%3C/g%3E%3C/g%3E%3Cg transform='rotate(-32 50 64)'%3E%3Cg class='q' style='animation-delay:-0.21s'%3E%3Cpath d='M50 64 Q43 44 50 18 Q57 44 50 64Z' fill='%232F7D3B' opacity='.75'/%3E%3Cpath d='M50 64 V24' stroke='%239CCC65' stroke-width='.6'/%3E%3Cellipse cx='50' cy='22' rx='5.6' ry='7.4' fill='%231B5E20'/%3E%3Cellipse cx='50' cy='22.6' rx='4.2' ry='5.6' fill='%23F9A825'/%3E%3Cellipse cx='50' cy='23.2' rx='2.9' ry='3.9' fill='%231565C0'/%3E%3Cellipse cx='50' cy='23.6' rx='1.5' ry='2' fill='%230A1F44'/%3E%3C/g%3E%3C/g%3E%3Cg transform='rotate(-16 50 64)'%3E%3Cg class='q' style='animation-delay:-0.00s'%3E%3Cpath d='M50 64 Q43 44 50 18 Q57 44 50 64Z' fill='%232F7D3B' opacity='.75'/%3E%3Cpath d='M50 64 V24' stroke='%239CCC65' stroke-width='.6'/%3E%3Cellipse cx='50' cy='22' rx='5.6' ry='7.4' fill='%231B5E20'/%3E%3Cellipse cx='50' cy='22.6' rx='4.2' ry='5.6' fill='%23F9A825'/%3E%3Cellipse cx='50' cy='23.2' rx='2.9' ry='3.9' fill='%231565C0'/%3E%3Cellipse cx='50' cy='23.6' rx='1.5' ry='2' fill='%230A1F44'/%3E%3C/g%3E%3C/g%3E%3Cg transform='rotate(0 50 64)'%3E%3Cg class='q' style='animation-delay:-0.07s'%3E%3Cpath d='M50 64 Q43 44 50 18 Q57 44 50 64Z' fill='%232F7D3B' opacity='.75'/%3E%3Cpath d='M50 64 V24' stroke='%239CCC65' stroke-width='.6'/%3E%3Cellipse cx='50' cy='22' rx='5.6' ry='7.4' fill='%231B5E20'/%3E%3Cellipse cx='50' cy='22.6' rx='4.2' ry='5.6' fill='%23F9A825'/%3E%3Cellipse cx='50' cy='23.2' rx='2.9' ry='3.9' fill='%231565C0'/%3E%3Cellipse cx='50' cy='23.6' rx='1.5' ry='2' fill='%230A1F44'/%3E%3C/g%3E%3C/g%3E%3Cg transform='rotate(16 50 64)'%3E%3Cg class='q' style='animation-delay:-0.14s'%3E%3Cpath d='M50 64 Q43 44 50 18 Q57 44 50 64Z' fill='%232F7D3B' opacity='.75'/%3E%3Cpath d='M50 64 V24' stroke='%239CCC65' stroke-width='.6'/%3E%3Cellipse cx='50' cy='22' rx='5.6' ry='7.4' fill='%231B5E20'/%3E%3Cellipse cx='50' cy='22.6' rx='4.2' ry='5.6' fill='%23F9A825'/%3E%3Cellipse cx='50' cy='23.2' rx='2.9' ry='3.9' fill='%231565C0'/%3E%3Cellipse cx='50' cy='23.6' rx='1.5' ry='2' fill='%230A1F44'/%3E%3C/g%3E%3C/g%3E%3Cg transform='rotate(32 50 64)'%3E%3Cg class='q' style='animation-delay:-0.21s'%3E%3Cpath d='M50 64 Q43 44 50 18 Q57 44 50 64Z' fill='%232F7D3B' opacity='.75'/%3E%3Cpath d='M50 64 V24' stroke='%239CCC65' stroke-width='.6'/%3E%3Cellipse cx='50' cy='22' rx='5.6' ry='7.4' fill='%231B5E20'/%3E%3Cellipse cx='50' cy='22.6' rx='4.2' ry='5.6' fill='%23F9A825'/%3E%3Cellipse cx='50' cy='23.2' rx='2.9' ry='3.9' fill='%231565C0'/%3E%3Cellipse cx='50' cy='23.6' rx='1.5' ry='2' fill='%230A1F44'/%3E%3C/g%3E%3C/g%3E%3Cg transform='rotate(48 50 64)'%3E%3Cg class='q' style='animation-delay:-0.00s'%3E%3Cpath d='M50 64 Q43 44 50 18 Q57 44 50 64Z' fill='%232F7D3B' opacity='.75'/%3E%3Cpath d='M50 64 V24' stroke='%239CCC65' stroke-width='.6'/%3E%3Cellipse cx='50' cy='22' rx='5.6' ry='7.4' fill='%231B5E20'/%3E%3Cellipse cx='50' cy='22.6' rx='4.2' ry='5.6' fill='%23F9A825'/%3E%3Cellipse cx='50' cy='23.2' rx='2.9' ry='3.9' fill='%231565C0'/%3E%3Cellipse cx='50' cy='23.6' rx='1.5' ry='2' fill='%230A1F44'/%3E%3C/g%3E%3C/g%3E%3Cg transform='rotate(64 50 64)'%3E%3Cg class='q' style='animation-delay:-0.07s'%3E%3Cpath d='M50 64 Q43 44 50 18 Q57 44 50 64Z' fill='%232F7D3B' opacity='.75'/%3E%3Cpath d='M50 64 V24' stroke='%239CCC65' stroke-width='.6'/%3E%3Cellipse cx='50' cy='22' rx='5.6' ry='7.4' fill='%231B5E20'/%3E%3Cellipse cx='50' cy='22.6' rx='4.2' ry='5.6' fill='%23F9A825'/%3E%3Cellipse cx='50' cy='23.2' rx='2.9' ry='3.9' fill='%231565C0'/%3E%3Cellipse cx='50' cy='23.6' rx='1.5' ry='2' fill='%230A1F44'/%3E%3C/g%3E%3C/g%3E%3Cg transform='rotate(80 50 64)'%3E%3Cg class='q' style='animation-delay:-0.14s'%3E%3Cpath d='M50 64 Q43 44 50 18 Q57 44 50 64Z' fill='%232F7D3B' opacity='.75'/%3E%3Cpath d='M50 64 V24' stroke='%239CCC65' stroke-width='.6'/%3E%3Cellipse cx='50' cy='22' rx='5.6' ry='7.4' fill='%231B5E20'/%3E%3Cellipse cx='50' cy='22.6' rx='4.2' ry='5.6' fill='%23F9A825'/%3E%3Cellipse cx='50' cy='23.2' rx='2.9' ry='3.9' fill='%231565C0'/%3E%3Cellipse cx='50' cy='23.6' rx='1.5' ry='2' fill='%230A1F44'/%3E%3C/g%3E%3C/g%3E%3Cg transform='rotate(-72 50 64)'%3E%3Cpath d='M50 64 Q45 50 50 36 Q55 50 50 64Z' fill='%2343A047' opacity='.8'/%3E%3Cellipse cx='50' cy='38' rx='3.4' ry='4.4' fill='%23F9A825'/%3E%3Cellipse cx='50' cy='38.5' rx='2.2' ry='3' fill='%231976D2'/%3E%3Cellipse cx='50' cy='38.8' rx='1' ry='1.4' fill='%230A1F44'/%3E%3C/g%3E%3Cg transform='rotate(-56 50 64)'%3E%3Cpath d='M50 64 Q45 50 50 36 Q55 50 50 64Z' fill='%2343A047' opacity='.8'/%3E%3Cellipse cx='50' cy='38' rx='3.4' ry='4.4' fill='%23F9A825'/%3E%3Cellipse cx='50' cy='38.5' rx='2.2' ry='3' fill='%231976D2'/%3E%3Cellipse cx='50' cy='38.8' rx='1' ry='1.4' fill='%230A1F44'/%3E%3C/g%3E%3Cg transform='rotate(-40 50 64)'%3E%3Cpath d='M50 64 Q45 50 50 36 Q55 50 50 64Z' fill='%2343A047' opacity='.8'/%3E%3Cellipse cx='50' cy='38' rx='3.4' ry='4.4' fill='%23F9A825'/%3E%3Cellipse cx='50' cy='38.5' rx='2.2' ry='3' fill='%231976D2'/%3E%3Cellipse cx='50' cy='38.8' rx='1' ry='1.4' fill='%230A1F44'/%3E%3C/g%3E%3Cg transform='rotate(-24 50 64)'%3E%3Cpath d='M50 64 Q45 50 50 36 Q55 50 50 64Z' fill='%2343A047' opacity='.8'/%3E%3Cellipse cx='50' cy='38' rx='3.4' ry='4.4' fill='%23F9A825'/%3E%3Cellipse cx='50' cy='38.5' rx='2.2' ry='3' fill='%231976D2'/%3E%3Cellipse cx='50' cy='38.8' rx='1' ry='1.4' fill='%230A1F44'/%3E%3C/g%3E%3Cg transform='rotate(-8 50 64)'%3E%3Cpath d='M50 64 Q45 50 50 36 Q55 50 50 64Z' fill='%2343A047' opacity='.8'/%3E%3Cellipse cx='50' cy='38' rx='3.4' ry='4.4' fill='%23F9A825'/%3E%3Cellipse cx='50' cy='38.5' rx='2.2' ry='3' fill='%231976D2'/%3E%3Cellipse cx='50' cy='38.8' rx='1' ry='1.4' fill='%230A1F44'/%3E%3C/g%3E%3Cg transform='rotate(8 50 64)'%3E%3Cpath d='M50 64 Q45 50 50 36 Q55 50 50 64Z' fill='%2343A047' opacity='.8'/%3E%3Cellipse cx='50' cy='38' rx='3.4' ry='4.4' fill='%23F9A825'/%3E%3Cellipse cx='50' cy='38.5' rx='2.2' ry='3' fill='%231976D2'/%3E%3Cellipse cx='50' cy='38.8' rx='1' ry='1.4' fill='%230A1F44'/%3E%3C/g%3E%3Cg transform='rotate(24 50 64)'%3E%3Cpath d='M50 64 Q45 50 50 36 Q55 50 50 64Z' fill='%2343A047' opacity='.8'/%3E%3Cellipse cx='50' cy='38' rx='3.4' ry='4.4' fill='%23F9A825'/%3E%3Cellipse cx='50' cy='38.5' rx='2.2' ry='3' fill='%231976D2'/%3E%3Cellipse cx='50' cy='38.8' rx='1' ry='1.4' fill='%230A1F44'/%3E%3C/g%3E%3Cg transform='rotate(40 50 64)'%3E%3Cpath d='M50 64 Q45 50 50 36 Q55 50 50 64Z' fill='%2343A047' opacity='.8'/%3E%3Cellipse cx='50' cy='38' rx='3.4' ry='4.4' fill='%23F9A825'/%3E%3Cellipse cx='50' cy='38.5' rx='2.2' ry='3' fill='%231976D2'/%3E%3Cellipse cx='50' cy='38.8' rx='1' ry='1.4' fill='%230A1F44'/%3E%3C/g%3E%3Cg transform='rotate(56 50 64)'%3E%3Cpath d='M50 64 Q45 50 50 36 Q55 50 50 64Z' fill='%2343A047' opacity='.8'/%3E%3Cellipse cx='50' cy='38' rx='3.4' ry='4.4' fill='%23F9A825'/%3E%3Cellipse cx='50' cy='38.5' rx='2.2' ry='3' fill='%231976D2'/%3E%3Cellipse cx='50' cy='38.8' rx='1' ry='1.4' fill='%230A1F44'/%3E%3C/g%3E%3Cg transform='rotate(72 50 64)'%3E%3Cpath d='M50 64 Q45 50 50 36 Q55 50 50 64Z' fill='%2343A047' opacity='.8'/%3E%3Cellipse cx='50' cy='38' rx='3.4' ry='4.4' fill='%23F9A825'/%3E%3Cellipse cx='50' cy='38.5' rx='2.2' ry='3' fill='%231976D2'/%3E%3Cellipse cx='50' cy='38.8' rx='1' ry='1.4' fill='%230A1F44'/%3E%3C/g%3E%3C/g%3E%3Cg class='bd'%3E%3Cpath d='M47 84 L46 92 M53 84 L54 92' stroke='%23B0957A' stroke-width='1.3' stroke-linecap='round'/%3E%3Cellipse cx='50' cy='76' rx='7.5' ry='9' fill='%230D47A1'/%3E%3Cpath d='M44 74 C46 82 54 84 57 78 C55 86 46 88 44 74Z' fill='%238D6E63'/%3E%3Cpath d='M47 72 C45 62 47 52 50 47 C53 52 54 62 53 72Z' fill='url(%23n)'/%3E%3Cg class='hd'%3E%3Ccircle cx='51' cy='45' r='3.6' fill='%231E88E5'/%3E%3Cellipse cx='52.2' cy='44.2' rx='1.5' ry='.9' fill='%23FFF'/%3E%3Ccircle cx='52.4' cy='44.3' r='.5' fill='%23111'/%3E%3Cpath d='M54.3 45 L57.5 45.8 L54.3 46.6Z' fill='%23C9A26B'/%3E%3Cpath d='M50 41.6 L48.6 36.4 M51 41.4 L51 36 M52 41.6 L53.4 36.4' stroke='%231E88E5' stroke-width='.5'/%3E%3Ccircle cx='48.6' cy='36.2' r='.9' fill='%231E88E5'/%3E%3Ccircle cx='51' cy='35.8' r='.9' fill='%231E88E5'/%3E%3Ccircle cx='53.4' cy='36.2' r='.9' fill='%231E88E5'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}
 .blk.sc1,.scsample.sc1{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='xMidYMid slice'%3E%3Cdefs%3E%3ClinearGradient id='b' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%232E4A66'/%3E%3Cstop offset='.55' stop-color='%237E9DB4'/%3E%3Cstop offset='.56' stop-color='%231C6E92'/%3E%3Cstop offset='1' stop-color='%230B3A55'/%3E%3C/linearGradient%3E%3Cpath id='w' d='M0 0 Q12.5 -7 25 0 T50 0 T75 0 T100 0 T125 0 T150 0 T175 0 T200 0 V60 H0Z'/%3E%3C/defs%3E%3Cstyle%3E.w1%7Banimation:mv 5s linear infinite%7D.w2%7Banimation:mv 3.6s linear infinite%7D.w3%7Banimation:mv 2.6s linear infinite%7D@keyframes mv%7Bfrom%7Btransform:translateX(0)%7Dto%7Btransform:translateX(-50px)%7D%7D.bob%7Banimation:bob 2.6s ease-in-out infinite%7D@keyframes bob%7B50%25%7Btransform:translateY(-2.5px)%7D%7D.dr%7Banimation:dr 2.6s ease-out infinite;opacity:0%7D@keyframes dr%7B0%25,40%25%7Bopacity:0;transform:translate(0,0)%7D50%25%7Bopacity:1%7D100%25%7Bopacity:0;transform:translate(var(--x),-18px)%7D%7D.cl%7Banimation:cl 14s linear infinite%7D@keyframes cl%7Bfrom%7Btransform:translateX(-30px)%7Dto%7Btransform:translateX(110px)%7D%7D.gl%7Banimation:gl 9s linear infinite%7D@keyframes gl%7Bfrom%7Btransform:translate(-20px,0)%7Dto%7Btransform:translate(120px,-6px)%7D%7D.wg%7Banimation:wg .45s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:center%7D@keyframes wg%7Bto%7Btransform:scaleY(-.5)%7D%7D%3C/style%3E%3Crect width='100' height='100' fill='url(%23b)'/%3E%3Cg class='cl'%3E%3Cellipse cx='10' cy='18' rx='12' ry='4' fill='%239FB4C6' opacity='.7'/%3E%3Cellipse cx='18' cy='15' rx='8' ry='4' fill='%23B5C7D5' opacity='.7'/%3E%3C/g%3E%3Cg class='gl'%3E%3Cpath class='wg' d='M10 30 q3 -3 6 0 q3 -3 6 0' fill='none' stroke='%23F2F5F8' stroke-width='1.2' stroke-linecap='round'/%3E%3C/g%3E%3Cg class='bob'%3E%3Cg transform='translate(0 58)'%3E%3Cuse class='w1' href='%23w' fill='%2322769A'/%3E%3C/g%3E%3C/g%3E%3Cpath d='M74 100 L78 68 L86 62 L94 66 L100 64 V100Z' fill='%232B2F36'/%3E%3Cpath d='M78 68 L86 62 L90 66 L82 72Z' fill='%233C424B'/%3E%3Cg class='bob' style='animation-delay:-1s'%3E%3Cg transform='translate(0 70)'%3E%3Cuse class='w2' href='%23w' fill='%23155F84'/%3E%3Cuse class='w2' href='%23w' fill='none' stroke='%23D7EEF7' stroke-width='1.2' opacity='.8'/%3E%3C/g%3E%3C/g%3E%3Cg transform='translate(84 66)'%3E%3Ccircle class='dr' r='1.6' fill='%23EAF6FB' style='--x:-8px'/%3E%3Ccircle class='dr' r='1.2' fill='%23EAF6FB' style='--x:-3px;animation-delay:-.2s'/%3E%3Ccircle class='dr' r='1.4' fill='%23EAF6FB' style='--x:4px;animation-delay:-.4s'/%3E%3Ccircle class='dr' r='1' fill='%23EAF6FB' style='--x:-12px;animation-delay:-.6s'/%3E%3Ccircle class='dr' r='1.8' fill='%23FFFFFF' style='--x:1px;animation-delay:-.1s'/%3E%3C/g%3E%3Cg class='bob' style='animation-delay:-2s'%3E%3Cg transform='translate(0 82)'%3E%3Cuse class='w3' href='%23w' fill='%230C4A6B'/%3E%3Cuse class='w3' href='%23w' fill='none' stroke='%23FFFFFF' stroke-width='1.6' stroke-dasharray='6 4' opacity='.85'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}
@@ -935,7 +955,7 @@ a.smallbtn{text-decoration:none;display:inline-flex;align-items:center;justify-c
   try { reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
   var LS = 'e-padavinodam-v2';
   function freshProgress() { return { letters: {}, r: -1, c: -1, dir: 'A', elapsed: 0, hints: 0, done: false, doneTime: 0, variant: 0, started: false }; }
-  var S = { prefs: { theme: 'auto', accent: '#F2A93B', font: 'Anek Telugu', size: 'm', rain: !reduced, hard: false, skip: true, timer: true, keypad: 'app', fontGrid: 'Ramabhadra', fontClue: 'Anek Telugu', fontHead: 'Ramabhadra', zoom: 2, blk: 'post', order: 'use' }, prog: {}, lastVariant: -1, draft: null, profile: { id: 'p1', name: '', avatar: '🦚' } };
+  var S = { prefs: { theme: 'auto', accent: '#F2A93B', font: 'Anek Telugu', size: 'm', rain: !reduced, hard: false, skip: true, timer: true, keypad: 'phone', fontGrid: 'Ramabhadra', fontClue: 'Anek Telugu', fontHead: 'Ramabhadra', zoom: 2, blk: 'post', order: 'use' }, prog: {}, lastVariant: -1, draft: null, profile: { id: 'p1', name: '', avatar: '🦚' } };
   var PREF_DEFAULTS = JSON.parse(JSON.stringify(S.prefs));
   try {
     var raw = localStorage.getItem(LS);
@@ -950,6 +970,7 @@ a.smallbtn{text-decoration:none;display:inline-flex;align-items:center;justify-c
   if (S.prefs.zoomV !== 2) { S.prefs.zoom = 2; S.prefs.zoomV = 2; }
   if ((S.prefs.blkV || 0) < 2) { if (S.prefs.blk !== 'plain') S.prefs.blk = 'post'; S.prefs.blkV = 2; }   // the post's own picture (as on the blog) is now the default
   if (!S.prefs.order) S.prefs.order = 'use';
+  if ((S.prefs.kbV || 0) < 1) { S.prefs.keypad = 'phone'; S.prefs.kbV = 1; }
   function save() { try { localStorage.setItem(LS, JSON.stringify(S)); } catch (e) {} }
   // ---- players on this phone: the active one lives in S, the others are kept aside with their own settings and progress ----
   var LSO = LS + '-players';
@@ -959,6 +980,7 @@ a.smallbtn{text-decoration:none;display:inline-flex;align-items:center;justify-c
   function snapshot() { return { prefs: S.prefs, prog: S.prog, lastVariant: S.lastVariant, profile: S.profile }; }
   function loadPlayer(o) {
     S.prefs = Object.assign(JSON.parse(JSON.stringify(PREF_DEFAULTS)), o.prefs || {}); S.prefs.zoomV = 2; S.prefs.blkV = 2;
+    if ((S.prefs.kbV || 0) < 1) { S.prefs.keypad = 'phone'; S.prefs.kbV = 1; }
     S.prog = o.prog || {}; S.lastVariant = typeof o.lastVariant === 'number' ? o.lastVariant : -1; S.profile = o.profile;
     CUR = null; MODELS = {}; save(); applyPrefs();
   }
@@ -1222,13 +1244,21 @@ a.smallbtn{text-decoration:none;display:inline-flex;align-items:center;justify-c
   // all clues by their number on the board (1 అడ్డం, 1 నిలువు, 2 …): the order the cursor walks after a word is done
   function numOrder() { var m = CUR.m; if (!m.numOrd) m.numOrd = m.order.A.concat(m.order.D).sort(function (a, b) { var x = m.entries[a], y = m.entries[b]; return (+x.n - +y.n) || (x.d === 'A' ? -1 : 1); }); return m.numOrd; }
   function emptyIn(e, from, to) { var L = CUR.P.letters; for (var j = from; j < to; j++) { var c = e.cells[j], k = key(c[0], c[1]); if (!L[k] && !locked(k)) return c; } return null; }
-  // after a letter: the next empty square in the same word, then its earlier empty squares, then the next clue (by number) with empty squares, wrapping to the start
+  // after a letter: the next empty square in the same word, then its earlier empty squares; a finished word: the across / down word
+  // that already has the largest share of its letters (put there by crossing words), so it is the easiest to complete; when none
+  // has any, the next clue by number with empty squares, wrapping to the start
   function advance(e, idx) {
     var P = CUR.P, c = e.id !== 'X' ? (emptyIn(e, idx + 1, e.cells.length) || emptyIn(e, 0, idx)) : null;
     if (!S.prefs.skip && e.id !== 'X') { var nc = nextCell(e, idx); if (nc) c = nc; }
     if (c) { P.r = c[0]; P.c = c[1]; return true; }
-    var all = numOrder(), at = all.indexOf(e.id);
-    for (var s = 1; s <= all.length; s++) { var en = CUR.m.entries[all[(Math.max(at, 0) + s) % all.length]], f = en && emptyIn(en, 0, en.cells.length); if (f) { P.r = f[0]; P.c = f[1]; P.dir = en.d; U.tab = en.d; return true; } }
+    var all = numOrder(), at = all.indexOf(e.id), best = null, bestShare = 0;
+    for (var s = 1; s <= all.length; s++) {
+      var en = CUR.m.entries[all[(Math.max(at, 0) + s) % all.length]]; if (!en || en.id === e.id || !emptyIn(en, 0, en.cells.length)) continue;
+      var have = 0; en.cells.forEach(function (x) { var k = key(x[0], x[1]); if (P.letters[k] || locked(k)) have++; });
+      var share = have / en.cells.length; if (share > bestShare + 1e-9) { best = en; bestShare = share; }
+    }
+    if (best) { var bf = emptyIn(best, 0, best.cells.length); P.r = bf[0]; P.c = bf[1]; P.dir = best.d; U.tab = best.d; return true; }
+    for (var s2 = 1; s2 <= all.length; s2++) { var en2 = CUR.m.entries[all[(Math.max(at, 0) + s2) % all.length]], f = en2 && emptyIn(en2, 0, en2.cells.length); if (f) { P.r = f[0]; P.c = f[1]; P.dir = en2.d; U.tab = en2.d; return true; } }
     return false;
   }
   // squares filled by a hint or ఆటో (shown differently in the clue list); typing a letter there clears the mark
@@ -1484,7 +1514,7 @@ a.smallbtn{text-decoration:none;display:inline-flex;align-items:center;justify-c
   }
   function typeBoxHTML() {
     return '<div class="typebox">' +
-      '<div class="tl-row"><input id="tl-in" class="inp" type="text" lang="te" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="done" aria-label="జవాబు — పూర్తి పదం, ఇంగ్లీష్ లేదా తెలుగులో" placeholder="పూర్తి పదం: kamalam → కమలం"><button class="smallbtn pri" data-act="tl-commit" data-keepfocus>పెట్టు</button><button class="ghostbtn helpbtn" data-act="tl-help" data-keepfocus aria-label="టైపింగ్ చిట్కాలు">?</button></div>' +
+      '<div class="tl-row"><input id="tl-in" class="inp" type="text" lang="te" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="done" aria-label="జవాబు — పూర్తి పదం, ఇంగ్లీష్ లేదా తెలుగులో" placeholder="పూర్తి పదం: kamalam → కమలం"><button class="smallbtn pri" data-act="tl-commit" data-keepfocus>పెట్టు</button><button class="smallbtn tl-te" data-act="kb-te" data-keepfocus aria-label="తెలుగు అక్షర కీప్యాడ్‌కు మారండి" title="తెలుగు అక్షర కీప్యాడ్">తెలుగు</button><button class="ghostbtn helpbtn" data-act="tl-help" data-keepfocus aria-label="టైపింగ్ చిట్కాలు">?</button></div>' +
       '<div id="tl-cands" class="tl-cands" aria-live="polite"></div>' +
       '<p class="note" id="tl-help" hidden>పదం మొత్తం టైప్ చేసి స్పేస్, Enter లేదా “పెట్టు” నొక్కండి — అక్షరాలు ఆ పదం గడుల్లో వరుసగా పడతాయి. పూర్తి పదం టైప్ చేస్తే మొదటి గడి నుంచే పెడతాం. aa ఆ · ee ఈ · oo ఊ · E ఏ · O ఓ · T ట · D డ · N ణ · L ళ · Sh ష. వేరే రూపం కావాలంటే కింది వాటిలో ఒకటి నొక్కండి. ఫోన్ కీబోర్డ్‌ను తెలుగుకు మార్చి నేరుగా తెలుగులోనూ టైప్ చేయవచ్చు.</p></div>';
   }
@@ -1530,7 +1560,7 @@ a.smallbtn{text-decoration:none;display:inline-flex;align-items:center;justify-c
   }
   function kbBar(mode) {
     var t = mode === 'type';
-    return '<div class="kbbar"><div class="seg" role="group" aria-label="కీబోర్డ్ భాష"><button data-act="kb-te" aria-pressed="' + (mode === 'keys') + '">తెలుగు</button><button data-act="kb-en" aria-pressed="' + t + '">ENG</button></div><div class="kbr">' +
+    return '<div class="kbbar"><div class="seg" role="group" aria-label="కీబోర్డ్ భాష"><button data-act="kb-en" aria-pressed="' + t + '">ENG</button><button data-act="kb-te" aria-pressed="' + (mode === 'keys') + '">తెలుగు</button></div><div class="kbr">' +
       (t ? '<button class="smallbtn" data-act="flip" data-keepfocus aria-label="దిశ మార్చు">' + I.swap + dirName(CUR.P.dir) + '</button><button class="smallbtn" data-act="back" data-keepfocus aria-label="తొలగించు">' + I.del + '</button>' : '') +
       '<button class="smallbtn" data-act="kb-hide" aria-label="కీబోర్డ్ దాచు">' + I.down + (t ? '' : ' దాచు') + '</button></div></div>';
   }
@@ -1561,7 +1591,7 @@ a.smallbtn{text-decoration:none;display:inline-flex;align-items:center;justify-c
   function subText() { var p = CUR.p, m = CUR.m; return (p.date ? p.date + ' · ' : '') + filledCount() + '/' + m.whites + ' నిండాయి' + (m.hasAns ? '' : ' · జవాబులు లేవు'); }
   // one picture for all the black squares of a post, as on the blog; weekly posts step through the 13 scenes in turn
   var SCENE_COUNT = 13;
-  function postPic(p) { var u = p.blk || p.blkImg || ''; return /^https:\/\/[^"'()\s]+$/.test(u) ? u : ''; }
+  function postPic(p) { var u = p.blk || p.blkImg || BLOG_BLK[p.date] || ''; if (/^http:\/\//i.test(u)) u = 'https://' + u.slice(7); return /^https:\/\/[^"'()\s]+$/.test(u) ? u : ''; }
   function sceneFor(p) {
     var d = /^(\d{2})\.(\d{2})\.(\d{4})$/.exec(p.date || '');
     if (d) return Math.floor(Date.UTC(+d[3], +d[2] - 1, +d[1]) / 864e5 / 7) % SCENE_COUNT;
@@ -1935,16 +1965,16 @@ a.smallbtn{text-decoration:none;display:inline-flex;align-items:center;justify-c
         }).join('') + '</div><p class="note">నాట్యం చేసే నెమలి, ఘోషించే సముద్రం, గర్జించే సింహం, వర్షం, వికసించే పూలు, మిణుగురులు, చంద్రుణ్ణి చూసే పిల్లి, కొలనులో చేపలు, సంధ్యా పక్షి, సీతాకోకచిలుక, గుడ్లగూబ, చిలుక, రాలే ఆకులు — ఒక్కో పోస్ట్‌కు ఒక బొమ్మ, ఆ పోస్ట్ నల్ల గడులన్నింటిలో అదే; వారం వారం మారుతుంది.</p></div>' + '</div></section>' +
       '<section class="sec"><h2 class="sec-h">తెలుగు ఫాంట్‌లు</h2><div class="box">' + fonts + '<div class="fld"><h3>గడిలో అక్షర పరిమాణం</h3>' + seg('size', [['s', 'చిన్నది'], ['m', 'మధ్యస్థం'], ['l', 'పెద్దది']], 'అక్షర పరిమాణం') + '</div></div></section>' +
       '<section class="sec"><h2 class="sec-h">ఆట</h2><div class="box"><div class="fld"><h3>కష్టత</h3>' + seg('hard', [['0', 'సులభం'], ['1', 'కష్టం']], 'కష్టత') + '<p class="note">' + (p.hard ? 'కష్టం: చివరి 10 గడులు మిగిలినప్పుడే సూచన బల్బ్ కనిపిస్తుంది.' : 'సులభం: సూచన (బల్బ్) మొదటి నుంచే ఎప్పుడైనా వాడొచ్చు.') + ' బ్లాగ్‌లోలాగే సరైన అక్షరం ఆకుపచ్చ అంచుతో, తప్పు అక్షరం పసుపు గడిలో ఎరుపు అంచుతో కనిపిస్తాయి.' + '</p></div>' + toggle('skip', 'నిండిన గడులు దాటవేయి', 'టైప్ చేసేటప్పుడు ఇప్పటికే నింపిన గడిలోకి వెళ్ళదు') + toggle('timer', 'టైమర్ చూపించు', 'ఎంత సేపట్లో పూర్తి చేశారో రికార్డ్ అవుతుంది') + '</div></section>' +
-      '<section class="sec"><h2 class="sec-h">టైపింగ్</h2><div class="box" style="gap:0;padding-block:6px"><button class="radio" data-act="pref" data-k="keypad" data-v="app" aria-pressed="' + (p.keypad === 'app') + '"><span class="dot" aria-hidden="true"></span><span class="t"><b>యాప్ అక్షర కీప్యాడ్ (సిఫార్సు)</b><small>హల్లు + గుణింతం, ఒత్తులు — ఒక్కో గడికి ఒక అక్షరం</small></span></button><button class="radio" data-act="pref" data-k="keypad" data-v="phone" aria-pressed="' + (p.keypad === 'phone') + '"><span class="dot" aria-hidden="true"></span><span class="t"><b>టైప్ చేయడం (ఇంగ్లీష్ లేదా తెలుగు)</b><small>పూర్తి పదం టైప్ చేయండి — kamalam అంటే కమలం, ఆ పదం గడుల్లో సరిగ్గా పడుతుంది; తెలుగు కీబోర్డ్ కూడా పనిచేస్తుంది</small></span></button></div></section>' +
+      '<section class="sec"><h2 class="sec-h">టైపింగ్</h2><div class="box" style="gap:0;padding-block:6px"><button class="radio" data-act="pref" data-k="keypad" data-v="phone" aria-pressed="' + (p.keypad === 'phone') + '"><span class="dot" aria-hidden="true"></span><span class="t"><b>ఇంగ్లీష్‌లో టైపింగ్ (సిఫార్సు)</b><small>పూర్తి పదం టైప్ చేయండి — kamalam అంటే కమలం, ఆ పదం గడుల్లో సరిగ్గా పడుతుంది; తెలుగు కీబోర్డ్ కూడా పనిచేస్తుంది</small></span></button><button class="radio" data-act="pref" data-k="keypad" data-v="app" aria-pressed="' + (p.keypad === 'app') + '"><span class="dot" aria-hidden="true"></span><span class="t"><b>తెలుగు అక్షర కీప్యాడ్ (యాప్‌లోనిది)</b><small>హల్లు + గుణింతం, ఒత్తులు — ఒక్కో గడికి ఒక అక్షరం</small></span></button></div></section>' +
       (apkCardHTML(false) ? '<section class="sec"><h2 class="sec-h">Android యాప్</h2>' + apkCardHTML(false) + '</section>' : '') +
       '<section class="sec"><h2 class="sec-h">Android యాప్‌లో రాబోయేవి</h2><div class="box"><ul class="soon"><li>కొత్త పద వినోదం వస్తే నోటిఫికేషన్</li><li>English భాషలో యాప్</li></ul>' + (IS_CLAUDE ? '' : '<p class="note">ఆఫ్‌లైన్: ఒకసారి తెరిచిన తర్వాత ఇంటర్నెట్ లేకున్నా యాప్, చివరిసారి లోడ్ అయిన పోస్టులు తెరుచుకుంటాయి.</p>') + '</div></section>' +
       '<section class="sec"><h2 class="sec-h">ఆట పురోగతి</h2><div class="box"><p class="note">మీ అమరికలు, ఆట పురోగతి ఈ పరికరంలోనే సేవ్ అవుతాయి.</p><button class="wide-btn ter" data-act="resetall">' + (U.confirm === 'resetall' ? 'ఖచ్చితమా? అన్ని ఆటల పురోగతి పోతుంది — మళ్ళీ నొక్కండి' : 'అన్ని ఆటల పురోగతి తుడిచివేయండి') + '</button></div></section>' +
       (!IS_CLAUDE ? '<section class="sec"><h2 class="sec-h">నిర్వాహణ</h2><div class="box"><p class="note">' + (ADMIN ? 'ఈ పరికరంలో నిర్వాహకుడిగా ప్రవేశించారు: కొత్త పద వినోదం (ఫోటో / PDF నుంచి కూడా), మార్పులు, ప్రచురణ.' : 'బ్లాగ్ నిర్వాహకుడి కోసం మాత్రమే: కొత్త పద వినోదం చేర్చడం, ఆధారాలు సరిదిద్దడం.') + '</p><a class="wide-btn ' + (ADMIN ? 'pri' : 'ter') + '" href="#admin">' + I.lock + (ADMIN ? ' నిర్వాహణ పేజీ తెరవండి' : ' నిర్వాహకుడి ప్రవేశం') + '</a></div></section>' : '') +
-      '<footer style="display:flex;flex-direction:column;align-items:center;gap:2px;text-align:center">' + (IN_BLOG ? '<a href="/?classic=1" style="font-weight:600;padding:10px 0">బ్లాగ్‌ను పాత రూపంలో చూడండి</a><a href="' + APPBASE + '" target="_blank" rel="noopener" style="padding:4px 0 10px">వెబ్‌సైట్ / ఆండ్రాయిడ్ యాప్</a>' : '<a href="' + BLOG + '" target="_blank" rel="noopener" style="font-weight:600;padding:10px 0">బ్లాగ్ తెరవండి · telugupadavinodam.blogspot.com</a>') + '<span style="font-family:var(--font-display);font-size:22px;color:var(--title)">ఈ-పద వినోదం</span><span class="note">వెర్షన్ 0.25' + (IS_CLAUDE ? ' · స్టూడియో' : IN_BLOG ? ' · బ్లాగ్' : '') + '</span></footer></div>';
+      '<footer style="display:flex;flex-direction:column;align-items:center;gap:2px;text-align:center">' + (IN_BLOG ? '<a href="/?classic=1" style="font-weight:600;padding:10px 0">బ్లాగ్‌ను పాత రూపంలో చూడండి</a><a href="' + APPBASE + '" target="_blank" rel="noopener" style="padding:4px 0 10px">వెబ్‌సైట్ / ఆండ్రాయిడ్ యాప్</a>' : '<a href="' + BLOG + '" target="_blank" rel="noopener" style="font-weight:600;padding:10px 0">బ్లాగ్ తెరవండి · telugupadavinodam.blogspot.com</a>') + '<span style="font-family:var(--font-display);font-size:22px;color:var(--title)">ఈ-పద వినోదం</span><span class="note">వెర్షన్ 0.26' + (IS_CLAUDE ? ' · స్టూడియో' : IN_BLOG ? ' · బ్లాగ్' : '') + '</span></footer></div>';
   }
 
   /* ================= admin: who may manage ================= */
-  var EXTRAS = [], BLOGPOSTS = [], HIDDEN = [], BLOG_ORIG = {}, BLOG_DATE = {};
+  var EXTRAS = [], BLOGPOSTS = [], HIDDEN = [], BLOG_ORIG = {}, BLOG_DATE = {}, BLOG_BLK = {};
   var ADMIN = null, CONFIG = {};
   // Website admin goes through the owner's Google Apps Script (password, blog publishing, Gemini). No GitHub key.
   var SVC_K = 'epv-admin-service', SES_K = 'epv-admin-session';
@@ -2054,9 +2084,21 @@ a.smallbtn{text-decoration:none;display:inline-flex;align-items:center;justify-c
     // the post's congratulation picture (the image inside its btn-finish2 / finish box)
     var fm = html.match(/id\s*=\s*"finish\d*"[^>]*?\ssrc\s*=\s*"([^"]+)"/i) || html.match(/<(?:input|img)[^>]*\ssrc\s*=\s*"([^"]+)"[^>]*id\s*=\s*"finish\d*"/i) || html.match(/btn-finish2[\s\S]{0,400}?\ssrc\s*=\s*"([^"]+)"/i);
     p.fin = fm ? fm[1].replace(/&amp;/g, '&') : '';
-    var bm = html.match(/<input[^>]*class="btn-disabled2?"[^>]*\ssrc\s*=\s*"([^"]+)"/i) || html.match(/<input[^>]*\ssrc\s*=\s*"([^"]+)"[^>]*class="btn-disabled2?"/i);
-    p.blk = bm ? bm[1].replace(/&amp;/g, '&') : '';
+    p.blk = blkSrc(html);
     return p;
+  }
+  // the black squares' picture: the src of the post's first <input class="btn-disabled…"> (attributes in any order and spacing)
+  function blkSrc(html) {
+    var tags = String(html || '').match(/<input\b[^>]*>/gi) || [];
+    for (var i = 0; i < tags.length; i++) {
+      var t = tags[i], cl = t.match(/\sclass\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))/i);
+      if (!cl || !/(^|\s)btn-disabled2?(\s|$)/.test(cl[1] || cl[2] || cl[3] || '')) continue;
+      var sr = t.match(/\ssrc\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))/i); if (!sr) continue;
+      var u = (sr[1] || sr[2] || sr[3] || '').replace(/&amp;/g, '&').trim();
+      if (/^\/\//.test(u)) u = 'https:' + u; else if (/^http:\/\//i.test(u)) u = 'https://' + u.slice(7);
+      if (/^https:\/\//i.test(u)) return u;
+    }
+    return '';
   }
   // a puzzle's congratulation picture: its own, else the newest blog post's
   function finImage(p) {
@@ -4681,10 +4723,10 @@ a.smallbtn{text-decoration:none;display:inline-flex;align-items:center;justify-c
   function mergePuzzles() {
     var byDate = {}, taken = {}, list = EXTRAS.slice();
     EXTRAS.forEach(function (p) { taken[p.id] = true; if (p.date) byDate[p.date] = true; });
-    BLOG_ORIG = {}; BLOG_DATE = {};
+    BLOG_ORIG = {}; BLOG_DATE = {}; BLOG_BLK = {};
     BLOGPOSTS.forEach(function (p) {
       p.id = p.id && /^e\d{8}/.test(p.id) ? p.id : makeId(p.date, taken); taken[p.id] = true;
-      BLOG_ORIG[p.id] = JSON.stringify(cleanPuzzle(p)); BLOG_DATE[p.id] = p.date;
+      BLOG_ORIG[p.id] = JSON.stringify(cleanPuzzle(p)); BLOG_DATE[p.id] = p.date; if (p.date && p.blk) BLOG_BLK[p.date] = p.blk;
       if (p.date && (byDate[p.date] || HIDDEN.indexOf(p.date) >= 0)) return;
       list.push(p);
     });
@@ -4696,6 +4738,24 @@ a.smallbtn{text-decoration:none;display:inline-flex;align-items:center;justify-c
     navigator.serviceWorker.addEventListener('controllerchange', function () { if (hadSW && !reloaded) { reloaded = true; location.reload(); } });
     window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).then(function (reg) { reg.update().catch(function () {}); }).catch(function () {}); });
   }
+
+  // A short screen (a phone browser with its address bar, a small window): with a keyboard open the board keeps its share of
+  // the screen — the keys, clue card and bars get smaller in two steps instead of the board shrinking to a sliver.
+  function fitPlay() {
+    view.classList.remove('tight', 'tight2');
+    if (route().indexOf('play-') !== 0 || !U.panel || U.panel === 'none') return;
+    var pm = document.getElementById('pmid'), H = view.clientHeight || window.innerHeight; if (!pm || !H) return;
+    if (pm.clientHeight >= 0.42 * H) return;
+    view.classList.add('tight');
+    if (pm.clientHeight < 0.36 * H) view.classList.add('tight2');
+    U.follow = true; keepCurVisible(); syncHbar();
+  }
+  var render0 = render, refresh0 = refreshPlay;
+  render = function () { render0(); fitPlay(); };
+  refreshPlay = function () { refresh0(); fitPlay(); };
+  window.addEventListener('resize', function () { if (route().indexOf('play-') === 0) fitPlay(); });
+  // the blog on a phone: full screen from the first tap anywhere (browsers allow it only after a tap); the phone's Back leaves it
+  if (IN_BLOG) document.addEventListener('click', function first() { goFull(); }, { capture: true, once: true });
 
   applyPrefs();
   onRoute();
