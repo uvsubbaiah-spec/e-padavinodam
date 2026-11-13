@@ -2052,7 +2052,11 @@ select.inp{font-family:var(--font-ui,inherit);font-size:16px;appearance:auto}
   function loadSvcStatus() {
     if (IS_CLAUDE || !ADMIN || U.svcStatus || U.svcLoading) return;
     U.svcLoading = true;
-    svc('status').then(function (j) { U.svcLoading = false; U.svcStatus = j; if (route() === 'admin') render(); }, function (e) { U.svcLoading = false; U.svcStatus = { error: svcErr(e) }; if (route() === 'admin') render(); });
+    svc('status').then(function (j) {
+      U.svcLoading = false; U.svcStatus = j;
+      if (j && j.v >= 9 && !S.prefs.papersMarked && !U.busy) { runRelink(0, null, true); return; }
+      if (route() === 'admin') render();
+    }, function (e) { U.svcLoading = false; U.svcStatus = { error: svcErr(e) }; if (route() === 'admin') render(); });
   }
 
   /* ================= admin: blog import ================= */
@@ -2142,7 +2146,12 @@ select.inp{font-family:var(--font-ui,inherit);font-size:16px;appearance:auto}
     ((j && j.feed && j.feed.entry) || []).forEach(function (e) {
       var link = (e.link || []).filter(function (l) { return l.rel === 'alternate'; })[0];
       var p = postFrom(e.title && e.title.$t, (e.content && e.content.$t) || '', link && link.href);
-      if (p) { var pm = ((e.id && e.id.$t) || '').match(/post-(\d+)$/); p.postId = pm ? pm[1] : ''; out.push(p); }
+      if (p) {
+        var pm = ((e.id && e.id.$t) || '').match(/post-(\d+)$/); p.postId = pm ? pm[1] : '';
+        var labs = (e.category || []).map(function (c) { return c.term || ''; }).join(' ');
+        if (labs && !PAPERS[0].re.test((e.title && e.title.$t) || '')) { var lp = paperIn(labs); if (lp !== 'eenadu' || PAPERS[0].re.test(labs)) p.paper = lp; }
+        out.push(p);
+      }
     });
     return out;
   }
@@ -2304,13 +2313,19 @@ select.inp{font-family:var(--font-ui,inherit);font-size:16px;appearance:auto}
     return exp > 0 && b.clues.length === exp;
   }
   // after publishing, the draft stays in the saved drafts (marked) — nothing is lost if the blog side goes wrong
+  function postTitle(pz) {
+    var pp = paperOf(pz.paper), t = (pz.title || '').trim() || pp.title;
+    if (pp.id !== 'other' && paperIn(t) !== pp.id) t = pp.title;
+    return t + ' - ' + pz.date;
+  }
   function keepPublished(d, url) { if (!d) return; d.published = Date.now(); d.pubUrl = url || ''; keepDraft(d, true); }
   function blogPublish(pz, draft) {
     U.busy = 'publish'; U.status = { kind: 'wait', text: 'ఈ తేదీ పోస్ట్ బ్లాగ్‌లో ఇప్పటికే ఉందో చూస్తున్నాం…' }; render();
-    var title = (pz.title || paperOf(pz.paper).title) + ' - ' + pz.date;
+    var title = postTitle(pz);
     // an older admin script (before version 5) lost post bodies: do not publish through it
-    svc('find', { date: pz.date }).then(function (f) {
-      var same = (f.items || [])[0];
+    var myPaper = paperOf(pz.paper).id;
+    svc('find', { date: pz.date, paper: myPaper }).then(function (f) {
+      var same = (f.items || []).filter(function (it) { return (it.paper || paperIn((it.title || '') + ' ' + (it.url || ''))) === myPaper; })[0];
       if (same && !draft) {   // already there (perhaps empty): correct that post instead of making a second one
         U.busy = ''; blogUpdate(Object.assign({}, pz, { postId: same.id, publishDraft: same.status === 'draft' }), pz.date + ' పోస్ట్ బ్లాగ్‌లో ఇప్పటికే ఉంది — దాన్నే సరిచేశాం.', function () { keepPublished(D, same.url); D = null; S.draft = null; delete S.prog.draft; save(); location.hash = '#admin'; });
         return null;
@@ -2326,13 +2341,13 @@ select.inp{font-family:var(--font-ui,inherit);font-size:16px;appearance:auto}
       var html = blogPostHTML(t.content, pz, { suffix: String((+postSuffix(t.content) || 0) + 1), prevUrl: t.url, newPost: true });
       if (!sameAsBlog(html, pz)) throw { code: 'self_check' };
       U.status = { kind: 'wait', text: draft ? 'బ్లాగ్‌లో డ్రాఫ్ట్‌గా సేవ్ చేస్తున్నాం…' : 'బ్లాగ్‌లో ప్రచురిస్తున్నాం…' }; render();
-      return svc('publish', { title: title, slug: (pz.paper && pz.paper !== 'eenadu' ? pz.paper + '-' : '') + slugDate(pz.date), html: html, draft: !!draft, prevPostId: t.id });
+      return svc('publish', { title: title, slug: (pz.paper && pz.paper !== 'eenadu' ? pz.paper + '-' : '') + slugDate(pz.date), html: html, draft: !!draft, prevPostId: t.id, paper: myPaper, label: paperOf(myPaper).te });
     }).then(function (r) {
       U.busy = '';
       if (!draft) {
         var np = Object.assign({}, pz, { src: 'blog', url: r.url, postId: r.id, title: pz.title || paperOf(pz.paper).title });
-        np.id = 'e' + dateKey(pz.date);
-        BLOGPOSTS = BLOGPOSTS.filter(function (p) { return p.date !== pz.date; }); BLOGPOSTS.unshift(np); mergePuzzles();
+        np.paper = myPaper; np.id = paperOf(myPaper).pre + dateKey(pz.date);
+        BLOGPOSTS = BLOGPOSTS.filter(function (p) { return pkey(p) !== pkey(np); }); BLOGPOSTS.unshift(np); mergePuzzles();
       }
       keepPublished(D, r.url); D = null; S.draft = null; delete S.prog.draft; save();
       U.status = { kind: 'ok', text: draft ? 'బ్లాగ్‌లో డ్రాఫ్ట్‌గా సేవ్ చేశాం. Blogger లో తెరిచి చూసి Publish నొక్కండి; అప్పుడు యాప్‌లోనూ కనిపిస్తుంది.' : title + ' బ్లాగ్‌లో ప్రచురించాం' + (r.linkedPrev ? '; ముందటి పోస్ట్‌లో “తర్వాత »” బటన్ దీనికి కలిపాం' : '') + '. యాప్‌లో ఇప్పటికే ఉంది.', link: r.url || '' };
@@ -2350,7 +2365,7 @@ select.inp{font-family:var(--font-ui,inherit);font-size:16px;appearance:auto}
     }).then(function (html) {
       if (!sameAsBlog(html, pz)) throw { code: 'self_check' };
       U.status = { kind: 'wait', text: 'బ్లాగ్ పోస్ట్ సరిదిద్దుతున్నాం…' }; render();
-      return svc('update', { postId: pz.postId, html: html, title: (pz.title || paperOf(pz.paper).title) + ' - ' + pz.date, publish: !!pz.publishDraft });
+      return svc('update', { postId: pz.postId, html: html, title: postTitle(pz), publish: !!pz.publishDraft, paper: paperOf(pz.paper).id, label: paperOf(pz.paper).te });
     }).then(function (r) {
       BLOGPOSTS = BLOGPOSTS.map(function (p) { return p.postId === pz.postId ? Object.assign({}, p, pz, { src: 'blog', url: r.url || p.url }) : p; }); mergePuzzles();
       U.busy = ''; U.status = { kind: 'ok', text: okMsg + (r.kept ? ' పాత రూపం మీ Google Drive లో “e-padavinodam-old-…” ఫైల్‌లో ఉంది.' : r.kept === false ? '' : ' పాత రూపం Blogger డ్రాఫ్ట్‌లలో “బ్యాకప్ ·” పేరుతో ఉంది (కొత్త Code.gs v7 తో ఈ డ్రాఫ్ట్‌లు రావు).'), link: r.url || '' };
@@ -3926,8 +3941,8 @@ select.inp{font-family:var(--font-ui,inherit);font-size:16px;appearance:auto}
       '<p class="bignote">కొత్త పద వినోదం (పేపర్ ఫోటో / PDF నుంచి కూడా) బ్లాగ్‌లో ప్రచురించడం, ఆధారాలు సరిదిద్దడం.</p></div>' + statusBox() +
       '<section class="sec"><div class="box">' +
 
-        '<div class="fld"><label class="lbl" for="adm-pw">పాస్‌వర్డ్</label><input id="adm-pw" class="inp" type="password" autocomplete="current-password" enterkeyhint="go"></div>' +
-        '<button class="wide-btn pri" data-act="svc-login"' + (U.busy ? ' disabled' : '') + '>ప్రవేశించండి</button>' +
+        '<div class="fld"><label class="lbl" for="adm-pw">పాస్‌వర్డ్</label><input id="adm-pw" class="inp" type="password" autocomplete="current-password" enterkeyhint="go"' + (U.busy === 'login' ? ' disabled value="' + esc(U.pwHold || '') + '"' : '') + '></div>' +
+        '<button class="wide-btn pri" data-act="svc-login"' + (U.busy ? ' disabled' : '') + '>' + (U.busy === 'login' && U.pwHold ? 'సరిచూస్తున్నాం…' : 'ప్రవేశించండి') + '</button>' +
         '<button class="wide-btn ter" data-act="svc-reset"' + (U.busy ? ' disabled' : '') + '>' + (U.confirm === 'reset' ? 'ఖచ్చితమా? కొత్త పాస్‌వర్డ్ blogofrulings@gmail.com కు పంపుతాం — మళ్ళీ నొక్కండి' : 'పాస్‌వర్డ్ మర్చిపోయారా?') + '</button>' +
         '<p class="note">“పాస్‌వర్డ్ మర్చిపోయారా?” నొక్కితే కొత్త పాస్‌వర్డ్ blogofrulings@gmail.com కు మెయిల్ వస్తుంది. యాప్ మూసినా, నిర్వాహణ పేజీ నుంచి బయటకు వెళ్ళినా మళ్ళీ పాస్‌వర్డ్ అడుగుతుంది.</p>' +
 
@@ -3938,17 +3953,18 @@ select.inp{font-family:var(--font-ui,inherit);font-size:16px;appearance:auto}
   // one tap: every post onto its puzzle date on the blog, and « » to the puzzles on either side
   function relinkHTML(busy) {
     var ask = U.confirm === 'relink', R = U.relink;
-    return '<div class="box relinkbox"><b>తేదీల వరుస, « » లింకులు</b><p class="note">ప్రతి పోస్ట్‌ను బ్లాగ్‌లో దాని పద వినోదం తేదీకి (ఉదా: 01.11.2026 పోస్ట్ → 1 నవంబర్) మారుస్తుంది; « » లు ముందు, తర్వాతి తేదీల పోస్టులకు వెళ్తాయి. పోస్టుల లింకులు (URL) మారవు. మళ్ళీ నొక్కినా సమస్య లేదు — సరిగా ఉన్నవాటిని ముట్టదు.</p>' +
+    return '<div class="box relinkbox"><b>తేదీల వరుస, « » లింకులు, పత్రిక లేబుల్</b><p class="note">ప్రతి పోస్ట్‌ను బ్లాగ్‌లో దాని పద వినోదం తేదీకి (ఉదా: 01.11.2026 పోస్ట్ → 1 నవంబర్) మారుస్తుంది; « » లు అదే పత్రిక ముందు, తర్వాతి తేదీల పోస్టులకు వెళ్తాయి; ప్రతి పోస్ట్‌కు దాని పత్రిక పేరు లేబుల్‌గా (ఈనాడు / సాక్షి) పెడుతుంది. పోస్టుల లింకులు (URL) మారవు. మళ్ళీ నొక్కినా సమస్య లేదు — సరిగా ఉన్నవాటిని ముట్టదు.</p>' +
       (R && R.text ? '<p class="note"><b>' + esc(R.text) + '</b></p>' : '') +
       '<button class="wide-btn ' + (ask ? 'pri' : 'ter') + '" data-act="relink"' + (busy ? ' disabled' : '') + '>' + (ask ? 'ఖచ్చితమా? బ్లాగ్‌లో పోస్టులు మారుతాయి — మళ్ళీ నొక్కండి' : 'తేదీలు, « » లింకులు సరిచేయండి') + '</button></div>';
   }
-  function runRelink(from, acc) {
+  function runRelink(from, acc, auto) {
     acc = acc || { changed: 0, nodate: [], failed: [] };
-    U.busy = 'relink'; U.status = { kind: 'wait', text: 'బ్లాగ్ పోస్టుల తేదీలు, « » లింకులు సరిచేస్తున్నాం…' + (from ? ' (' + from + ' అయ్యాయి)' : '') + ' కొన్ని నిమిషాలు పట్టవచ్చు; ఈ పేజీ తెరిచే ఉంచండి.' }; render();
+    U.busy = 'relink'; U.status = { kind: 'wait', text: (auto ? 'బ్లాగ్‌లో ఉన్న పోస్టులన్నిటికీ పత్రిక పేరు (ఈనాడు) లేబుల్ పెడుతున్నాం (ఒక్కసారే)… ' : '') + 'బ్లాగ్ పోస్టుల తేదీలు, « » లింకులు సరిచేస్తున్నాం…' + (from ? ' (' + from + ' అయ్యాయి)' : '') + ' కొన్ని నిమిషాలు పట్టవచ్చు; ఈ పేజీ తెరిచే ఉంచండి.' }; render();
     svc('relink', { from: from || 0 }).then(function (r) {
       acc.changed += r.changed || 0; acc.nodate = acc.nodate.concat(r.nodate || []); acc.failed = acc.failed.concat(r.failed || []);
-      if (r.left > 0 && r.next > (from || 0)) { runRelink(r.next, acc); return; }
+      if (r.left > 0 && r.next > (from || 0)) { runRelink(r.next, acc, auto); return; }
       U.busy = '';
+      if (!acc.failed.length) { S.prefs.papersMarked = 9; save(); }
       var t = r.total + ' పోస్టులు చూశాం; ' + (acc.changed ? acc.changed + ' సరిచేశాం.' : 'అన్నీ ఇప్పటికే సరిగా ఉన్నాయి.');
       if (acc.nodate.length) t += ' ఈ పోస్టుల తేదీని Blogger మార్చనివ్వలేదు (లింకులు మాత్రం సరిచేశాం): ' + acc.nodate.join(', ') + ' — Blogger లో పోస్ట్ తెరిచి “Published on” తేదీ మార్చండి.';
       if (acc.failed.length) t += ' వీటిని చేయలేకపోయాం: ' + acc.failed.join(', ') + ' — మళ్ళీ నొక్కి చూడండి.';
@@ -3993,7 +4009,7 @@ select.inp{font-family:var(--font-ui,inherit);font-size:16px;appearance:auto}
       '<header class="apphead"><div style="display:flex;align-items:center;gap:6px"><a class="ghostbtn" href="#home" aria-label="వెనక్కి">' + I.back + '</a><h1 class="apptitle" style="font-size:34px">నిర్వాహణ</h1></div><span class="iconbtn lockbtn is-admin" aria-hidden="true">' + I.unlock + '</span></header>' +
       statusBox() + (blogLine ? '<p class="note">' + esc(blogLine) + '</p>' : '') +
       '<section class="sec homesearch"><div class="search"><label for="adm-find">పోస్టులు, డ్రాఫ్ట్‌లు వెతకండి</label><div class="box">' + I.search + '<input id="adm-find" type="search" enterkeyhint="search" autocomplete="off" placeholder="తేదీ (01.11.2026, 1/11), నెల లేదా పేరు" value="' + esc(U.admFind || '') + '"></div></div><div id="adm-find-res">' + admFindHTML(busy) + '</div></section>' +
-      (st.v && st.v >= 7 && st.v < 8 ? '<div class="status warn"><b>కొత్త Code.gs (v8) అతికించండి.</b> సాక్షి వంటి మరో పత్రిక పోస్టులు కూడా ఉంటే, ప్రతి పోస్ట్ « » అదే పత్రిక పక్క తేదీల పోస్టులకు వెళ్తాయి. అతికించాక “లింకులు సరిచేయండి” ఒకసారి నొక్కండి. ఎలా: README లో “Code.gs v8”.</div>' : '') +
+      (st.v && st.v >= 7 && st.v < 9 ? '<div class="status warn"><b>కొత్త Code.gs (v9) అతికించండి.</b> ప్రతి పోస్ట్‌కు దాని పత్రిక లేబుల్ (ఈనాడు / సాక్షి) పెడుతుంది; ఒకే తేదీ ఈనాడు, సాక్షి పోస్టులు ఒకదానిపై ఒకటి పడవు; « » అదే పత్రిక పక్క తేదీల పోస్టులకు వెళ్తాయి. అతికించాక “లింకులు సరిచేయండి” ఒకసారి నొక్కండి — ఉన్న పోస్టులన్నిటికీ “ఈనాడు” లేబుల్ వస్తుంది. ఎలా: README లో “Code.gs v9”.</div>' : '') +
       (st.v && st.v < 7 ? '<div class="status warn"><b>కొత్త Code.gs (v8) అతికించండి.</b> అప్పుడు: పోస్టులు పద వినోదం తేదీతో బ్లాగ్‌లో వరుసగా వస్తాయి, « » పక్క తేదీల పోస్టులకు వెళ్తాయి, సరిదిద్దినప్పుడు “బ్యాకప్ ·” డ్రాఫ్ట్‌లు రావు. ఎలా: README లో “Code.gs v8”.</div>' : '') +
       '<section class="sec"><h2 class="sec-h">కొత్త పద వినోదం</h2><div class="box">' +
         '<p class="bignote">పేపర్‌లోని పద వినోదం ఫోటో లేదా PDF ఇవ్వండి. డ్రాఫ్ట్ తయారై, మీరు సరిచూసి ప్రచురించగానే అది బ్లాగ్‌లో కొత్త పోస్ట్ అవుతుంది — యాప్‌లోనూ కనిపిస్తుంది.</p>' +
@@ -4546,11 +4562,11 @@ select.inp{font-family:var(--font-ui,inherit);font-size:16px;appearance:auto}
         var pwv = (document.getElementById('adm-pw') || {}).value || '';
         if (!svcUrl()) { toast('ముందు అడ్మిన్ సర్వీస్ లింక్ ఇవ్వండి.'); break; }
         if (!pwv) { toast('పాస్‌వర్డ్ ఇవ్వండి.'); break; }
-        U.busy = 'login'; U.status = { kind: 'wait', text: 'సరిచూస్తున్నాం…' }; render();
+        U.busy = 'login'; U.pwHold = pwv; U.status = { kind: 'wait', text: 'సరిచూస్తున్నాం…' }; render();
         svc('login', { password: pwv }).then(function (j) {
-          sesSet(j.token); ADMIN = true; U.busy = ''; U.svcStatus = null;
+          sesSet(j.token); ADMIN = true; U.busy = ''; U.pwHold = ''; U.svcStatus = null;
           U.status = { kind: 'ok', text: 'నిర్వాహకుడిగా ప్రవేశించారు.' + (j.firstPassword ? ' మొదటి పాస్‌వర్డ్ (uvs-2026) వాడుతున్నారు — కింది సెట్టింగ్‌లలో మీ సొంత పాస్‌వర్డ్ పెట్టుకోండి.' : '') }; render();
-        }, function (e) { U.busy = ''; U.status = { kind: 'err', text: svcErr(e) }; render(); });
+        }, function (e) { U.busy = ''; U.pwHold = ''; U.status = { kind: 'err', text: svcErr(e) }; render(); });
         break;
       case 'svc-reset':
         var sur = document.getElementById('svc-url'), surv = sur ? sur.value.trim() : '';

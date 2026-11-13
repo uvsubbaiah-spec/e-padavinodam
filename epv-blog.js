@@ -1220,7 +1220,11 @@
   function loadSvcStatus() {
     if (IS_CLAUDE || !ADMIN || U.svcStatus || U.svcLoading) return;
     U.svcLoading = true;
-    svc('status').then(function (j) { U.svcLoading = false; U.svcStatus = j; if (route() === 'admin') render(); }, function (e) { U.svcLoading = false; U.svcStatus = { error: svcErr(e) }; if (route() === 'admin') render(); });
+    svc('status').then(function (j) {
+      U.svcLoading = false; U.svcStatus = j;
+      if (j && j.v >= 9 && !S.prefs.papersMarked && !U.busy) { runRelink(0, null, true); return; }
+      if (route() === 'admin') render();
+    }, function (e) { U.svcLoading = false; U.svcStatus = { error: svcErr(e) }; if (route() === 'admin') render(); });
   }
 
   /* ================= admin: blog import ================= */
@@ -1310,7 +1314,12 @@
     ((j && j.feed && j.feed.entry) || []).forEach(function (e) {
       var link = (e.link || []).filter(function (l) { return l.rel === 'alternate'; })[0];
       var p = postFrom(e.title && e.title.$t, (e.content && e.content.$t) || '', link && link.href);
-      if (p) { var pm = ((e.id && e.id.$t) || '').match(/post-(\d+)$/); p.postId = pm ? pm[1] : ''; out.push(p); }
+      if (p) {
+        var pm = ((e.id && e.id.$t) || '').match(/post-(\d+)$/); p.postId = pm ? pm[1] : '';
+        var labs = (e.category || []).map(function (c) { return c.term || ''; }).join(' ');
+        if (labs && !PAPERS[0].re.test((e.title && e.title.$t) || '')) { var lp = paperIn(labs); if (lp !== 'eenadu' || PAPERS[0].re.test(labs)) p.paper = lp; }
+        out.push(p);
+      }
     });
     return out;
   }
@@ -1472,13 +1481,19 @@
     return exp > 0 && b.clues.length === exp;
   }
   // after publishing, the draft stays in the saved drafts (marked) \u2014 nothing is lost if the blog side goes wrong
+  function postTitle(pz) {
+    var pp = paperOf(pz.paper), t = (pz.title || '').trim() || pp.title;
+    if (pp.id !== 'other' && paperIn(t) !== pp.id) t = pp.title;
+    return t + ' - ' + pz.date;
+  }
   function keepPublished(d, url) { if (!d) return; d.published = Date.now(); d.pubUrl = url || ''; keepDraft(d, true); }
   function blogPublish(pz, draft) {
     U.busy = 'publish'; U.status = { kind: 'wait', text: '\u0c08 \u0c24\u0c47\u0c26\u0c40 \u0c2a\u0c4b\u0c38\u0c4d\u0c1f\u0c4d \u0c2c\u0c4d\u0c32\u0c3e\u0c17\u0c4d\u200c\u0c32\u0c4b \u0c07\u0c2a\u0c4d\u0c2a\u0c1f\u0c3f\u0c15\u0c47 \u0c09\u0c02\u0c26\u0c4b \u0c1a\u0c42\u0c38\u0c4d\u0c24\u0c41\u0c28\u0c4d\u0c28\u0c3e\u0c02\u2026' }; render();
-    var title = (pz.title || paperOf(pz.paper).title) + ' - ' + pz.date;
+    var title = postTitle(pz);
     // an older admin script (before version 5) lost post bodies: do not publish through it
-    svc('find', { date: pz.date }).then(function (f) {
-      var same = (f.items || [])[0];
+    var myPaper = paperOf(pz.paper).id;
+    svc('find', { date: pz.date, paper: myPaper }).then(function (f) {
+      var same = (f.items || []).filter(function (it) { return (it.paper || paperIn((it.title || '') + ' ' + (it.url || ''))) === myPaper; })[0];
       if (same && !draft) {   // already there (perhaps empty): correct that post instead of making a second one
         U.busy = ''; blogUpdate(Object.assign({}, pz, { postId: same.id, publishDraft: same.status === 'draft' }), pz.date + ' \u0c2a\u0c4b\u0c38\u0c4d\u0c1f\u0c4d \u0c2c\u0c4d\u0c32\u0c3e\u0c17\u0c4d\u200c\u0c32\u0c4b \u0c07\u0c2a\u0c4d\u0c2a\u0c1f\u0c3f\u0c15\u0c47 \u0c09\u0c02\u0c26\u0c3f \u2014 \u0c26\u0c3e\u0c28\u0c4d\u0c28\u0c47 \u0c38\u0c30\u0c3f\u0c1a\u0c47\u0c36\u0c3e\u0c02.', function () { keepPublished(D, same.url); D = null; S.draft = null; delete S.prog.draft; save(); location.hash = '#admin'; });
         return null;
@@ -1494,13 +1509,13 @@
       var html = blogPostHTML(t.content, pz, { suffix: String((+postSuffix(t.content) || 0) + 1), prevUrl: t.url, newPost: true });
       if (!sameAsBlog(html, pz)) throw { code: 'self_check' };
       U.status = { kind: 'wait', text: draft ? '\u0c2c\u0c4d\u0c32\u0c3e\u0c17\u0c4d\u200c\u0c32\u0c4b \u0c21\u0c4d\u0c30\u0c3e\u0c2b\u0c4d\u0c1f\u0c4d\u200c\u0c17\u0c3e \u0c38\u0c47\u0c35\u0c4d \u0c1a\u0c47\u0c38\u0c4d\u0c24\u0c41\u0c28\u0c4d\u0c28\u0c3e\u0c02\u2026' : '\u0c2c\u0c4d\u0c32\u0c3e\u0c17\u0c4d\u200c\u0c32\u0c4b \u0c2a\u0c4d\u0c30\u0c1a\u0c41\u0c30\u0c3f\u0c38\u0c4d\u0c24\u0c41\u0c28\u0c4d\u0c28\u0c3e\u0c02\u2026' }; render();
-      return svc('publish', { title: title, slug: (pz.paper && pz.paper !== 'eenadu' ? pz.paper + '-' : '') + slugDate(pz.date), html: html, draft: !!draft, prevPostId: t.id });
+      return svc('publish', { title: title, slug: (pz.paper && pz.paper !== 'eenadu' ? pz.paper + '-' : '') + slugDate(pz.date), html: html, draft: !!draft, prevPostId: t.id, paper: myPaper, label: paperOf(myPaper).te });
     }).then(function (r) {
       U.busy = '';
       if (!draft) {
         var np = Object.assign({}, pz, { src: 'blog', url: r.url, postId: r.id, title: pz.title || paperOf(pz.paper).title });
-        np.id = 'e' + dateKey(pz.date);
-        BLOGPOSTS = BLOGPOSTS.filter(function (p) { return p.date !== pz.date; }); BLOGPOSTS.unshift(np); mergePuzzles();
+        np.paper = myPaper; np.id = paperOf(myPaper).pre + dateKey(pz.date);
+        BLOGPOSTS = BLOGPOSTS.filter(function (p) { return pkey(p) !== pkey(np); }); BLOGPOSTS.unshift(np); mergePuzzles();
       }
       keepPublished(D, r.url); D = null; S.draft = null; delete S.prog.draft; save();
       U.status = { kind: 'ok', text: draft ? '\u0c2c\u0c4d\u0c32\u0c3e\u0c17\u0c4d\u200c\u0c32\u0c4b \u0c21\u0c4d\u0c30\u0c3e\u0c2b\u0c4d\u0c1f\u0c4d\u200c\u0c17\u0c3e \u0c38\u0c47\u0c35\u0c4d \u0c1a\u0c47\u0c36\u0c3e\u0c02. Blogger \u0c32\u0c4b \u0c24\u0c46\u0c30\u0c3f\u0c1a\u0c3f \u0c1a\u0c42\u0c38\u0c3f Publish \u0c28\u0c4a\u0c15\u0c4d\u0c15\u0c02\u0c21\u0c3f; \u0c05\u0c2a\u0c4d\u0c2a\u0c41\u0c21\u0c41 \u0c2f\u0c3e\u0c2a\u0c4d\u200c\u0c32\u0c4b\u0c28\u0c42 \u0c15\u0c28\u0c3f\u0c2a\u0c3f\u0c38\u0c4d\u0c24\u0c41\u0c02\u0c26\u0c3f.' : title + ' \u0c2c\u0c4d\u0c32\u0c3e\u0c17\u0c4d\u200c\u0c32\u0c4b \u0c2a\u0c4d\u0c30\u0c1a\u0c41\u0c30\u0c3f\u0c02\u0c1a\u0c3e\u0c02' + (r.linkedPrev ? '; \u0c2e\u0c41\u0c02\u0c26\u0c1f\u0c3f \u0c2a\u0c4b\u0c38\u0c4d\u0c1f\u0c4d\u200c\u0c32\u0c4b \u201c\u0c24\u0c30\u0c4d\u0c35\u0c3e\u0c24 \u00bb\u201d \u0c2c\u0c1f\u0c28\u0c4d \u0c26\u0c40\u0c28\u0c3f\u0c15\u0c3f \u0c15\u0c32\u0c3f\u0c2a\u0c3e\u0c02' : '') + '. \u0c2f\u0c3e\u0c2a\u0c4d\u200c\u0c32\u0c4b \u0c07\u0c2a\u0c4d\u0c2a\u0c1f\u0c3f\u0c15\u0c47 \u0c09\u0c02\u0c26\u0c3f.', link: r.url || '' };
@@ -1518,7 +1533,7 @@
     }).then(function (html) {
       if (!sameAsBlog(html, pz)) throw { code: 'self_check' };
       U.status = { kind: 'wait', text: '\u0c2c\u0c4d\u0c32\u0c3e\u0c17\u0c4d \u0c2a\u0c4b\u0c38\u0c4d\u0c1f\u0c4d \u0c38\u0c30\u0c3f\u0c26\u0c3f\u0c26\u0c4d\u0c26\u0c41\u0c24\u0c41\u0c28\u0c4d\u0c28\u0c3e\u0c02\u2026' }; render();
-      return svc('update', { postId: pz.postId, html: html, title: (pz.title || paperOf(pz.paper).title) + ' - ' + pz.date, publish: !!pz.publishDraft });
+      return svc('update', { postId: pz.postId, html: html, title: postTitle(pz), publish: !!pz.publishDraft, paper: paperOf(pz.paper).id, label: paperOf(pz.paper).te });
     }).then(function (r) {
       BLOGPOSTS = BLOGPOSTS.map(function (p) { return p.postId === pz.postId ? Object.assign({}, p, pz, { src: 'blog', url: r.url || p.url }) : p; }); mergePuzzles();
       U.busy = ''; U.status = { kind: 'ok', text: okMsg + (r.kept ? ' \u0c2a\u0c3e\u0c24 \u0c30\u0c42\u0c2a\u0c02 \u0c2e\u0c40 Google Drive \u0c32\u0c4b \u201ce-padavinodam-old-\u2026\u201d \u0c2b\u0c48\u0c32\u0c4d\u200c\u0c32\u0c4b \u0c09\u0c02\u0c26\u0c3f.' : r.kept === false ? '' : ' \u0c2a\u0c3e\u0c24 \u0c30\u0c42\u0c2a\u0c02 Blogger \u0c21\u0c4d\u0c30\u0c3e\u0c2b\u0c4d\u0c1f\u0c4d\u200c\u0c32\u0c32\u0c4b \u201c\u0c2c\u0c4d\u0c2f\u0c3e\u0c15\u0c2a\u0c4d \u00b7\u201d \u0c2a\u0c47\u0c30\u0c41\u0c24\u0c4b \u0c09\u0c02\u0c26\u0c3f (\u0c15\u0c4a\u0c24\u0c4d\u0c24 Code.gs v7 \u0c24\u0c4b \u0c08 \u0c21\u0c4d\u0c30\u0c3e\u0c2b\u0c4d\u0c1f\u0c4d\u200c\u0c32\u0c41 \u0c30\u0c3e\u0c35\u0c41).'), link: r.url || '' };
@@ -3094,8 +3109,8 @@
       '<p class="bignote">\u0c15\u0c4a\u0c24\u0c4d\u0c24 \u0c2a\u0c26 \u0c35\u0c3f\u0c28\u0c4b\u0c26\u0c02 (\u0c2a\u0c47\u0c2a\u0c30\u0c4d \u0c2b\u0c4b\u0c1f\u0c4b / PDF \u0c28\u0c41\u0c02\u0c1a\u0c3f \u0c15\u0c42\u0c21\u0c3e) \u0c2c\u0c4d\u0c32\u0c3e\u0c17\u0c4d\u200c\u0c32\u0c4b \u0c2a\u0c4d\u0c30\u0c1a\u0c41\u0c30\u0c3f\u0c02\u0c1a\u0c21\u0c02, \u0c06\u0c27\u0c3e\u0c30\u0c3e\u0c32\u0c41 \u0c38\u0c30\u0c3f\u0c26\u0c3f\u0c26\u0c4d\u0c26\u0c21\u0c02.</p></div>' + statusBox() +
       '<section class="sec"><div class="box">' +
 
-        '<div class="fld"><label class="lbl" for="adm-pw">\u0c2a\u0c3e\u0c38\u0c4d\u200c\u0c35\u0c30\u0c4d\u0c21\u0c4d</label><input id="adm-pw" class="inp" type="password" autocomplete="current-password" enterkeyhint="go"></div>' +
-        '<button class="wide-btn pri" data-act="svc-login"' + (U.busy ? ' disabled' : '') + '>\u0c2a\u0c4d\u0c30\u0c35\u0c47\u0c36\u0c3f\u0c02\u0c1a\u0c02\u0c21\u0c3f</button>' +
+        '<div class="fld"><label class="lbl" for="adm-pw">\u0c2a\u0c3e\u0c38\u0c4d\u200c\u0c35\u0c30\u0c4d\u0c21\u0c4d</label><input id="adm-pw" class="inp" type="password" autocomplete="current-password" enterkeyhint="go"' + (U.busy === 'login' ? ' disabled value="' + esc(U.pwHold || '') + '"' : '') + '></div>' +
+        '<button class="wide-btn pri" data-act="svc-login"' + (U.busy ? ' disabled' : '') + '>' + (U.busy === 'login' && U.pwHold ? '\u0c38\u0c30\u0c3f\u0c1a\u0c42\u0c38\u0c4d\u0c24\u0c41\u0c28\u0c4d\u0c28\u0c3e\u0c02\u2026' : '\u0c2a\u0c4d\u0c30\u0c35\u0c47\u0c36\u0c3f\u0c02\u0c1a\u0c02\u0c21\u0c3f') + '</button>' +
         '<button class="wide-btn ter" data-act="svc-reset"' + (U.busy ? ' disabled' : '') + '>' + (U.confirm === 'reset' ? '\u0c16\u0c1a\u0c4d\u0c1a\u0c3f\u0c24\u0c2e\u0c3e? \u0c15\u0c4a\u0c24\u0c4d\u0c24 \u0c2a\u0c3e\u0c38\u0c4d\u200c\u0c35\u0c30\u0c4d\u0c21\u0c4d blogofrulings@gmail.com \u0c15\u0c41 \u0c2a\u0c02\u0c2a\u0c41\u0c24\u0c3e\u0c02 \u2014 \u0c2e\u0c33\u0c4d\u0c33\u0c40 \u0c28\u0c4a\u0c15\u0c4d\u0c15\u0c02\u0c21\u0c3f' : '\u0c2a\u0c3e\u0c38\u0c4d\u200c\u0c35\u0c30\u0c4d\u0c21\u0c4d \u0c2e\u0c30\u0c4d\u0c1a\u0c3f\u0c2a\u0c4b\u0c2f\u0c3e\u0c30\u0c3e?') + '</button>' +
         '<p class="note">\u201c\u0c2a\u0c3e\u0c38\u0c4d\u200c\u0c35\u0c30\u0c4d\u0c21\u0c4d \u0c2e\u0c30\u0c4d\u0c1a\u0c3f\u0c2a\u0c4b\u0c2f\u0c3e\u0c30\u0c3e?\u201d \u0c28\u0c4a\u0c15\u0c4d\u0c15\u0c3f\u0c24\u0c47 \u0c15\u0c4a\u0c24\u0c4d\u0c24 \u0c2a\u0c3e\u0c38\u0c4d\u200c\u0c35\u0c30\u0c4d\u0c21\u0c4d blogofrulings@gmail.com \u0c15\u0c41 \u0c2e\u0c46\u0c2f\u0c3f\u0c32\u0c4d \u0c35\u0c38\u0c4d\u0c24\u0c41\u0c02\u0c26\u0c3f. \u0c2f\u0c3e\u0c2a\u0c4d \u0c2e\u0c42\u0c38\u0c3f\u0c28\u0c3e, \u0c28\u0c3f\u0c30\u0c4d\u0c35\u0c3e\u0c39\u0c23 \u0c2a\u0c47\u0c1c\u0c40 \u0c28\u0c41\u0c02\u0c1a\u0c3f \u0c2c\u0c2f\u0c1f\u0c15\u0c41 \u0c35\u0c46\u0c33\u0c4d\u0c33\u0c3f\u0c28\u0c3e \u0c2e\u0c33\u0c4d\u0c33\u0c40 \u0c2a\u0c3e\u0c38\u0c4d\u200c\u0c35\u0c30\u0c4d\u0c21\u0c4d \u0c05\u0c21\u0c41\u0c17\u0c41\u0c24\u0c41\u0c02\u0c26\u0c3f.</p>' +
 
@@ -3106,17 +3121,18 @@
   // one tap: every post onto its puzzle date on the blog, and \u00ab \u00bb to the puzzles on either side
   function relinkHTML(busy) {
     var ask = U.confirm === 'relink', R = U.relink;
-    return '<div class="box relinkbox"><b>\u0c24\u0c47\u0c26\u0c40\u0c32 \u0c35\u0c30\u0c41\u0c38, \u00ab \u00bb \u0c32\u0c3f\u0c02\u0c15\u0c41\u0c32\u0c41</b><p class="note">\u0c2a\u0c4d\u0c30\u0c24\u0c3f \u0c2a\u0c4b\u0c38\u0c4d\u0c1f\u0c4d\u200c\u0c28\u0c41 \u0c2c\u0c4d\u0c32\u0c3e\u0c17\u0c4d\u200c\u0c32\u0c4b \u0c26\u0c3e\u0c28\u0c3f \u0c2a\u0c26 \u0c35\u0c3f\u0c28\u0c4b\u0c26\u0c02 \u0c24\u0c47\u0c26\u0c40\u0c15\u0c3f (\u0c09\u0c26\u0c3e: 01.11.2026 \u0c2a\u0c4b\u0c38\u0c4d\u0c1f\u0c4d \u2192 1 \u0c28\u0c35\u0c02\u0c2c\u0c30\u0c4d) \u0c2e\u0c3e\u0c30\u0c41\u0c38\u0c4d\u0c24\u0c41\u0c02\u0c26\u0c3f; \u00ab \u00bb \u0c32\u0c41 \u0c2e\u0c41\u0c02\u0c26\u0c41, \u0c24\u0c30\u0c4d\u0c35\u0c3e\u0c24\u0c3f \u0c24\u0c47\u0c26\u0c40\u0c32 \u0c2a\u0c4b\u0c38\u0c4d\u0c1f\u0c41\u0c32\u0c15\u0c41 \u0c35\u0c46\u0c33\u0c4d\u0c24\u0c3e\u0c2f\u0c3f. \u0c2a\u0c4b\u0c38\u0c4d\u0c1f\u0c41\u0c32 \u0c32\u0c3f\u0c02\u0c15\u0c41\u0c32\u0c41 (URL) \u0c2e\u0c3e\u0c30\u0c35\u0c41. \u0c2e\u0c33\u0c4d\u0c33\u0c40 \u0c28\u0c4a\u0c15\u0c4d\u0c15\u0c3f\u0c28\u0c3e \u0c38\u0c2e\u0c38\u0c4d\u0c2f \u0c32\u0c47\u0c26\u0c41 \u2014 \u0c38\u0c30\u0c3f\u0c17\u0c3e \u0c09\u0c28\u0c4d\u0c28\u0c35\u0c3e\u0c1f\u0c3f\u0c28\u0c3f \u0c2e\u0c41\u0c1f\u0c4d\u0c1f\u0c26\u0c41.</p>' +
+    return '<div class="box relinkbox"><b>\u0c24\u0c47\u0c26\u0c40\u0c32 \u0c35\u0c30\u0c41\u0c38, \u00ab \u00bb \u0c32\u0c3f\u0c02\u0c15\u0c41\u0c32\u0c41, \u0c2a\u0c24\u0c4d\u0c30\u0c3f\u0c15 \u0c32\u0c47\u0c2c\u0c41\u0c32\u0c4d</b><p class="note">\u0c2a\u0c4d\u0c30\u0c24\u0c3f \u0c2a\u0c4b\u0c38\u0c4d\u0c1f\u0c4d\u200c\u0c28\u0c41 \u0c2c\u0c4d\u0c32\u0c3e\u0c17\u0c4d\u200c\u0c32\u0c4b \u0c26\u0c3e\u0c28\u0c3f \u0c2a\u0c26 \u0c35\u0c3f\u0c28\u0c4b\u0c26\u0c02 \u0c24\u0c47\u0c26\u0c40\u0c15\u0c3f (\u0c09\u0c26\u0c3e: 01.11.2026 \u0c2a\u0c4b\u0c38\u0c4d\u0c1f\u0c4d \u2192 1 \u0c28\u0c35\u0c02\u0c2c\u0c30\u0c4d) \u0c2e\u0c3e\u0c30\u0c41\u0c38\u0c4d\u0c24\u0c41\u0c02\u0c26\u0c3f; \u00ab \u00bb \u0c32\u0c41 \u0c05\u0c26\u0c47 \u0c2a\u0c24\u0c4d\u0c30\u0c3f\u0c15 \u0c2e\u0c41\u0c02\u0c26\u0c41, \u0c24\u0c30\u0c4d\u0c35\u0c3e\u0c24\u0c3f \u0c24\u0c47\u0c26\u0c40\u0c32 \u0c2a\u0c4b\u0c38\u0c4d\u0c1f\u0c41\u0c32\u0c15\u0c41 \u0c35\u0c46\u0c33\u0c4d\u0c24\u0c3e\u0c2f\u0c3f; \u0c2a\u0c4d\u0c30\u0c24\u0c3f \u0c2a\u0c4b\u0c38\u0c4d\u0c1f\u0c4d\u200c\u0c15\u0c41 \u0c26\u0c3e\u0c28\u0c3f \u0c2a\u0c24\u0c4d\u0c30\u0c3f\u0c15 \u0c2a\u0c47\u0c30\u0c41 \u0c32\u0c47\u0c2c\u0c41\u0c32\u0c4d\u200c\u0c17\u0c3e (\u0c08\u0c28\u0c3e\u0c21\u0c41 / \u0c38\u0c3e\u0c15\u0c4d\u0c37\u0c3f) \u0c2a\u0c46\u0c21\u0c41\u0c24\u0c41\u0c02\u0c26\u0c3f. \u0c2a\u0c4b\u0c38\u0c4d\u0c1f\u0c41\u0c32 \u0c32\u0c3f\u0c02\u0c15\u0c41\u0c32\u0c41 (URL) \u0c2e\u0c3e\u0c30\u0c35\u0c41. \u0c2e\u0c33\u0c4d\u0c33\u0c40 \u0c28\u0c4a\u0c15\u0c4d\u0c15\u0c3f\u0c28\u0c3e \u0c38\u0c2e\u0c38\u0c4d\u0c2f \u0c32\u0c47\u0c26\u0c41 \u2014 \u0c38\u0c30\u0c3f\u0c17\u0c3e \u0c09\u0c28\u0c4d\u0c28\u0c35\u0c3e\u0c1f\u0c3f\u0c28\u0c3f \u0c2e\u0c41\u0c1f\u0c4d\u0c1f\u0c26\u0c41.</p>' +
       (R && R.text ? '<p class="note"><b>' + esc(R.text) + '</b></p>' : '') +
       '<button class="wide-btn ' + (ask ? 'pri' : 'ter') + '" data-act="relink"' + (busy ? ' disabled' : '') + '>' + (ask ? '\u0c16\u0c1a\u0c4d\u0c1a\u0c3f\u0c24\u0c2e\u0c3e? \u0c2c\u0c4d\u0c32\u0c3e\u0c17\u0c4d\u200c\u0c32\u0c4b \u0c2a\u0c4b\u0c38\u0c4d\u0c1f\u0c41\u0c32\u0c41 \u0c2e\u0c3e\u0c30\u0c41\u0c24\u0c3e\u0c2f\u0c3f \u2014 \u0c2e\u0c33\u0c4d\u0c33\u0c40 \u0c28\u0c4a\u0c15\u0c4d\u0c15\u0c02\u0c21\u0c3f' : '\u0c24\u0c47\u0c26\u0c40\u0c32\u0c41, \u00ab \u00bb \u0c32\u0c3f\u0c02\u0c15\u0c41\u0c32\u0c41 \u0c38\u0c30\u0c3f\u0c1a\u0c47\u0c2f\u0c02\u0c21\u0c3f') + '</button></div>';
   }
-  function runRelink(from, acc) {
+  function runRelink(from, acc, auto) {
     acc = acc || { changed: 0, nodate: [], failed: [] };
-    U.busy = 'relink'; U.status = { kind: 'wait', text: '\u0c2c\u0c4d\u0c32\u0c3e\u0c17\u0c4d \u0c2a\u0c4b\u0c38\u0c4d\u0c1f\u0c41\u0c32 \u0c24\u0c47\u0c26\u0c40\u0c32\u0c41, \u00ab \u00bb \u0c32\u0c3f\u0c02\u0c15\u0c41\u0c32\u0c41 \u0c38\u0c30\u0c3f\u0c1a\u0c47\u0c38\u0c4d\u0c24\u0c41\u0c28\u0c4d\u0c28\u0c3e\u0c02\u2026' + (from ? ' (' + from + ' \u0c05\u0c2f\u0c4d\u0c2f\u0c3e\u0c2f\u0c3f)' : '') + ' \u0c15\u0c4a\u0c28\u0c4d\u0c28\u0c3f \u0c28\u0c3f\u0c2e\u0c3f\u0c37\u0c3e\u0c32\u0c41 \u0c2a\u0c1f\u0c4d\u0c1f\u0c35\u0c1a\u0c4d\u0c1a\u0c41; \u0c08 \u0c2a\u0c47\u0c1c\u0c40 \u0c24\u0c46\u0c30\u0c3f\u0c1a\u0c47 \u0c09\u0c02\u0c1a\u0c02\u0c21\u0c3f.' }; render();
+    U.busy = 'relink'; U.status = { kind: 'wait', text: (auto ? '\u0c2c\u0c4d\u0c32\u0c3e\u0c17\u0c4d\u200c\u0c32\u0c4b \u0c09\u0c28\u0c4d\u0c28 \u0c2a\u0c4b\u0c38\u0c4d\u0c1f\u0c41\u0c32\u0c28\u0c4d\u0c28\u0c3f\u0c1f\u0c3f\u0c15\u0c40 \u0c2a\u0c24\u0c4d\u0c30\u0c3f\u0c15 \u0c2a\u0c47\u0c30\u0c41 (\u0c08\u0c28\u0c3e\u0c21\u0c41) \u0c32\u0c47\u0c2c\u0c41\u0c32\u0c4d \u0c2a\u0c46\u0c21\u0c41\u0c24\u0c41\u0c28\u0c4d\u0c28\u0c3e\u0c02 (\u0c12\u0c15\u0c4d\u0c15\u0c38\u0c3e\u0c30\u0c47)\u2026 ' : '') + '\u0c2c\u0c4d\u0c32\u0c3e\u0c17\u0c4d \u0c2a\u0c4b\u0c38\u0c4d\u0c1f\u0c41\u0c32 \u0c24\u0c47\u0c26\u0c40\u0c32\u0c41, \u00ab \u00bb \u0c32\u0c3f\u0c02\u0c15\u0c41\u0c32\u0c41 \u0c38\u0c30\u0c3f\u0c1a\u0c47\u0c38\u0c4d\u0c24\u0c41\u0c28\u0c4d\u0c28\u0c3e\u0c02\u2026' + (from ? ' (' + from + ' \u0c05\u0c2f\u0c4d\u0c2f\u0c3e\u0c2f\u0c3f)' : '') + ' \u0c15\u0c4a\u0c28\u0c4d\u0c28\u0c3f \u0c28\u0c3f\u0c2e\u0c3f\u0c37\u0c3e\u0c32\u0c41 \u0c2a\u0c1f\u0c4d\u0c1f\u0c35\u0c1a\u0c4d\u0c1a\u0c41; \u0c08 \u0c2a\u0c47\u0c1c\u0c40 \u0c24\u0c46\u0c30\u0c3f\u0c1a\u0c47 \u0c09\u0c02\u0c1a\u0c02\u0c21\u0c3f.' }; render();
     svc('relink', { from: from || 0 }).then(function (r) {
       acc.changed += r.changed || 0; acc.nodate = acc.nodate.concat(r.nodate || []); acc.failed = acc.failed.concat(r.failed || []);
-      if (r.left > 0 && r.next > (from || 0)) { runRelink(r.next, acc); return; }
+      if (r.left > 0 && r.next > (from || 0)) { runRelink(r.next, acc, auto); return; }
       U.busy = '';
+      if (!acc.failed.length) { S.prefs.papersMarked = 9; save(); }
       var t = r.total + ' \u0c2a\u0c4b\u0c38\u0c4d\u0c1f\u0c41\u0c32\u0c41 \u0c1a\u0c42\u0c36\u0c3e\u0c02; ' + (acc.changed ? acc.changed + ' \u0c38\u0c30\u0c3f\u0c1a\u0c47\u0c36\u0c3e\u0c02.' : '\u0c05\u0c28\u0c4d\u0c28\u0c40 \u0c07\u0c2a\u0c4d\u0c2a\u0c1f\u0c3f\u0c15\u0c47 \u0c38\u0c30\u0c3f\u0c17\u0c3e \u0c09\u0c28\u0c4d\u0c28\u0c3e\u0c2f\u0c3f.');
       if (acc.nodate.length) t += ' \u0c08 \u0c2a\u0c4b\u0c38\u0c4d\u0c1f\u0c41\u0c32 \u0c24\u0c47\u0c26\u0c40\u0c28\u0c3f Blogger \u0c2e\u0c3e\u0c30\u0c4d\u0c1a\u0c28\u0c3f\u0c35\u0c4d\u0c35\u0c32\u0c47\u0c26\u0c41 (\u0c32\u0c3f\u0c02\u0c15\u0c41\u0c32\u0c41 \u0c2e\u0c3e\u0c24\u0c4d\u0c30\u0c02 \u0c38\u0c30\u0c3f\u0c1a\u0c47\u0c36\u0c3e\u0c02): ' + acc.nodate.join(', ') + ' \u2014 Blogger \u0c32\u0c4b \u0c2a\u0c4b\u0c38\u0c4d\u0c1f\u0c4d \u0c24\u0c46\u0c30\u0c3f\u0c1a\u0c3f \u201cPublished on\u201d \u0c24\u0c47\u0c26\u0c40 \u0c2e\u0c3e\u0c30\u0c4d\u0c1a\u0c02\u0c21\u0c3f.';
       if (acc.failed.length) t += ' \u0c35\u0c40\u0c1f\u0c3f\u0c28\u0c3f \u0c1a\u0c47\u0c2f\u0c32\u0c47\u0c15\u0c2a\u0c4b\u0c2f\u0c3e\u0c02: ' + acc.failed.join(', ') + ' \u2014 \u0c2e\u0c33\u0c4d\u0c33\u0c40 \u0c28\u0c4a\u0c15\u0c4d\u0c15\u0c3f \u0c1a\u0c42\u0c21\u0c02\u0c21\u0c3f.';
@@ -3161,7 +3177,7 @@
       '<header class="apphead"><div style="display:flex;align-items:center;gap:6px"><a class="ghostbtn" href="#home" aria-label="\u0c35\u0c46\u0c28\u0c15\u0c4d\u0c15\u0c3f">' + I.back + '</a><h1 class="apptitle" style="font-size:34px">\u0c28\u0c3f\u0c30\u0c4d\u0c35\u0c3e\u0c39\u0c23</h1></div><span class="iconbtn lockbtn is-admin" aria-hidden="true">' + I.unlock + '</span></header>' +
       statusBox() + (blogLine ? '<p class="note">' + esc(blogLine) + '</p>' : '') +
       '<section class="sec homesearch"><div class="search"><label for="adm-find">\u0c2a\u0c4b\u0c38\u0c4d\u0c1f\u0c41\u0c32\u0c41, \u0c21\u0c4d\u0c30\u0c3e\u0c2b\u0c4d\u0c1f\u0c4d\u200c\u0c32\u0c41 \u0c35\u0c46\u0c24\u0c15\u0c02\u0c21\u0c3f</label><div class="box">' + I.search + '<input id="adm-find" type="search" enterkeyhint="search" autocomplete="off" placeholder="\u0c24\u0c47\u0c26\u0c40 (01.11.2026, 1/11), \u0c28\u0c46\u0c32 \u0c32\u0c47\u0c26\u0c3e \u0c2a\u0c47\u0c30\u0c41" value="' + esc(U.admFind || '') + '"></div></div><div id="adm-find-res">' + admFindHTML(busy) + '</div></section>' +
-      (st.v && st.v >= 7 && st.v < 8 ? '<div class="status warn"><b>\u0c15\u0c4a\u0c24\u0c4d\u0c24 Code.gs (v8) \u0c05\u0c24\u0c3f\u0c15\u0c3f\u0c02\u0c1a\u0c02\u0c21\u0c3f.</b> \u0c38\u0c3e\u0c15\u0c4d\u0c37\u0c3f \u0c35\u0c02\u0c1f\u0c3f \u0c2e\u0c30\u0c4b \u0c2a\u0c24\u0c4d\u0c30\u0c3f\u0c15 \u0c2a\u0c4b\u0c38\u0c4d\u0c1f\u0c41\u0c32\u0c41 \u0c15\u0c42\u0c21\u0c3e \u0c09\u0c02\u0c1f\u0c47, \u0c2a\u0c4d\u0c30\u0c24\u0c3f \u0c2a\u0c4b\u0c38\u0c4d\u0c1f\u0c4d \u00ab \u00bb \u0c05\u0c26\u0c47 \u0c2a\u0c24\u0c4d\u0c30\u0c3f\u0c15 \u0c2a\u0c15\u0c4d\u0c15 \u0c24\u0c47\u0c26\u0c40\u0c32 \u0c2a\u0c4b\u0c38\u0c4d\u0c1f\u0c41\u0c32\u0c15\u0c41 \u0c35\u0c46\u0c33\u0c4d\u0c24\u0c3e\u0c2f\u0c3f. \u0c05\u0c24\u0c3f\u0c15\u0c3f\u0c02\u0c1a\u0c3e\u0c15 \u201c\u0c32\u0c3f\u0c02\u0c15\u0c41\u0c32\u0c41 \u0c38\u0c30\u0c3f\u0c1a\u0c47\u0c2f\u0c02\u0c21\u0c3f\u201d \u0c12\u0c15\u0c38\u0c3e\u0c30\u0c3f \u0c28\u0c4a\u0c15\u0c4d\u0c15\u0c02\u0c21\u0c3f. \u0c0e\u0c32\u0c3e: README \u0c32\u0c4b \u201cCode.gs v8\u201d.</div>' : '') +
+      (st.v && st.v >= 7 && st.v < 9 ? '<div class="status warn"><b>\u0c15\u0c4a\u0c24\u0c4d\u0c24 Code.gs (v9) \u0c05\u0c24\u0c3f\u0c15\u0c3f\u0c02\u0c1a\u0c02\u0c21\u0c3f.</b> \u0c2a\u0c4d\u0c30\u0c24\u0c3f \u0c2a\u0c4b\u0c38\u0c4d\u0c1f\u0c4d\u200c\u0c15\u0c41 \u0c26\u0c3e\u0c28\u0c3f \u0c2a\u0c24\u0c4d\u0c30\u0c3f\u0c15 \u0c32\u0c47\u0c2c\u0c41\u0c32\u0c4d (\u0c08\u0c28\u0c3e\u0c21\u0c41 / \u0c38\u0c3e\u0c15\u0c4d\u0c37\u0c3f) \u0c2a\u0c46\u0c21\u0c41\u0c24\u0c41\u0c02\u0c26\u0c3f; \u0c12\u0c15\u0c47 \u0c24\u0c47\u0c26\u0c40 \u0c08\u0c28\u0c3e\u0c21\u0c41, \u0c38\u0c3e\u0c15\u0c4d\u0c37\u0c3f \u0c2a\u0c4b\u0c38\u0c4d\u0c1f\u0c41\u0c32\u0c41 \u0c12\u0c15\u0c26\u0c3e\u0c28\u0c3f\u0c2a\u0c48 \u0c12\u0c15\u0c1f\u0c3f \u0c2a\u0c21\u0c35\u0c41; \u00ab \u00bb \u0c05\u0c26\u0c47 \u0c2a\u0c24\u0c4d\u0c30\u0c3f\u0c15 \u0c2a\u0c15\u0c4d\u0c15 \u0c24\u0c47\u0c26\u0c40\u0c32 \u0c2a\u0c4b\u0c38\u0c4d\u0c1f\u0c41\u0c32\u0c15\u0c41 \u0c35\u0c46\u0c33\u0c4d\u0c24\u0c3e\u0c2f\u0c3f. \u0c05\u0c24\u0c3f\u0c15\u0c3f\u0c02\u0c1a\u0c3e\u0c15 \u201c\u0c32\u0c3f\u0c02\u0c15\u0c41\u0c32\u0c41 \u0c38\u0c30\u0c3f\u0c1a\u0c47\u0c2f\u0c02\u0c21\u0c3f\u201d \u0c12\u0c15\u0c38\u0c3e\u0c30\u0c3f \u0c28\u0c4a\u0c15\u0c4d\u0c15\u0c02\u0c21\u0c3f \u2014 \u0c09\u0c28\u0c4d\u0c28 \u0c2a\u0c4b\u0c38\u0c4d\u0c1f\u0c41\u0c32\u0c28\u0c4d\u0c28\u0c3f\u0c1f\u0c3f\u0c15\u0c40 \u201c\u0c08\u0c28\u0c3e\u0c21\u0c41\u201d \u0c32\u0c47\u0c2c\u0c41\u0c32\u0c4d \u0c35\u0c38\u0c4d\u0c24\u0c41\u0c02\u0c26\u0c3f. \u0c0e\u0c32\u0c3e: README \u0c32\u0c4b \u201cCode.gs v9\u201d.</div>' : '') +
       (st.v && st.v < 7 ? '<div class="status warn"><b>\u0c15\u0c4a\u0c24\u0c4d\u0c24 Code.gs (v8) \u0c05\u0c24\u0c3f\u0c15\u0c3f\u0c02\u0c1a\u0c02\u0c21\u0c3f.</b> \u0c05\u0c2a\u0c4d\u0c2a\u0c41\u0c21\u0c41: \u0c2a\u0c4b\u0c38\u0c4d\u0c1f\u0c41\u0c32\u0c41 \u0c2a\u0c26 \u0c35\u0c3f\u0c28\u0c4b\u0c26\u0c02 \u0c24\u0c47\u0c26\u0c40\u0c24\u0c4b \u0c2c\u0c4d\u0c32\u0c3e\u0c17\u0c4d\u200c\u0c32\u0c4b \u0c35\u0c30\u0c41\u0c38\u0c17\u0c3e \u0c35\u0c38\u0c4d\u0c24\u0c3e\u0c2f\u0c3f, \u00ab \u00bb \u0c2a\u0c15\u0c4d\u0c15 \u0c24\u0c47\u0c26\u0c40\u0c32 \u0c2a\u0c4b\u0c38\u0c4d\u0c1f\u0c41\u0c32\u0c15\u0c41 \u0c35\u0c46\u0c33\u0c4d\u0c24\u0c3e\u0c2f\u0c3f, \u0c38\u0c30\u0c3f\u0c26\u0c3f\u0c26\u0c4d\u0c26\u0c3f\u0c28\u0c2a\u0c4d\u0c2a\u0c41\u0c21\u0c41 \u201c\u0c2c\u0c4d\u0c2f\u0c3e\u0c15\u0c2a\u0c4d \u00b7\u201d \u0c21\u0c4d\u0c30\u0c3e\u0c2b\u0c4d\u0c1f\u0c4d\u200c\u0c32\u0c41 \u0c30\u0c3e\u0c35\u0c41. \u0c0e\u0c32\u0c3e: README \u0c32\u0c4b \u201cCode.gs v8\u201d.</div>' : '') +
       '<section class="sec"><h2 class="sec-h">\u0c15\u0c4a\u0c24\u0c4d\u0c24 \u0c2a\u0c26 \u0c35\u0c3f\u0c28\u0c4b\u0c26\u0c02</h2><div class="box">' +
         '<p class="bignote">\u0c2a\u0c47\u0c2a\u0c30\u0c4d\u200c\u0c32\u0c4b\u0c28\u0c3f \u0c2a\u0c26 \u0c35\u0c3f\u0c28\u0c4b\u0c26\u0c02 \u0c2b\u0c4b\u0c1f\u0c4b \u0c32\u0c47\u0c26\u0c3e PDF \u0c07\u0c35\u0c4d\u0c35\u0c02\u0c21\u0c3f. \u0c21\u0c4d\u0c30\u0c3e\u0c2b\u0c4d\u0c1f\u0c4d \u0c24\u0c2f\u0c3e\u0c30\u0c48, \u0c2e\u0c40\u0c30\u0c41 \u0c38\u0c30\u0c3f\u0c1a\u0c42\u0c38\u0c3f \u0c2a\u0c4d\u0c30\u0c1a\u0c41\u0c30\u0c3f\u0c02\u0c1a\u0c17\u0c3e\u0c28\u0c47 \u0c05\u0c26\u0c3f \u0c2c\u0c4d\u0c32\u0c3e\u0c17\u0c4d\u200c\u0c32\u0c4b \u0c15\u0c4a\u0c24\u0c4d\u0c24 \u0c2a\u0c4b\u0c38\u0c4d\u0c1f\u0c4d \u0c05\u0c35\u0c41\u0c24\u0c41\u0c02\u0c26\u0c3f \u2014 \u0c2f\u0c3e\u0c2a\u0c4d\u200c\u0c32\u0c4b\u0c28\u0c42 \u0c15\u0c28\u0c3f\u0c2a\u0c3f\u0c38\u0c4d\u0c24\u0c41\u0c02\u0c26\u0c3f.</p>' +
@@ -3714,11 +3730,11 @@
         var pwv = (document.getElementById('adm-pw') || {}).value || '';
         if (!svcUrl()) { toast('\u0c2e\u0c41\u0c02\u0c26\u0c41 \u0c05\u0c21\u0c4d\u0c2e\u0c3f\u0c28\u0c4d \u0c38\u0c30\u0c4d\u0c35\u0c40\u0c38\u0c4d \u0c32\u0c3f\u0c02\u0c15\u0c4d \u0c07\u0c35\u0c4d\u0c35\u0c02\u0c21\u0c3f.'); break; }
         if (!pwv) { toast('\u0c2a\u0c3e\u0c38\u0c4d\u200c\u0c35\u0c30\u0c4d\u0c21\u0c4d \u0c07\u0c35\u0c4d\u0c35\u0c02\u0c21\u0c3f.'); break; }
-        U.busy = 'login'; U.status = { kind: 'wait', text: '\u0c38\u0c30\u0c3f\u0c1a\u0c42\u0c38\u0c4d\u0c24\u0c41\u0c28\u0c4d\u0c28\u0c3e\u0c02\u2026' }; render();
+        U.busy = 'login'; U.pwHold = pwv; U.status = { kind: 'wait', text: '\u0c38\u0c30\u0c3f\u0c1a\u0c42\u0c38\u0c4d\u0c24\u0c41\u0c28\u0c4d\u0c28\u0c3e\u0c02\u2026' }; render();
         svc('login', { password: pwv }).then(function (j) {
-          sesSet(j.token); ADMIN = true; U.busy = ''; U.svcStatus = null;
+          sesSet(j.token); ADMIN = true; U.busy = ''; U.pwHold = ''; U.svcStatus = null;
           U.status = { kind: 'ok', text: '\u0c28\u0c3f\u0c30\u0c4d\u0c35\u0c3e\u0c39\u0c15\u0c41\u0c21\u0c3f\u0c17\u0c3e \u0c2a\u0c4d\u0c30\u0c35\u0c47\u0c36\u0c3f\u0c02\u0c1a\u0c3e\u0c30\u0c41.' + (j.firstPassword ? ' \u0c2e\u0c4a\u0c26\u0c1f\u0c3f \u0c2a\u0c3e\u0c38\u0c4d\u200c\u0c35\u0c30\u0c4d\u0c21\u0c4d (uvs-2026) \u0c35\u0c3e\u0c21\u0c41\u0c24\u0c41\u0c28\u0c4d\u0c28\u0c3e\u0c30\u0c41 \u2014 \u0c15\u0c3f\u0c02\u0c26\u0c3f \u0c38\u0c46\u0c1f\u0c4d\u0c1f\u0c3f\u0c02\u0c17\u0c4d\u200c\u0c32\u0c32\u0c4b \u0c2e\u0c40 \u0c38\u0c4a\u0c02\u0c24 \u0c2a\u0c3e\u0c38\u0c4d\u200c\u0c35\u0c30\u0c4d\u0c21\u0c4d \u0c2a\u0c46\u0c1f\u0c4d\u0c1f\u0c41\u0c15\u0c4b\u0c02\u0c21\u0c3f.' : '') }; render();
-        }, function (e) { U.busy = ''; U.status = { kind: 'err', text: svcErr(e) }; render(); });
+        }, function (e) { U.busy = ''; U.pwHold = ''; U.status = { kind: 'err', text: svcErr(e) }; render(); });
         break;
       case 'svc-reset':
         var sur = document.getElementById('svc-url'), surv = sur ? sur.value.trim() : '';
