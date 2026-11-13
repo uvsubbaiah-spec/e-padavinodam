@@ -2744,8 +2744,11 @@ a.smallbtn{text-decoration:none;display:inline-flex;align-items:center;justify-c
         var y0 = Math.round(rr[0]), y1 = Math.round(rr[rr.length - 1]), gy = (y1 - y0) / (rr.length - 1), vc = new Uint32Array(W);
         for (y = y0; y <= y1; y++) { var o2 = y * W; for (x = 0; x < W; x++) vc[x] += n2[o2 + x]; }
         evenRuns(lineCenters(vc, 0.3, Math.round(0.25 * (y1 - y0))), 6, gy).forEach(function (cc) {
-          var n = Math.min(rr.length, cc.length) - 1, score = n * 1000 + (rr.length - 1) * (cc.length - 1);
-          if (!best || score > best.score) best = { score: score, R: rr.length - 1, C: cc.length - 1, x0: cc[0], x1: cc[cc.length - 1], y0: y0, y1: y1, mh: m, mv: n2 };
+          var R_cnt = rr.length - 1, C_cnt = cc.length - 1;
+          var ch = (rr[rr.length - 1] - rr[0]) / R_cnt;
+          var cw = (cc[cc.length - 1] - cc[0]) / C_cnt;
+          var n = Math.min(rr.length, cc.length) - 1, score = n * 1000 + R_cnt * C_cnt;
+          if (!best || score > best.score) best = { score: score, R: R_cnt, C: C_cnt, x0: cc[0] - cw / 2, x1: cc[cc.length - 1] + cw / 2, y0: rr[0] - ch / 2, y1: rr[rr.length - 1] + ch / 2, mh: m, mv: n2 };
         });
       });
       return best;
@@ -3108,44 +3111,33 @@ a.smallbtn{text-decoration:none;display:inline-flex;align-items:center;justify-c
     };
   }
   function boxDel(b, rad) { return { x: b.x + b.w - rad * 2.2, y: b.y + rad * 1.4 }; }
- 
-
-
-
-// Fix the grid bounding box snapping and coordinate scaling for precise cell alignment
   function drawScanOverlay() {
     var ov = document.getElementById('scan-ov'); if (!ov) return;
     var sw = SC.W / 400, s = '';
     if (SC.quad && SC.page === SC.gridPage) {
       var R = SC.R, C = SC.C;
-      // Draw grid outline and inner lines accurately aligned with cell boundaries
-      var tl = SC.quad.tl, tr = SC.quad.tr, bl = SC.quad.bl, br = SC.quad.br;
-      s += '<polygon points="' + tl.x + ',' + tl.y + ' ' + tr.x + ',' + tr.y + ' ' + br.x + ',' + br.y + ' ' + bl.x + ',' + bl.y + '" fill="rgba(220,38,38,0.08)" stroke="#DC2626" stroke-width="' + (2.5 * sw) + '"/>';
-      
-      // Draw inner cells to verify exact grid alignment
-      for (var r = 1; r < R; r++) {
-        var p1 = { x: tl.x + (bl.x - tl.x) * (r / R), y: tl.y + (bl.y - tl.y) * (r / R) };
-        var p2 = { x: tr.x + (br.x - tr.x) * (r / R), y: tr.y + (br.y - tr.y) * (r / R) };
-        s += '<line x1="' + p1.x + '" y1="' + p1.y + '" x2="' + p2.x + '" y2="' + p2.y + '" stroke="#DC2626" stroke-width="' + (1 * sw) + '" stroke-dasharray="3,3"/>';
+      for (var r = 0; r < R; r++) for (var c = 0; c < C; c++) if (scanBlack(r, c)) {
+        var a = qpt(c / C, r / R), b = qpt((c + 1) / C, r / R), d = qpt((c + 1) / C, (r + 1) / R), e = qpt(c / C, (r + 1) / R);
+        s += '<polygon points="' + [a, b, d, e].map(function (p) { return p.x.toFixed(1) + ',' + p.y.toFixed(1); }).join(' ') + '" fill="rgba(220,30,30,.35)"/>';
       }
-      for (var c = 1; c < C; c++) {
-        var p3 = { x: tl.x + (tr.x - tl.x) * (c / C), y: tl.y + (tr.y - tl.y) * (c / C) };
-        var p4 = { x: bl.x + (br.x - bl.x) * (c / C), y: bl.y + (br.y - br.y) * (c / C) }; // fixed vertical column interpolation
-        s += '<line x1="' + p3.x + '" y1="' + p3.y + '" x2="' + p4.x + '" y2="' + p4.y + '" stroke="#DC2626" stroke-width="' + (1 * sw) + '" stroke-dasharray="3,3"/>';
-      }
-      // Corner handles
-      ['tl', 'tr', 'bl', 'br'].forEach(function (k) {
-        var pt = SC.quad[k];
-        s += '<circle cx="' + pt.x + '" cy="' + pt.y + '" r="' + (14 * sw) + '" fill="#DC2626" fill-opacity="0.8" stroke="#fff" stroke-width="' + (2 * sw) + '"/>';
-      });
+      for (var i = 0; i <= R; i++) { var p0 = qpt(0, i / R), p1 = qpt(1, i / R); s += '<line x1="' + p0.x + '" y1="' + p0.y + '" x2="' + p1.x + '" y2="' + p1.y + '" stroke="#E00000" stroke-width="' + (i % R ? sw : sw * 2) + '"/>'; }
+      for (var j = 0; j <= C; j++) { var q0 = qpt(j / C, 0), q1 = qpt(j / C, 1); s += '<line x1="' + q0.x + '" y1="' + q0.y + '" x2="' + q1.x + '" y2="' + q1.y + '" stroke="#E00000" stroke-width="' + (j % C ? sw : sw * 2) + '"/>'; }
+      ['tl', 'tr', 'bl', 'br'].forEach(function (k) { var q = SC.quad[k]; s += '<circle cx="' + q.x + '" cy="' + q.y + '" r="' + sw * 9 + '" fill="rgba(224,0,0,.25)" stroke="#E00000" stroke-width="' + sw * 2 + '"/>'; });
     }
+    SC.boxes.forEach(function (b) {
+      if (b.page !== SC.page) return;
+      var col = b.d === 'A' ? '#1565C0' : b.d === 'D' ? '#2E7D32' : '#6B5849', lab = b.d === 'A' ? 'అడ్డం' : b.d === 'D' ? 'నిలువు' : 'ఆధారాలు (ఆటో)';
+      s += '<rect x="' + b.x + '" y="' + b.y + '" width="' + b.w + '" height="' + b.h + '" fill="' + (SC.mode === 'A' || SC.mode === 'D' ? 'rgba(255,255,255,.06)' : 'none') + '" stroke="' + col + '" stroke-width="' + sw * 2.5 + '"' + (b.d ? '' : ' stroke-dasharray="' + sw * 8 + ' ' + sw * 6 + '"') + '/>' +
+        '<text x="' + (b.x + sw * 4) + '" y="' + (b.y + sw * 22) + '" fill="' + col + '" font-size="' + sw * 18 + '" font-weight="700">' + lab + '</text>';
+      if (SC.mode === 'A' || SC.mode === 'D') {
+        [[b.x, b.y], [b.x + b.w, b.y], [b.x, b.y + b.h], [b.x + b.w, b.y + b.h]].forEach(function (q) { s += '<circle cx="' + q[0] + '" cy="' + q[1] + '" r="' + sw * 8 + '" fill="' + col + '" fill-opacity=".25" stroke="' + col + '" stroke-width="' + sw * 2 + '"/>'; });
+        var dl = boxDel(b, 34 / ((ov.getBoundingClientRect().width || SC.W) / SC.W));
+        s += '<circle cx="' + dl.x + '" cy="' + dl.y + '" r="' + sw * 9 + '" fill="#fff" stroke="#C00000" stroke-width="' + sw * 2 + '"/><text x="' + dl.x + '" y="' + (dl.y + sw * 6) + '" text-anchor="middle" fill="#C00000" font-size="' + sw * 18 + '" font-weight="700">×</text>';
+      }
+    });
     ov.innerHTML = s;
   }
-  
-
-
-
-// reviewed clue lines ("12. text (3)") as the admin sees them in the text boxes
+  // reviewed clue lines ("12. text (3)") as the admin sees them in the text boxes
   function parseClueText(text, dir) {
     var out = [], cur = null, d = dir;
     String(text || '').replace(/[‌‍]/g, '').replace(/\)\s+(?=\d{1,2}\s*[.)])/g, ')\n').split(/\n/).forEach(function (line) {
