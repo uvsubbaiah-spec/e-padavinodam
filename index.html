@@ -2744,11 +2744,9 @@ a.smallbtn{text-decoration:none;display:inline-flex;align-items:center;justify-c
         var y0 = Math.round(rr[0]), y1 = Math.round(rr[rr.length - 1]), gy = (y1 - y0) / (rr.length - 1), vc = new Uint32Array(W);
         for (y = y0; y <= y1; y++) { var o2 = y * W; for (x = 0; x < W; x++) vc[x] += n2[o2 + x]; }
         evenRuns(lineCenters(vc, 0.3, Math.round(0.25 * (y1 - y0))), 6, gy).forEach(function (cc) {
-          var R_cnt = rr.length - 1, C_cnt = cc.length - 1;
-          var ch = (rr[rr.length - 1] - rr[0]) / R_cnt;
-          var cw = (cc[cc.length - 1] - cc[0]) / C_cnt;
+                    var R_cnt = rr.length - 1, C_cnt = cc.length - 1;
           var n = Math.min(rr.length, cc.length) - 1, score = n * 1000 + R_cnt * C_cnt;
-          if (!best || score > best.score) best = { score: score, R: R_cnt, C: C_cnt, x0: cc[0] - cw / 2, x1: cc[cc.length - 1] + cw / 2, y0: rr[0] - ch / 2, y1: rr[rr.length - 1] + ch / 2, mh: m, mv: n2 };
+          if (!best || score > best.score) best = { score: score, R: R_cnt, C: C_cnt, x0: cc[0] - 2, x1: cc[cc.length - 1] + 2, y0: rr[0] - 2, y1: rr[rr.length - 1] + 2, mh: m, mv: n2 };if (!best || score > best.score) best = { score: score, R: R_cnt, C: C_cnt, x0: cc[0] - cw / 2, x1: cc[cc.length - 1] + cw / 2, y0: rr[0] - ch / 2, y1: rr[rr.length - 1] + ch / 2, mh: m, mv: n2 };
         });
       });
       return best;
