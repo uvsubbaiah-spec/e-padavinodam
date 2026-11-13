@@ -94,6 +94,17 @@ On the admin page:
 - A new post copies the layout of the latest blog post (scripts, సులభం/కష్టం switch, hint bulb, congratulation picture, record button, black-square picture), gets the next number for its element names, the address `…/YYYY/MM/DDMMYYYY.html`, and « » links by puzzle date (see above). Before sending, the app reads the made post back and refuses to publish if the squares or clues do not come out the same.
 - **మార్చు** on a blog post rewrites that post's squares and clues in place. **దాచు** turns a post back into a draft.
 
+## Other papers: Sakshi and any other (new in 0.27)
+
+- **Paper name:** the upload form, the reading screen and the draft have a **పత్రిక** choice beside the date — ఈనాడు, సాక్షి, ఆంధ్రజ్యోతి, నమస్తే తెలంగాణ, వార్త, ఆంధ్రభూమి, ఆంధ్రప్రభ or ఇతర. The title follows it (“సాక్షి పదవినోదం”, still editable); the app remembers the last choice. Each paper's puzzles are kept apart: Eenadu's addresses and ids stay as they were (`01112026.html`, `e20261101`), another paper's carry its name (`sakshi-01112026.html`, `s20261101`), so Eenadu and Sakshi of the same Sunday sit side by side. Search finds “sakshi”, “సాక్షి”, “sakshi 01.11”.
+- **Any paper's grid:** besides Eenadu's pink-lined grid, the reader now looks for any table of thin straight lines (grey, black, blue — on white, peach or a photo's dull paper), measures its rows and columns from the lines themselves (a page divider beside the grid or a frame round it is left out; a faint last line is added), and tells a crossword (some squares shaded or black) from a sudoku or a word search (none). Several grids on one page come back separately: on a puzzle page the biggest empty crossword is taken, on an answers page the filled one with the draft's size. A small answers box (Sakshi's “పదవినోదం - 904 జవాబు”) is looked for on a sharper page when nothing suitable is found at first.
+- **Shaded blocked squares** (Sakshi's grey with a white flower) are told by a patch near each square's bottom-right corner (the number is top-left, the letter in the middle).
+- **Clue numbers inside answer squares** printed in dark ink (Sakshi) are taken out before the letter is read — as many digits as the square's number has, even where they touch the square's lines. On Sakshi's answers box this took the letters read right from 57 to 72 of 75.
+- **Clue boxes one above the other with no gap** (Sakshi's అడ్డం box right above its నిలువు box) are cut on the box border.
+- Tested: Sakshi 01.11.2026 (పదవినోదం-904): grid 10×10 with every blocked square right, clues అడ్డం 23/23 and నిలువు 24/24 with every number and length right (wording still to be checked, as always); its answers from the 08.11.2026 page: the 10×10 box found, every blocked square matching the draft, 72 of 75 letters right. Eenadu 27.09, 01.11 and 08.11 read as before (08.11 answers: 94 of 99).
+- **Code.gs v8:** with more than one paper on the blog, « » of each post go to the same paper's posts on either side. Paste the new `Code.gs`, deploy a new version (as in the setup below), then press **తేదీలు, « » లింకులు సరిచేయండి** once.
+- **Theme:** the blog's titles and descriptions now speak of పదవినోదం in general (ఈనాడు, సాక్షి) — upload the new theme file the same way as before (Theme → Restore).
+
 ## Admin service (one-time setup, about 10 minutes, free, no card)
 
 A small Google Apps Script does the parts a website cannot do by itself: checking the password, sending the reset email, posting to Blogger and calling Gemini. Do all of this **signed in to the Google account that manages the blog**.
