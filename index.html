@@ -2776,7 +2776,7 @@ a.smallbtn{text-decoration:none;display:inline-flex;align-items:center;justify-c
         var p = pt((c + 0.3 + 0.4 * j / 6) / C, (r + 0.3 + 0.4 * i / 6) / R), xx = p.x | 0, yy = p.y | 0;
         if (xx < 0 || yy < 0 || xx >= W || yy >= H) continue;
         var o = (yy * W + xx) * 4, R0 = d[o], G0 = d[o + 1], B0 = d[o + 2], mx = Math.max(R0, G0, B0), mn = Math.min(R0, G0, B0), lum = (R0 * 299 + G0 * 587 + B0 * 114) / 1000;
-        n++; if (mx - mn > 40) col++; else if (lum < 110) dark++;
+        n++; if (mx - mn > 40) col++; else if (lum < 160 || (Math.abs(R0 - G0) < 15 && Math.abs(G0 - B0) < 15 && lum < 200)) dark++;
       }
       out.push({ col: n ? col / n : 0, dark: n ? dark / n : 0 });
     }
@@ -3115,8 +3115,9 @@ a.smallbtn{text-decoration:none;display:inline-flex;align-items:center;justify-c
     if (SC.quad && SC.page === SC.gridPage) {
       var R = SC.R, C = SC.C;
       for (var r = 0; r < R; r++) for (var c = 0; c < C; c++) if (scanBlack(r, c)) {
-        var a = qpt(c / C, r / R), b = qpt((c + 1) / C, r / R), d = qpt((c + 1) / C, (r + 1) / R), e = qpt(c / C, (r + 1) / R);
-        s += '<polygon points="' + [a, b, d, e].map(function (p) { return p.x.toFixed(1) + ',' + p.y.toFixed(1); }).join(' ') + '" fill="rgba(220,30,30,.35)"/>';
+        var u0 = (c - 0.03) / C, u1 = (c + 1.03) / C, v0 = (r - 0.03) / R, v1 = (r + 1.03) / R;
+        var a = qpt(u0, v0), b = qpt(u1, v0), d = qpt(u1, v1), e = qpt(u0, v1);
+        s += '<polygon points="' + [a, b, d, e].map(function (p) { return p.x.toFixed(1) + ',' + p.y.toFixed(1); }).join(' ') + '" fill="rgba(220,30,30,.45)"/>';
       }
       for (var i = 0; i <= R; i++) { var p0 = qpt(0, i / R), p1 = qpt(1, i / R); s += '<line x1="' + p0.x + '" y1="' + p0.y + '" x2="' + p1.x + '" y2="' + p1.y + '" stroke="#E00000" stroke-width="' + (i % R ? sw : sw * 2) + '"/>'; }
       for (var j = 0; j <= C; j++) { var q0 = qpt(j / C, 0), q1 = qpt(j / C, 1); s += '<line x1="' + q0.x + '" y1="' + q0.y + '" x2="' + q1.x + '" y2="' + q1.y + '" stroke="#E00000" stroke-width="' + (j % C ? sw : sw * 2) + '"/>'; }
