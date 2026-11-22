@@ -49,13 +49,17 @@ A puzzle opens zoomed so that about 7 columns fill a phone's width (a 12×12 boa
 
 **Finding a post:** the home page has a search box (పోస్ట్ వెతకండి): type a date in any common form (01.11.2026, 1/11, 1-11-26, 01112026), a month (నవంబర్ or nov), a year (2025) or part of the title, and tap the post in the list that appears. The archive search understands the same forms.
 
-## New in 0.28
+## New in 0.28 and 0.29
 
 - **Header and modes stay while playing:** the top bar (title, date, how many squares are filled, zoom − / +, the record button, ✓) and the సులభం / కష్టం / ఆటో row with the timer stay on screen while typing, on the blog and in the app alike, only a little smaller. The row wraps instead of cutting off its words on narrow phones.
 - **Zoom:** see *Typing answers* (about 7 columns on a phone).
 - **Home list:** in ఆడిన క్రమం the newest puzzle of every other paper that you have not opened yet comes first (a new సాక్షి puzzle is no longer hidden behind played ఈనాడు ones), then the ones played most recently.
 - **Status:** a puzzle finished with ఆటో shows **ఆటోతో పూర్తి** (it used to stay “మధ్యలో”), and a board with every square filled but some letters wrong shows **N తప్పులు** on the home page and on the puzzle's top bar (✓ marks them).
-- **The paper beside the editor (admin):** the photo / PDF a draft was read from (the puzzle's page, the answers page and grid) is shown above the editor on a phone — it stays in view while you scroll, zooms with − / +, and **దాచు** folds it to one line — and beside the editor on a computer. It is kept on that phone with the draft, so it is there again when the draft is reopened. **+ ఫైల్** adds any photo or PDF just to look at (for example when correcting a published post).
+- **Correcting old posts:** posts written in an older layout (for example 01.08.2021: the grid box `<div class='div1' …>` with other quotes or attributes, or squares without a number in their class) used to stop with “బ్లాగ్ పోస్ట్ రూపం అర్థం కాలేదు”. The app now reads those layouts, and a post it still cannot read is rebuilt on the latest post's layout (the old version is kept in Drive as `e-padavinodam-old-<post id>.html`, and its « » links are set again).
+- **Clue boxes (admin):** the list of Telugu letters opens only while you type English letters (it used to open on every tap and cover the clues below). For the forms of a Telugu letter already typed (ల ళ లా …), put the cursor after it and press **Ctrl+Space**.
+- **Double tap on a square** in only one word keeps that word's clue on the clue bar (no “ఆధారం లేదు” message). A square no clue reaches shows the clue of the word it sits in.
+- **Pictures from Google Drive:** the blog's congratulation and hint pictures are linked as `lh3.google.com/u/0/d/…`, an address that opens only for someone signed in to the blog owner's Google account — so the Android app, and every visitor, saw nothing. The app now asks for the same file at `lh3.googleusercontent.com/d/…` (and falls back to the old address), and new or corrected posts are written with it. For that to work the file must be shared **Anyone with the link · Viewer** in Google Drive.
+- **The paper beside the editor (admin):** the photo / PDF a draft was read from (the puzzle's page, the answers page and grid) is shown above the editor on a phone — it stays in view while you scroll, zooms with − / +, and **దాచు** folds it to one line — and beside the editor on a computer. It is kept on that phone with the draft, and — with Code.gs v10 — in your Google Drive when the post is published or corrected, so **మార్చు** on a published post shows its paper on any phone. **+ ఫైల్** adds any photo or PDF (for a post already on the blog it goes to Drive at once): do this once for older posts, which were published before their pictures were kept.
 
 ## Look
 
@@ -140,6 +144,8 @@ If you later change `Code.gs`, use **Deploy → Manage deployments → Edit → 
 Skipping step 3 makes every admin call fail until it is done.
 
 **Version 7 of the script (posts on their puzzle dates, « » by date, no backup drafts)**: no new permission. In the script replace `Code.gs` with the new one (keep `appsscript.json`), then **Deploy → Manage deployments → ✏️ → Version: New version → Deploy**. The admin page shows a yellow note until the new version is live. Then press **తేదీలు, « » లింకులు సరిచేయండి** once.
+
+**Version 10 of the script (0.28: the paper each post was made from, kept in Drive; older post layouts)**: no new permission (it uses the Drive permission of version 6). In the script replace `Code.gs` with the new one (keep `appsscript.json`), then **Deploy → Manage deployments → ✏️ → Version: New version → Deploy**. The pictures go to a Drive folder **e-padavinodam మూల ఫైళ్ళు**, shared with nobody.
 
 If the admin page shows an error, open the script → **Executions** (left bar): every call is listed with its error message.
 

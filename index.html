@@ -1295,14 +1295,25 @@ select.inp{font-family:var(--font-ui,inherit);font-size:16px;appearance:auto}
   function cur() {
     var m = CUR.m, P = CUR.P, k = key(P.r, P.c);
     var id = (P.dir === 'A' ? m.cellA[k] : m.cellD[k]) || m.cellA[k] || m.cellD[k];
-    return id ? m.entries[id] : { id: 'X', d: P.dir, n: '', cells: [[P.r, P.c]], text: '' };
+    return id ? m.entries[id] : { id: 'X', d: P.dir, n: '', cells: [[P.r, P.c]], text: '', near: nearEntry(P.r, P.c) };
+  }
+  // a square no clue reaches (the post's clue is shorter than the row, or missing): the clue of the word it sits in
+  function nearEntry(r, c) {
+    var m = CUR.m, x;
+    for (x = c - 1; m.isW(r, x); x--) if (m.cellA[key(r, x)]) return m.entries[m.cellA[key(r, x)]];
+    for (x = r - 1; m.isW(x, c); x--) if (m.cellD[key(x, c)]) return m.entries[m.cellD[key(x, c)]];
+    for (x = c + 1; m.isW(r, x); x++) if (m.cellA[key(r, x)]) return m.entries[m.cellA[key(r, x)]];
+    for (x = r + 1; m.isW(x, c); x++) if (m.cellD[key(x, c)]) return m.entries[m.cellD[key(x, c)]];
+    return null;
   }
   function idxIn(e) { var P = CUR.P; for (var i = 0; i < e.cells.length; i++) if (e.cells[i][0] === P.r && e.cells[i][1] === P.c) return i; return 0; }
   function filledCount() { var m = CUR.m, L = CUR.P.letters, n = 0; for (var k in L) { var a = k.split(','); if (L[k] && m.isW(+a[0], +a[1])) n++; } return n; }
   function wrongKeys() { var m = CUR.m, L = CUR.P.letters, out = []; if (!m.hasAns) return out; for (var k in L) if (L[k] && m.sol(k) && L[k] !== m.sol(k)) out.push(k); return out; }
   function pickCell(r, c) {
     var m = CUR.m, P = CUR.P, k = key(r, c);
-    if (P.r === r && P.c === c) { var o = P.dir === 'A' ? 'D' : 'A'; if (o === 'A' ? m.cellA[k] : m.cellD[k]) { P.dir = o; U.tab = o; } else toast('ఈ గడికి ' + dirName(o) + ' ఆధారం లేదు.'); }
+    // a second tap (or a double tap) on the selected square turns to its other word; a square in one word only keeps that word's
+    // clue (no message)
+    if (P.r === r && P.c === c) { var o = P.dir === 'A' ? 'D' : 'A'; if (o === 'A' ? m.cellA[k] : m.cellD[k]) { P.dir = o; U.tab = o; } else if (m.cellA[k] || m.cellD[k]) { P.dir = m.cellA[k] ? 'A' : 'D'; U.tab = P.dir; } }
     else { var d = P.dir; if (d === 'A' && !m.cellA[k] && m.cellD[k]) d = 'D'; else if (d === 'D' && !m.cellD[k] && m.cellA[k]) d = 'A'; P.r = r; P.c = c; P.dir = d; U.tab = d; }
     save();
   }
@@ -1717,6 +1728,20 @@ select.inp{font-family:var(--font-ui,inherit);font-size:16px;appearance:auto}
   // one picture for all the black squares of a post, as on the blog; weekly posts step through the 13 scenes in turn
   var SCENE_COUNT = 13;
   function postPic(p) { var u = p.blk || p.blkImg || BLOG_BLK[pkey(p)] || ''; if (/^http:\/\//i.test(u)) u = 'https://' + u.slice(7); return /^https:\/\/[^"'()\s]+$/.test(u) ? u : ''; }
+  // Pictures kept in Google Drive are often linked as https://lh3.google.com/u/0/d/<id>=s2048 (copied from the owner's browser):
+  // that address opens only for someone signed in to that Google account, so the Android app (and every visitor) gets nothing.
+  // The same file at https://lh3.googleusercontent.com/d/<id> opens for anyone once the file is shared "Anyone with the link".
+  function pubImg(u) {
+    u = String(u || '').trim().replace(/&amp;/g, '&');
+    if (/^\/\//.test(u)) u = 'https:' + u; else if (/^http:\/\//i.test(u)) u = 'https://' + u.slice(7);
+    var m = /^https:\/\/lh\d\.google\.com\/u\/\d+\/d\/([\w-]{20,})(=[\w-]+)?/i.exec(u);
+    if (m) return 'https://lh3.googleusercontent.com/d/' + m[1] + (m[2] || '');
+    m = /^https:\/\/drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?(?:export=\w+&)?id=|thumbnail\?id=)([\w-]{20,})/i.exec(u);
+    if (m) return 'https://lh3.googleusercontent.com/d/' + m[1];
+    return u;
+  }
+  // a picture as a CSS background: the public address first, the one written in the post underneath (if the first cannot load)
+  function cssPics(u) { var a = pubImg(u); return 'url(&quot;' + esc(a) + '&quot;)' + (a !== u ? ',url(&quot;' + esc(u) + '&quot;)' : ''); }
   function sceneFor(p) {
     var d = /^(\d{2})\.(\d{2})\.(\d{4})$/.exec(p.date || '');
     if (d) return Math.floor(Date.UTC(+d[3], +d[2] - 1, +d[1]) / 864e5 / 7) % SCENE_COUNT;
@@ -1734,7 +1759,7 @@ select.inp{font-family:var(--font-ui,inherit);font-size:16px;appearance:auto}
       cells += '<button class="cell' + (word[k] ? ' is-word' : '') + st + (r === P.r && c === P.c && !pre ? ' is-cur' : '') + '" data-act="cell" data-r="' + r + '" data-c="' + c + '" aria-label="' + esc((num ? num + ' · ' : '') + 'అడ్డు వరుస ' + (r + 1) + ', నిలువు వరుస ' + (c + 1) + (L ? ' · ' + L : ' · ఖాళీ')) + '">' + (num ? '<span class="num">' + num + '</span>' : '') + '<span class="ltr">' + esc(L) + '</span></button>';
     }
     var z = zoomLevel(), base = m.C > 8 ? 'min(calc(100vw - 32px),520px)' : 'min(calc(100vw - 32px),460px,max(250px,calc(100dvh - 520px)))';
-    return '<div class="gridwrap"><div class="grid" style="' + (pimg ? '--pimg:url(&quot;' + esc(pimg) + '&quot;);' : '') + '--n:' + m.C + ';--gw:calc(' + base + ' * ' + z + ')' + (z > 1 ? ';max-width:none' : '') + '" role="group" aria-label="పద వినోదం గడి">' + cells + '</div></div>' +
+    return '<div class="gridwrap"><div class="grid" style="' + (pimg ? '--pimg:' + cssPics(pimg) + ';' : '') + '--n:' + m.C + ';--gw:calc(' + base + ' * ' + z + ')' + (z > 1 ? ';max-width:none' : '') + '" role="group" aria-label="పద వినోదం గడి">' + cells + '</div></div>' +
       (p.url && IN_BLOG ? '<a class="note" href="' + esc(p.url.split('#')[0].split('?')[0]) + '?classic=1" style="text-align:center">ఈ పోస్ట్‌ను బ్లాగ్ పాత రూపంలో చూడండి</a>'
         : p.url && !EMBED ? '<a class="note" href="' + esc(p.url) + '" target="_blank" rel="noopener" style="text-align:center">ఈ పోస్ట్‌ను బ్లాగ్‌లో తెరవండి</a>' : '');
   }
@@ -1743,7 +1768,7 @@ select.inp{font-family:var(--font-ui,inherit);font-size:16px;appearance:auto}
     var m = CUR.m, k = key(CUR.P.r, CUR.P.c), both = !!(m.cellA[k] && m.cellD[k]);
     return '<div class="cluebar"><button class="ghostbtn" data-act="prev" data-keepfocus aria-label="మునుపటి ఆధారం">' + I.prev + '</button>' +
       '<button class="tagbtn" data-act="flip" data-keepfocus aria-label="' + (both ? 'అడ్డం / నిలువు మార్చండి' : dirName(e.d) + ' మాత్రమే') + '"><span class="tag">' + (e.n ? e.n + ' ' + dirName(e.d) : dirName(e.d)) + '</span>' + (both ? '<span class="swp">⇅ ' + dirName(e.d === 'A' ? 'D' : 'A') + '</span>' : '') + '</button>' +
-      '<button class="mid" data-act="panel" aria-label="ఆధారాల జాబితా"><span class="txt">' + (e.text ? esc(e.text) + ' (' + e.cells.length + ')' : 'ఈ గడికి ఆధారం లేదు') + '</span></button>' +
+      '<button class="mid" data-act="panel" aria-label="ఆధారాల జాబితా"><span class="txt">' + (e.text ? esc(e.text) + ' (' + e.cells.length + ')' : e.near && e.near.text ? esc(e.near.n + ' ' + dirName(e.near.d) + ': ' + e.near.text) + ' (' + e.near.cells.length + ')' : 'ఆధారాల జాబితా చూడండి') + '</span></button>' +
       (canFix(e) ? '<button class="ghostbtn" data-act="fix-open" aria-label="ఈ ఆధారం సరిదిద్దండి">' + I.pen + '</button>' : '') + hintBtnHTML() +
       '<button class="ghostbtn" data-act="next" data-keepfocus aria-label="తదుపరి ఆధారం">' + I.next + '</button></div>';
   }
@@ -2095,7 +2120,7 @@ select.inp{font-family:var(--font-ui,inherit);font-size:16px;appearance:auto}
       '<section class="sec"><h2 class="sec-h">Android యాప్‌లో రాబోయేవి</h2><div class="box"><ul class="soon"><li>కొత్త పద వినోదం వస్తే నోటిఫికేషన్</li><li>English భాషలో యాప్</li></ul>' + (IS_CLAUDE ? '' : '<p class="note">ఆఫ్‌లైన్: ఒకసారి తెరిచిన తర్వాత ఇంటర్నెట్ లేకున్నా యాప్, చివరిసారి లోడ్ అయిన పోస్టులు తెరుచుకుంటాయి.</p>') + '</div></section>' +
       '<section class="sec"><h2 class="sec-h">ఆట పురోగతి</h2><div class="box"><p class="note">మీ అమరికలు, ఆట పురోగతి ఈ పరికరంలోనే సేవ్ అవుతాయి.</p><button class="wide-btn ter" data-act="resetall">' + (U.confirm === 'resetall' ? 'ఖచ్చితమా? అన్ని ఆటల పురోగతి పోతుంది — మళ్ళీ నొక్కండి' : 'అన్ని ఆటల పురోగతి తుడిచివేయండి') + '</button></div></section>' +
       (!IS_CLAUDE ? '<section class="sec"><h2 class="sec-h">నిర్వాహణ</h2><div class="box"><p class="note">' + (ADMIN ? 'ఈ పరికరంలో నిర్వాహకుడిగా ప్రవేశించారు: కొత్త పద వినోదం (ఫోటో / PDF నుంచి కూడా), మార్పులు, ప్రచురణ.' : 'బ్లాగ్ నిర్వాహకుడి కోసం మాత్రమే: కొత్త పద వినోదం చేర్చడం, ఆధారాలు సరిదిద్దడం.') + '</p><a class="wide-btn ' + (ADMIN ? 'pri' : 'ter') + '" href="#admin">' + I.lock + (ADMIN ? ' నిర్వాహణ పేజీ తెరవండి' : ' నిర్వాహకుడి ప్రవేశం') + '</a></div></section>' : '') +
-      '<footer style="display:flex;flex-direction:column;align-items:center;gap:2px;text-align:center">' + (IN_BLOG ? '<a href="/?classic=1" style="font-weight:600;padding:10px 0">బ్లాగ్‌ను పాత రూపంలో చూడండి</a><a href="' + APPBASE + '" target="_blank" rel="noopener" style="padding:4px 0 10px">వెబ్‌సైట్ / ఆండ్రాయిడ్ యాప్</a>' : '<a href="' + BLOG + '" target="_blank" rel="noopener" style="font-weight:600;padding:10px 0">బ్లాగ్ తెరవండి · telugupadavinodam.blogspot.com</a>') + '<span style="font-family:var(--font-display);font-size:22px;color:var(--title)">ఈ-పద వినోదం</span><span class="note">వెర్షన్ 0.28' + (IS_CLAUDE ? ' · స్టూడియో' : IN_BLOG ? ' · బ్లాగ్' : '') + '</span></footer></div>';
+      '<footer style="display:flex;flex-direction:column;align-items:center;gap:2px;text-align:center">' + (IN_BLOG ? '<a href="/?classic=1" style="font-weight:600;padding:10px 0">బ్లాగ్‌ను పాత రూపంలో చూడండి</a><a href="' + APPBASE + '" target="_blank" rel="noopener" style="padding:4px 0 10px">వెబ్‌సైట్ / ఆండ్రాయిడ్ యాప్</a>' : '<a href="' + BLOG + '" target="_blank" rel="noopener" style="font-weight:600;padding:10px 0">బ్లాగ్ తెరవండి · telugupadavinodam.blogspot.com</a>') + '<span style="font-family:var(--font-display);font-size:22px;color:var(--title)">ఈ-పద వినోదం</span><span class="note">వెర్షన్ 0.29' + (IS_CLAUDE ? ' · స్టూడియో' : IN_BLOG ? ' · బ్లాగ్' : '') + '</span></footer></div>';
   }
 
   /* ================= admin: who may manage ================= */
@@ -2241,7 +2266,7 @@ select.inp{font-family:var(--font-ui,inherit);font-size:16px;appearance:auto}
     var src = IS_CLAUDE ? '' : finImage(p), P = CUR.P;
     return '<div class="finpop" role="dialog" aria-modal="true" aria-label="అభినందనలు">' +
       '<button class="finx" data-act="fin-close" aria-label="మూసివేయి — గడి చూడండి">' + I.close + '</button>' +
-      '<button class="finpic" data-act="fin-go" aria-label="అభినందనలు — సమయం, సూచనలు చూడండి">' + (src ? '<img src="' + esc(src) + '" alt="అభినందనలు">' : '<span class="finart">' + congrats(P.variant || 0) + '</span>') + '</button>' +
+      '<button class="finpic" data-act="fin-go" aria-label="అభినందనలు — సమయం, సూచనలు చూడండి">' + (src ? '<img src="' + esc(pubImg(src)) + '" data-orig="' + esc(src) + '" alt="అభినందనలు">' : '<span class="finart">' + congrats(P.variant || 0) + '</span>') + '</button>' +
       '<p class="finnote">' + esc(p.title) + (p.date ? ' · ' + esc(p.date) : '') + ' పూర్తి! బొమ్మను నొక్కితే మీ సమయం, సూచనలు చూడవచ్చు.</p></div>';
   }
   function postsFromFeed(j) {
@@ -2361,7 +2386,14 @@ select.inp{font-family:var(--font-ui,inherit);font-size:16px;appearance:auto}
   // A blog post in the blog's own layout: the latest post is the pattern (its scripts, toggle, hint bulb,
   // congratulation picture, record button); only the squares, clues, numbers and links change.
   function escAttr(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
-  function postSuffix(html) { var m = (html || '').match(/class="input(\d+)"/); return m ? m[1] : ''; }
+  function postSuffix(html) { var m = (html || '').match(/class\s*=\s*["']?input(\d+)\b/); return m ? m[1] : ''; }
+  // the grid's box in a post: <div class="div1"> in any spelling (other attributes, quotes, spaces), up to its own </div>
+  function gridBox(html) {
+    var m = /<div\b[^>]*\bclass\s*=\s*["']?[^"'>]*\bdiv1\b[^>]*>/i.exec(html || ''); if (!m) return null;
+    var re = /<\/?div\b[^>]*>/gi, depth = 1, x; re.lastIndex = m.index + m[0].length;
+    while ((x = re.exec(html))) { if (x[0].charAt(1) === '/') { if (--depth === 0) return { g0: m.index, g1: x.index, end: x.index + x[0].length }; } else depth++; }
+    return null;
+  }
   function shortDate(d) { var m = /^(\d{2})\.(\d{2})\.\d{2}(\d{2})$/.exec(d || ''); return m ? m[1] + m[2] + m[3] : ''; }
   function slugDate(d) { var m = /^(\d{2})\.(\d{2})\.(\d{4})$/.exec(d || ''); return m ? m[1] + m[2] + m[3] : ''; }
   function blogGridHTML(p, suf, idp, img) {
@@ -2389,16 +2421,17 @@ select.inp{font-family:var(--font-ui,inherit);font-size:16px;appearance:auto}
     return out.join('\n');
   }
   function blogPostHTML(tpl, p, o) {
-    var old = postSuffix(tpl), g0 = tpl.indexOf('<div class="div1">'), g1 = g0 < 0 ? -1 : tpl.indexOf('</div>', g0);
-    if (!old || g1 < 0) throw { code: 'template' };
-    var suf = o.suffix || old, grid = tpl.slice(g0, g1);
-    var img = o.img || p.blkImg || (grid.match(/<input type="image"[^>]*?src="([^"]+)"[^>]*class="btn-disabled2"/) || grid.match(/class="btn-disabled2"[^>]*?src="([^"]+)"/) || [])[1] || '';
+    var old = postSuffix(tpl), gb = gridBox(tpl);
+    if (!old || !gb) throw { code: 'template' };
+    var suf = o.suffix || old, grid = tpl.slice(gb.g0, gb.g1);
+    var img = o.img || p.blkImg || blkSrc(grid) || blkSrc(tpl) || '';
     var idp = shortDate(p.date) || (grid.match(/id\s*=\s*"(\d{6})-\d+"/) || [])[1] || 'epv';
-    var html = tpl.slice(0, g0) + '<div class="div1">\n' + blogGridHTML(p, suf, idp, img) + '\n\n</div>' + tpl.slice(g1 + 6);
+    var html = tpl.slice(0, gb.g0) + '<div class="div1">\n' + blogGridHTML(p, suf, idp, img) + '\n\n</div>' + tpl.slice(gb.end);
     if (suf !== old) html = html.replace(new RegExp('\\b(input|hint|theme|recording-toggle|congrats|finish)' + old + '\\b', 'g'), '$1' + suf);
     if (o.prevUrl) html = html.replace(/(<a href=")[^"]*("[^>]*class="btn-prev")/, '$1' + o.prevUrl + '$2');
     if (p.finImg) html = html.replace(/(id\s*=\s*"finish\d*"[^>]*?\ssrc\s*=\s*")[^"]*(")/, '$1' + escAttr(p.finImg) + '$2').replace(/(<(?:input|img)[^>]*\ssrc\s*=\s*")[^"]*("[^>]*id\s*=\s*"finish\d*")/, '$1' + escAttr(p.finImg) + '$2');
     if (o.newPost) html = html.replace(/(window\.prompt\("File Name",\s*")\d{6}(")/, '$1' + idp + '$2');
+    html = html.replace(/https?:\/\/lh\d\.google\.com\/u\/\d+\/d\/([\w-]{20,})/g, 'https://lh3.googleusercontent.com/d/$1');   // see pubImg
     return html;
   }
   // read the made post back with the app's own blog reader: the squares, answers and clues must come out the same
@@ -2422,7 +2455,7 @@ select.inp{font-family:var(--font-ui,inherit);font-size:16px;appearance:auto}
     if (pp.id !== 'other' && paperIn(t) !== pp.id) t = pp.title;
     return t + ' - ' + pz.date;
   }
-  function keepPublished(d, url) { if (!d) return; d.published = Date.now(); d.pubUrl = url || ''; keepDraft(d, true); }
+  function keepPublished(d, url) { if (!d) return; d.published = Date.now(); d.pubUrl = url || ''; keepDraft(d, true); if (d.uid) srcToDrive(d.uid, srcKeyOf(d), true); }
   function blogPublish(pz, draft) {
     U.busy = 'publish'; U.status = { kind: 'wait', text: 'ఈ తేదీ పోస్ట్ బ్లాగ్‌లో ఇప్పటికే ఉందో చూస్తున్నాం…' }; render();
     var title = postTitle(pz);
@@ -2463,8 +2496,10 @@ select.inp{font-family:var(--font-ui,inherit);font-size:16px;appearance:auto}
     if (!pz.postId) { toast('ఇది బ్లాగ్ పోస్ట్ కాదు. డ్రాఫ్ట్‌గా తెరిచి బ్లాగ్‌లో కొత్తగా ప్రచురించండి.'); return; }
     U.busy = 'publish'; U.status = { kind: 'wait', text: 'బ్లాగ్ పోస్ట్ తెచ్చుకుంటున్నాం…' }; render();
     svc('get', { postId: pz.postId }).then(function (t) {
-      if (/class="div1"/.test(t.content || '')) return blogPostHTML(t.content, pz, {});
-      // the post has lost its body: build it again on the latest post's layout
+      if (gridBox(t.content || '')) { try { return blogPostHTML(t.content, pz, {}); } catch (e) { if (!e || e.code !== 'template') throw e; } }
+      // the post has lost its body, or is an old post whose layout this app cannot read: build it again on the latest post's
+      // layout (the script keeps the old version in Drive as e-padavinodam-old-<id>.html and puts its « » links right)
+      U.status = { kind: 'wait', text: 'ఈ పాత పోస్ట్ రూపం వేరు — తాజా పోస్ట్ రూపంలో మళ్ళీ కడుతున్నాం…' }; render();
       return svc('template').then(function (tp) { return blogPostHTML(tp.content, pz, { suffix: String((+postSuffix(tp.content) || 0) + 1), prevUrl: tp.id !== pz.postId ? tp.url : '', newPost: true }); });
     }).then(function (html) {
       if (!sameAsBlog(html, pz)) throw { code: 'self_check' };
@@ -3905,7 +3940,7 @@ select.inp{font-family:var(--font-ui,inherit);font-size:16px;appearance:auto}
     var mine = SRCV, p = srcTx('readonly', function (st) { return st.get(uid); }).catch(function () { return null; }).then(function (rec) {
       if (SRCV !== mine) return SRCV;   // something newer took the viewer meanwhile
       srcReset(uid);
-      ((rec && rec.items) || []).forEach(function (it) { if (it && it.blob) SRCV.items.push({ k: it.k, label: it.label, blob: it.blob, url: URL.createObjectURL(it.blob) }); });
+      ((rec && rec.items) || []).forEach(function (it) { if (it && it.blob) SRCV.items.push({ k: it.k, label: it.label, blob: it.blob, url: URL.createObjectURL(it.blob), sent: it.sent || '' }); });
       return SRCV;
     });
     SRCV.loading = { uid: uid, p: p };
@@ -3913,7 +3948,10 @@ select.inp{font-family:var(--font-ui,inherit);font-size:16px;appearance:auto}
   }
   function srcSave() {
     if (!SRCV.uid || SRCV.uid === SRC_NEW) return;
-    var uid = SRCV.uid, rec = { t: Date.now(), items: SRCV.items.map(function (it) { return { k: it.k, label: it.label, blob: it.blob }; }) };
+    srcWrite(SRCV.uid, SRCV.items);
+  }
+  function srcWrite(uid, items) {
+    var rec = { t: Date.now(), items: items.map(function (it) { return { k: it.k, label: it.label, blob: it.blob, sent: it.sent || '' }; }) };
     srcTx('readwrite', function (st) { return rec.items.length ? st.put(rec, uid) : st.delete(uid); }).catch(function () {});
   }
   function srcPut(kind, blobs, labels) {
@@ -3931,7 +3969,59 @@ select.inp{font-family:var(--font-ui,inherit);font-size:16px;appearance:auto}
     blobs = (blobs || []).filter(Boolean); if (!blobs.length || !D) return;
     if (!D.uid) saveDraft();
     var uid = D.uid;
-    srcLoad(uid).then(function () { if (SRCV.uid !== uid) return; srcPut(kind, blobs, labels); srcSave(); if (route() === 'edit') render(); });
+    var pkey0 = D.postId ? srcKeyOf(D) : '';
+    srcLoad(uid).then(function () { if (SRCV.uid !== uid) return; srcPut(kind, blobs, labels); srcSave(); if (route() === 'edit') render(); if (pkey0) srcToDrive(uid, pkey0, false); });
+  }
+  // A post's pictures are also kept in the admin's own Google Drive (private; Code.gs v10), by paper and date (e20261101), so they
+  // show again when the post is corrected later, on any phone: sent when the post is published or corrected (and at once when a
+  // picture is added to a post already on the blog); fetched when a post is opened for correcting and this phone has none.
+  function srcKeyOf(d) { var k = dateKey(d && d.date); return d && k !== '00000000' ? paperOf(d.paper).pre + k : ''; }
+  function driveOk() { return !IS_CLAUDE && ADMIN && !!svcUrl(); }
+  function b64Blob(d, mime) { var bin = atob(d || ''), a = new Uint8Array(bin.length); for (var i = 0; i < bin.length; i++) a[i] = bin.charCodeAt(i); return new Blob([a], { type: mime || 'image/jpeg' }); }
+  // a phone photo can be several MB: Drive gets it at most 2400 px on its long side
+  function driveBlob(b) {
+    if (b.size < 1500000 && /jpeg|png|webp/.test(b.type)) return Promise.resolve(b);
+    return blobToImage(b).then(function (im) {
+      var s = Math.min(1, 2400 / Math.max(im.naturalWidth, im.naturalHeight)), cv = document.createElement('canvas');
+      cv.width = Math.round(im.naturalWidth * s); cv.height = Math.round(im.naturalHeight * s); cv.getContext('2d').drawImage(im, 0, 0, cv.width, cv.height);
+      return new Promise(function (res) { cv.toBlob(function (x) { res(x || b); }, 'image/jpeg', 0.85); });
+    });
+  }
+  function oldScript(e) { return !!(e && e.code === 'bad_request' && /తెలియని పని/.test(e.error || '')); }
+  var SRC_DRIVE = {};   // uid → 'wait' | 'none' | 'old' | 'err' | 'done'
+  function srcFromDrive(uid, key) {
+    if (!driveOk() || !key || SRC_DRIVE[uid]) return;
+    SRC_DRIVE[uid] = 'wait';
+    svc('srcget', { key: key }).then(function (j) {
+      var list = (j.items || []).filter(function (x) { return /^[a-z]\d{1,2}$/.test(x.k || ''); }), got = [], chain = Promise.resolve();
+      if (!list.length) { SRC_DRIVE[uid] = 'none'; return; }
+      list.forEach(function (x) { chain = chain.then(function () { return svc('srcfile', { key: key, k: x.k }); }).then(function (f) { got.push({ k: f.k, label: f.label || x.label || '', blob: b64Blob(f.data, f.mime) }); }); });
+      return chain.then(function () { return srcLoad(uid); }).then(function () {
+        if (SRCV.uid !== uid) return;
+        got.forEach(function (g) { if (!SRCV.items.some(function (it) { return it.k === g.k; })) SRCV.items.push({ k: g.k, label: g.label, blob: g.blob, url: URL.createObjectURL(g.blob), sent: key }); });
+        var ord = 'pagx'; SRCV.items.sort(function (a, b) { return (ord.indexOf(a.k.charAt(0)) - ord.indexOf(b.k.charAt(0))) || (+a.k.slice(1) - +b.k.slice(1)); });
+        srcSave(); SRC_DRIVE[uid] = 'done';
+      });
+    }).catch(function (e) { SRC_DRIVE[uid] = oldScript(e) ? 'old' : 'err'; SRC_DRIVE[uid + ':e'] = svcErr(e); })
+      .then(function () { if (route() === 'edit' && D && D.uid === uid) render(); });
+  }
+  function srcToDrive(uid, key, quiet) {
+    if (!driveOk() || !uid || !key) return;
+    srcLoad(uid).then(function () {
+      if (SRCV.uid !== uid || !SRCV.items.length) return;
+      var items = SRCV.items.slice(), todo = items.filter(function (it) { return it.sent !== key; }), chain = Promise.resolve();
+      if (!todo.length) return;
+      todo.forEach(function (it) {
+        chain = chain.then(function () { return driveBlob(it.blob); }).then(function (b) { return blobToB64(b).then(function (d) { return svc('srcput', { key: key, k: it.k, label: it.label, mime: /png|webp/.test(b.type) ? b.type : 'image/jpeg', data: d }); }); }).then(function () { it.sent = key; });
+      });
+      return chain.then(function () {
+        var kinds = ''; items.forEach(function (it) { if (kinds.indexOf(it.k.charAt(0)) < 0) kinds += it.k.charAt(0); });
+        return svc('srcprune', { key: key, keep: items.map(function (it) { return it.k; }), kinds: kinds });
+      }).then(function () {
+        srcWrite(uid, items); SRC_DRIVE[uid] = 'done';
+        if (!quiet) toast('మూల ఫైల్ మీ Google Drive లో కూడా ఉంచాం — పోస్ట్ సరిదిద్దేటప్పుడు ఏ ఫోన్‌లోనైనా కనిపిస్తుంది.');
+      });
+    }).catch(function (e) { toast('మూల ఫైల్ Google Drive కి వెళ్ళలేదు: ' + (oldScript(e) ? 'అడ్మిన్ స్క్రిప్ట్ పాతది — కొత్త Code.gs (v10) అతికించి Deploy చేయండి.' : svcErr(e))); });
   }
   // any photo or PDF, just to look at while editing (e.g. a published post being corrected): PDF pages are drawn as pictures
   function srcAddFiles(files) {
@@ -3955,10 +4045,22 @@ select.inp{font-family:var(--font-ui,inherit);font-size:16px;appearance:auto}
   }
   function srcViewHTML() {
     if (!D) return '';
-    if (D.uid && SRCV.uid !== D.uid && !(SRCV.loading && SRCV.loading.uid === D.uid)) srcLoad(D.uid).then(function () { if (route() === 'edit' && D && SRCV.uid === D.uid && SRCV.items.length) render(); });
+    if (D.uid && SRCV.uid !== D.uid && !(SRCV.loading && SRCV.loading.uid === D.uid)) srcLoad(D.uid).then(function () {
+      if (route() !== 'edit' || !D || SRCV.uid !== D.uid) return;
+      if (SRCV.items.length) render(); else if (srcKeyOf(D) && driveOk() && !SRC_DRIVE[D.uid]) { srcFromDrive(D.uid, srcKeyOf(D)); render(); }
+    });
     var add = '<label class="smallbtn srcadd" for="src-add" style="cursor:pointer" aria-label="మూల ఫైల్ జోడించండి" title="మూల ఫైల్ జోడించండి">+ ఫైల్</label><input id="src-add" type="file" accept="image/jpeg,image/png,image/webp,application/pdf" multiple style="position:absolute;width:1px;height:1px;opacity:0">';
     var its = SRCV.uid === D.uid ? SRCV.items : [];
-    if (!its.length) return '<div class="srcv is-empty"><span class="lbl">మూల ఫైల్ (పేపర్ ఫోటో / PDF) పక్కనే చూస్తూ సరిదిద్దాలంటే:</span>' + add + '</div>';
+    if (!its.length) {
+      var dk = srcKeyOf(D), ds = SRC_DRIVE[D.uid];
+      if (SRCV.uid === D.uid && dk && !ds && driveOk()) { srcFromDrive(D.uid, dk); ds = 'wait'; }
+      var msg = ds === 'wait' ? 'మూల ఫైల్ మీ Google Drive నుంచి తెస్తున్నాం…'
+        : ds === 'none' ? 'ఈ పోస్ట్ మూల ఫైల్ (పేపర్ ఫోటో / PDF) Drive లో లేదు. ఇక్కడ ఇస్తే పక్కనే చూపి, Drive లోనూ ఉంచుతాం' + (D.postId ? '' : ' (ప్రచురించినప్పుడు)') + ':'
+        : ds === 'old' ? 'Drive లో మూల ఫైళ్ళు ఉంచాలంటే అడ్మిన్ స్క్రిప్ట్ కొత్తది (Code.gs v10) కావాలి. అప్పటిదాకా ఈ ఫోన్‌లో మాత్రమే:'
+        : ds === 'err' ? 'Drive నుంచి మూల ఫైల్ తేలేకపోయాం (' + esc(SRC_DRIVE[D.uid + ':e'] || '') + '). ఫైల్ ఇక్కడ ఇవ్వవచ్చు:'
+        : 'మూల ఫైల్ (పేపర్ ఫోటో / PDF) పక్కనే చూస్తూ సరిదిద్దాలంటే:';
+      return '<div class="srcv is-empty"><span class="lbl">' + msg + '</span>' + (ds === 'wait' ? '' : add) + '</div>';
+    }
     var sel = Math.min(SRCV.sel, its.length - 1), it = its[sel], hide = !!S.prefs.srcHide, z = SRCZ[SRCV.z] || 100;
     var tabs = its.length > 1 ? '<div class="seg small srctabs" role="group" aria-label="మూల చిత్రాలు">' + its.map(function (x, i) { return '<button data-act="src-sel" data-v="' + i + '" aria-pressed="' + (i === sel) + '">' + esc(x.label) + '</button>'; }).join('') + '</div>' : '<span class="srcname">' + esc(it.label) + '</span>';
     return '<section class="srcv' + (hide ? ' is-hidden' : '') + '" aria-label="మూల ఫైల్">' +
@@ -4345,10 +4447,10 @@ select.inp{font-family:var(--font-ui,inherit);font-size:16px;appearance:auto}
     var rows = [['blk', 'నలుపు గడుల బొమ్మ', 'పోస్ట్‌లోని ప్రతి నలుపు గడిలో కనిపిస్తుంది.'], ['fin', 'అభినందనల బొమ్మ', 'పూర్తి చేసినప్పుడు వచ్చేది.']];
     return '<section class="sec"><h2 class="sec-h">బొమ్మలు (GIF)</h2><div class="box pics">' + rows.map(function (rw) {
       var k = rw[0], chosen = k === 'blk' ? D.blkImg : D.finImg, cur = chosen || (k === 'blk' ? D.curBlk : D.curFin) || '', open = U.picOpen === k, gal = open ? picGallery(k) : [];
-      return '<div class="picrow"><div class="pichead"><span class="picnow">' + (cur ? '<img src="' + esc(cur) + '" alt="">' : '<i>తాజా పోస్ట్‌లోది</i>') + '</span><div class="t"><b>' + rw[1] + '</b><small>' + rw[2] + ' ' + (chosen ? 'మీరు ఎంచుకున్నది.' : D.postId ? 'ఈ పోస్ట్‌లో ఇప్పుడున్నది.' : 'ఎంచుకోకపోతే తాజా బ్లాగ్ పోస్ట్‌లోదే.') + '</small></div></div>' +
+      return '<div class="picrow"><div class="pichead"><span class="picnow">' + (cur ? '<img src="' + esc(pubImg(cur)) + '" alt="">' : '<i>తాజా పోస్ట్‌లోది</i>') + '</span><div class="t"><b>' + rw[1] + '</b><small>' + rw[2] + ' ' + (chosen ? 'మీరు ఎంచుకున్నది.' : D.postId ? 'ఈ పోస్ట్‌లో ఇప్పుడున్నది.' : 'ఎంచుకోకపోతే తాజా బ్లాగ్ పోస్ట్‌లోదే.') + '</small></div></div>' +
         '<div class="btnrow"><button class="smallbtn" data-act="pic-open" data-v="' + k + '" aria-expanded="' + open + '">' + (open ? 'మూసివేయి' : 'మార్చండి') + '</button>' + (chosen ? '<button class="smallbtn" data-act="pic-reset" data-v="' + k + '">మొదటిదే ఉంచండి</button>' : '') + '</div>' +
         (open ? '<div class="picpick">' +
-          (gal.length ? '<p class="lbl">బ్లాగ్‌లో వాడిన బొమ్మలు — ఒకటి నొక్కండి</p><div class="picgal">' + gal.map(function (u) { return '<button class="picbtn" data-act="pic-use" data-k="' + k + '" data-u="' + esc(u) + '" aria-pressed="' + (u === cur) + '"><img src="' + esc(u) + '" alt="" loading="lazy"></button>'; }).join('') + '</div>' : '') +
+          (gal.length ? '<p class="lbl">బ్లాగ్‌లో వాడిన బొమ్మలు — ఒకటి నొక్కండి</p><div class="picgal">' + gal.map(function (u) { return '<button class="picbtn" data-act="pic-use" data-k="' + k + '" data-u="' + esc(u) + '" aria-pressed="' + (u === cur) + '"><img src="' + esc(pubImg(u)) + '" alt="" loading="lazy"></button>'; }).join('') + '</div>' : '') +
           (IS_CLAUDE ? '' : '<label class="wide-btn ter" for="pic-file-' + k + '" style="cursor:pointer">ఫోన్ / కంప్యూటర్ నుంచి GIF ఎంచుకోండి</label><input id="pic-file-' + k + '" data-pick="' + k + '" type="file" accept="image/gif,image/png,image/jpeg,image/webp" style="position:absolute;width:1px;height:1px;opacity:0">' +
             '<p class="note">ఎంచుకున్న బొమ్మ మీ Google Drive లో “e-padavinodam-…” పేరుతో ఉంటుంది (లింక్ ఉన్నవారు చూడగలిగేలా); పోస్ట్ దాన్ని అక్కడి నుంచి చూపిస్తుంది.</p>') +
           '<div class="fld"><label class="lbl" for="pic-url-' + k + '">లేదా బొమ్మ లింక్ (https://…gif)</label><div class="btnrow"><input id="pic-url-' + k + '" class="inp" type="url" inputmode="url" placeholder="https://…"><button class="smallbtn" data-act="pic-link" data-v="' + k + '">వాడండి</button></div></div>' +
@@ -4422,9 +4524,12 @@ select.inp{font-family:var(--font-ui,inherit);font-size:16px;appearance:auto}
   // word being typed, or every form of the Telugu letter just before the cursor (also the reader's look-alike mix-ups); a tap swaps it in
   var TE = null;
   function teHide() { var b = document.getElementById('teopts'); if (b) b.remove(); TE = null; }
-  function teStrip(el) {
+  // latinOnly (typing): the list shows only while an English word is being typed — a tap in a clue box or a Telugu letter typed does
+  // not open it (it covered the clues below); the forms of the Telugu letter before the cursor come on request (Ctrl+Space)
+  function teStrip(el, latinOnly) {
     if (!el || !teField(el) || el.selectionStart == null || el.selectionStart !== el.selectionEnd) { teHide(); return; }
     var pos = el.selectionStart, before = el.value.slice(0, pos), m = before.match(/[A-Za-z]+$/), opts = [], start = pos, word = false, seen = {};
+    if (latinOnly && !(m && S.prefs.teType !== false)) { teHide(); return; }
     function add(x) { if (x && !seen[x]) { seen[x] = 1; opts.push(x); } }
     if (m && S.prefs.teType !== false) { word = true; start = pos - m[0].length; TL.convert(m[0]).forEach(function (a) { add(a.join('')); }); predict(opts[0]).forEach(add); letterOpts(m[0]).forEach(function (x) { if (opts.length < 14) add(x); }); }
     else {
@@ -4660,12 +4765,15 @@ select.inp{font-family:var(--font-ui,inherit);font-size:16px;appearance:auto}
     else html = homeView();
     view.innerHTML = html;
     var fimg = view.querySelector('.finpic img');
-    if (fimg) fimg.onerror = function () { fimg.parentNode.innerHTML = '<span class="finart">' + congrats((CUR && CUR.P.variant) || 0) + '</span>'; };
+    if (fimg) fimg.onerror = function () {
+      var o = fimg.getAttribute('data-orig'); if (o && fimg.getAttribute('src') !== o) { fimg.setAttribute('src', o); return; }
+      fimg.parentNode.innerHTML = '<span class="finart">' + congrats((CUR && CUR.P.variant) || 0) + '</span>';
+    };
     var fixed = r.indexOf('play-') === 0 && !!CUR;
     view.classList.toggle('is-fixed', fixed);
     view.querySelectorAll('[data-scroll]').forEach(function (el) { var v = keep[el.getAttribute('data-scroll')], vx = keep[el.getAttribute('data-scroll') + ':x']; if (v) el.scrollTop = v; if (vx) el.scrollLeft = vx; });
     if (fsel) { var ne = view.querySelector(fsel); if (ne && ne !== document.activeElement) { try { ne.focus({ preventScroll: true }); if (fpos && fpos[0] != null) ne.setSelectionRange(fpos[0], fpos[1]); } catch (e) {} } }
-    if (TE && !document.body.contains(TE.el)) { var nf = document.activeElement; if (nf && teField(nf)) teStrip(nf); else teHide(); }
+    if (TE && !document.body.contains(TE.el)) { var nf = document.activeElement; if (nf && teField(nf)) teStrip(nf, true); else teHide(); }
     var apw = view.querySelector('#adm-pw');   // the admin sign-in: the cursor waits in the password box
     if (apw && !U.busy && document.activeElement !== apw && !(fsel && view.querySelector(fsel))) { try { apw.focus({ preventScroll: true }); } catch (e) {} }
     tabs.hidden = EMBED || r.indexOf('play-') === 0 || r.indexOf('done-') === 0 || r === 'edit' || r === 'scan';
@@ -4988,19 +5096,19 @@ select.inp{font-family:var(--font-ui,inherit);font-size:16px;appearance:auto}
   view.addEventListener('input', function (ev) {
     var t = ev.target;
     if (t.id === 'tl-in') { if (!ev.isComposing) tlInput(t); else updateCands(); return; }
-    if (t.id === 'fix-in') { if (!ev.isComposing && S.prefs.teType !== false) autoConvertField(t); teStrip(t); return; }
+    if (t.id === 'fix-in') { if (!ev.isComposing && S.prefs.teType !== false) autoConvertField(t); teStrip(t, true); return; }
     if (t.id === 'prof-name') { S.profile.name = t.value.trim().slice(0, 30); save(); return; }
     if (t.hasAttribute && t.hasAttribute('data-sr')) { t._typed = true; if (!ev.isComposing && !/[A-Za-z]/.test(t.value)) sheetCommit(t); sheetOpts(t); return; }
-    if (t.hasAttribute && t.hasAttribute('data-ocr') && SC) { if (!ev.isComposing && S.prefs.teType !== false) autoConvertField(t); teStrip(t); var od = t.getAttribute('data-ocr'); SC.ocr[od] = t.value; var on = document.getElementById('ocr-n-' + od); if (on) on.textContent = parseClueText(t.value, od).length; return; }
+    if (t.hasAttribute && t.hasAttribute('data-ocr') && SC) { if (!ev.isComposing && S.prefs.teType !== false) autoConvertField(t); teStrip(t, true); var od = t.getAttribute('data-ocr'); SC.ocr[od] = t.value; var on = document.getElementById('ocr-n-' + od); if (on) on.textContent = parseClueText(t.value, od).length; return; }
     if (t.id === 'sc-date' && SC) { SC.date = t.value; return; }
     if (t.id === 'adm-find') { U.admFind = t.value; var af = document.getElementById('adm-find-res'); if (af) af.innerHTML = admFindHTML(!!U.busy); return; }
     if (t.id === 'adm-q') { U.admQ = t.value; var al = document.getElementById('adm-list'); if (al) al.innerHTML = postsMgrHTML(!!U.busy) || '<p class="note" style="padding:10px 0">ఇంకా ఏ పోస్టూ లేదు.</p>'; return; }
     if (t.id === 'home-q') { U.homeQ = t.value; var hr = document.getElementById('home-res'); if (hr) hr.innerHTML = homeResults(); return; }
     if (t.id === 'arch-q') { U.query = t.value; var res = document.getElementById('arch-res'); if (res) res.innerHTML = archiveResults(); return; }
     if (!D) return;
-    if (t.hasAttribute('data-df')) { if (t.getAttribute('data-df') === 'title' && !ev.isComposing && S.prefs.teType !== false) autoConvertField(t); if (t.getAttribute('data-df') === 'title') teStrip(t); D[t.getAttribute('data-df')] = t.value; saveDraft(); return; }
+    if (t.hasAttribute('data-df')) { if (t.getAttribute('data-df') === 'title' && !ev.isComposing && S.prefs.teType !== false) autoConvertField(t); if (t.getAttribute('data-df') === 'title') teStrip(t, true); D[t.getAttribute('data-df')] = t.value; saveDraft(); return; }
     if (t.hasAttribute('data-ci')) {
-      var f = t.getAttribute('data-f'); if (f === 'text' && !ev.isComposing && S.prefs.teType !== false) autoConvertField(t); if (f === 'text') teStrip(t);
+      var f = t.getAttribute('data-f'); if (f === 'text' && !ev.isComposing && S.prefs.teType !== false) autoConvertField(t); if (f === 'text') teStrip(t, true);
       var cl = D.clues[+t.getAttribute('data-ci')];
       if (cl) { cl[f] = f === 'text' ? t.value : (parseInt(t.value, 10) || ''); saveDraft(); refreshChecks(); }
     }
@@ -5054,11 +5162,13 @@ select.inp{font-family:var(--font-ui,inherit);font-size:16px;appearance:auto}
     if (/[A-Za-z]/.test(t.value)) { var nv = convertLatin(t.value); if (nv !== t.value) { t.value = nv; t.dispatchEvent(new Event('input', { bubbles: true })); } }
     setTimeout(function () { var bar = document.getElementById('tlalts'); if (bar && !(document.activeElement && (document.activeElement === t || teField(document.activeElement)))) { bar.remove(); U.tlAlt = null; } }, 250);
   });
-  view.addEventListener('keyup', function (ev) { if (teField(ev.target) && /^(ArrowLeft|ArrowRight|Home|End)$/.test(ev.key)) teStrip(ev.target); });
-  view.addEventListener('click', function (ev) { if (teField(ev.target)) setTimeout(function () { teStrip(ev.target); }, 0); });
+  // moving the cursor or tapping in a clue box closes the list (it opens again with the next English letter, or with Ctrl+Space)
+  view.addEventListener('keyup', function (ev) { if (teField(ev.target) && TE && /^(ArrowLeft|ArrowRight|Home|End)$/.test(ev.key)) teHide(); });
+  view.addEventListener('click', function (ev) { if (teField(ev.target) && TE) teHide(); });
   view.addEventListener('keydown', function (ev) {
     var t = ev.target, k = ev.key, plain = !ev.isComposing && !ev.altKey && !ev.ctrlKey && !ev.metaKey;
     if (k === 'Escape' && TE) { teHide(); return; }
+    if (k === ' ' && ev.ctrlKey && teField(t)) { ev.preventDefault(); teStrip(t); return; }   // the forms of the letter before the cursor (ల ళ లా ళా …)
     // the Telugu list under a clue box: ↑ ↓ light up a row; Enter / Tab put the lit one in (Space: it and a space); 1–9 pick a row
     var tb = TE && t === TE.el && plain ? document.getElementById('teopts') : null;
     if (tb && tb._opts) {
