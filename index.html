@@ -455,7 +455,6 @@ textarea.inp.tel{font-family:var(--font-ui);font-size:17px;line-height:1.55;min-
 .tl-cands .note{white-space:nowrap}
 /* when the phone keyboard covers the page instead of shrinking it, the app is pinned to the part still visible */
 html.kb-over #app{position:fixed;left:0;right:0;top:var(--vv-top,0px);height:var(--app-h,100%);margin:0 auto}
-#view.typing .pbar{display:none}
 /* (typing) the board area keeps its own scroll */
 
 /* a right answer is frozen: grey with a green border even when selected (selection shows as a blue ring outside it) */
@@ -556,8 +555,6 @@ html.kb-over #app{position:fixed;left:0;right:0;top:var(--vv-top,0px);height:var
 /* the board area scrolls up and down as a whole; the grid strip itself only scrolls sideways */
 .pmid > *{flex-shrink:0}
 .gridwrap{overflow-y:hidden}
-/* small screen with the keyboard up: the mode/timer/hint row folds away too (close the keyboard to reach it) */
-html.vv-short #view.typing .ptools{display:none}
 html.vv-short #view.typing .tlc{min-height:38px}
 
 /* Android app download */
@@ -624,7 +621,7 @@ html.vv-short #view.typing .tlc{min-height:38px}
 .answ.ok{background:var(--ok-bg);color:var(--ok-ink);border:1.5px solid var(--ok-bd)}
 .clue.is-right .x{color:var(--ink);text-decoration:none}
 /* G. keyboard up: everything except the clue, the typing box and the suggestions folds away, so the board gets the room */
-#view.typing .ptools,#view.typing #wstrip{display:none!important}
+#view.typing #wstrip{display:none!important}
 
 /* website admin */
 .adminlink{display:block;text-align:center;font-size:13px;font-weight:600;color:var(--muted);padding:6px 0}
@@ -773,7 +770,6 @@ a.smallbtn{text-decoration:none;display:inline-flex;align-items:center;justify-c
 .egrid.sheet .scell.run{box-shadow:inset 0 0 0 2px var(--word-ring)}
 .egrid.sheet .scell.run:not(.low):not(.chg){background:var(--word)}
 /* short screens with a keyboard open: smaller keys and bars so the board keeps its share (two steps, set by fitPlay) */
-#view.tight .ptools{display:none}
 #view.tight .pbottom{gap:5px;padding-top:5px}
 #view.tight .ppanel{gap:4px;padding-bottom:6px}
 #view.tight .keys{gap:3px}
@@ -799,6 +795,57 @@ select.inp{font-family:var(--font-ui,inherit);font-size:16px;appearance:auto}
 .strip::-webkit-scrollbar-thumb{background:color-mix(in srgb, var(--ink) 30%, transparent);border-radius:3px}
 /* the తెలుగు button beside the typing box is for phones while typing (the switch above it is hidden then); otherwise the switch is on screen */
 #view:not(.typing) .tl-row .tl-te{display:none}
+/* 0.28: while playing, the header (title, date, zoom, record, check) and the mode / timer row stay on screen, also with a keyboard
+   open (as on the blog): smaller instead of hidden. The row wraps instead of cutting off సులభం / కష్టం or the time. */
+.pbar p{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ptools{height:auto;min-height:46px;flex-wrap:wrap;row-gap:4px;padding-block:4px}
+.ptools .seg{flex:0 1 auto;min-width:0}
+.ptools .seg button{white-space:normal;overflow-wrap:anywhere;line-height:1.25;min-height:34px;padding:3px 10px}
+.ptools .timer{flex-shrink:0;white-space:nowrap;margin-left:auto}
+.ptools #hintslot{min-width:0}
+.ptools .hintwait{max-width:none}
+#view.typing .pbar,#view.tight .pbar{height:44px}
+#view.typing .pbar h1,#view.tight .pbar h1{font-size:15px;line-height:1.3}
+#view.typing .pbar p,#view.tight .pbar p{font-size:11px}
+#view.typing .pbar .ghostbtn,#view.tight .pbar .ghostbtn{height:40px;width:38px}
+#view.typing .ptools,#view.tight .ptools{min-height:36px;padding-block:2px;row-gap:2px}
+#view.typing .ptools .seg,#view.tight .ptools .seg{padding:2px}
+#view.typing .ptools .seg button,#view.tight .ptools .seg button{min-height:28px;font-size:13px;padding:2px 9px}
+#view.typing .ptools .timer,#view.tight .ptools .timer{font-size:14px}
+#view.typing .ptools .resetbtn,#view.tight .ptools .resetbtn{height:32px}
+@media (max-width:400px){.pbar .ghostbtn{width:38px}.pbar{gap:0}}
+.pill.bad{background:transparent;color:var(--bad-ink);border:1.5px solid var(--bad-bd);padding:3px 9px}
+/* 0.28: the paper the draft was made from, beside the editor — above it on a phone (stays in view while scrolling, folds to one
+   line), on its right on a wide screen */
+.edpage{gap:12px}
+.edmain{display:flex;flex-direction:column;gap:18px;min-width:0}
+.srcv{position:sticky;top:0;z-index:6;display:flex;flex-direction:column;gap:6px;margin-inline:-4px;padding:6px 4px 8px;background:var(--bg);border-bottom:1px solid var(--line)}
+.srcv.is-empty{position:static;flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;border-bottom:0;padding-block:2px}
+.srcv.is-empty .lbl{flex:1 1 200px;min-width:0}
+.srcbar{display:flex;align-items:center;flex-wrap:wrap;gap:4px 6px}
+.srcbar > b{font-size:14px;color:var(--title)}
+.srcbar .srcsp{flex:1}
+.srcbar .smallbtn{min-height:36px;padding:0 10px}
+.srcbar .ghostbtn{width:38px;height:38px}
+.srcbar .srcname{font-size:13px;color:var(--muted)}
+.srctabs{max-width:100%;overflow-x:auto}
+.srctabs button{white-space:nowrap}
+.srcbox{max-height:36vh;overflow:auto;border-radius:10px;border:1px solid var(--line);background:var(--surface);overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+.srcbox img{display:block;height:auto}
+@media (min-width:1000px){
+  html.wide-edit #app{max-width:min(1240px,100%)}
+  .edpage{display:grid;grid-template-columns:520px minmax(0,1fr);column-gap:24px;align-items:start}
+  .edpage > .edmain{grid-column:1;grid-row:1}
+  .edpage > .srcv{grid-column:2;grid-row:1;top:12px;margin:0;padding:10px;border:1px solid var(--line);border-radius:14px;background:var(--surface)}
+  .edpage > .srcv .srcbox{max-height:calc(100vh - 120px)}
+}
+@media (max-width:480px){
+  .srcbar > b,.srcbar .srcfit{display:none}
+  .srcbar{gap:4px}
+  .srcbar .smallbtn{padding:0 8px;min-height:34px}
+  .srcbar .ghostbtn{width:34px;height:34px}
+  .srcbox{max-height:32vh}
+}
 /* black squares: animated nature and animal scenes (generated by scenes.py) */
 .blk.sc0,.scsample.sc0{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='xMidYMid slice'%3E%3Cdefs%3E%3ClinearGradient id='b' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%230D3436'/%3E%3Cstop offset='1' stop-color='%231E5A45'/%3E%3C/linearGradient%3E%3ClinearGradient id='n' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%2329B6F6'/%3E%3Cstop offset='1' stop-color='%230D47A1'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cstyle%3E.fan%7Banimation:fan 2.4s ease-in-out infinite;transform-origin:50px 64px%7D@keyframes fan%7B0%25,100%25%7Btransform:rotate(0) scale(1)%7D25%25%7Btransform:rotate(-4deg) scale(1.03)%7D50%25%7Btransform:rotate(0) scale(.96)%7D75%25%7Btransform:rotate(4deg) scale(1.03)%7D%7D.q%7Banimation:q .18s ease-in-out infinite alternate;transform-origin:50px 64px%7D@keyframes q%7Bto%7Btransform:rotate(1.6deg)%7D%7D.bd%7Banimation:bd 2.4s ease-in-out infinite;transform-origin:50px 86px%7D@keyframes bd%7B0%25,100%25%7Btransform:rotate(0)%7D25%25%7Btransform:rotate(-5deg) translateX(-1px)%7D75%25%7Btransform:rotate(5deg) translateX(1px)%7D%7D.hd%7Banimation:hd 1.2s ease-in-out infinite;transform-origin:51px 46px%7D@keyframes hd%7B50%25%7Btransform:rotate(-8deg)%7D%7D.sp%7Banimation:sp 2.4s ease-in-out infinite%7D@keyframes sp%7B0%25,100%25%7Bopacity:.15%7D50%25%7Bopacity:1%7D%7D%3C/style%3E%3Crect width='100' height='100' fill='url(%23b)'/%3E%3Ccircle class='sp' cx='12' cy='14' r='.9' fill='%23E0F2F1'/%3E%3Ccircle class='sp' cx='88' cy='12' r='.8' fill='%23E0F2F1' style='animation-delay:-1.2s'/%3E%3Cellipse cx='50' cy='92' rx='46' ry='7' fill='%23123A2C'/%3E%3Cg class='fan'%3E%3Cg transform='rotate(-80 50 64)'%3E%3Cg class='q' style='animation-delay:-0.00s'%3E%3Cpath d='M50 64 Q43 44 50 18 Q57 44 50 64Z' fill='%232F7D3B' opacity='.75'/%3E%3Cpath d='M50 64 V24' stroke='%239CCC65' stroke-width='.6'/%3E%3Cellipse cx='50' cy='22' rx='5.6' ry='7.4' fill='%231B5E20'/%3E%3Cellipse cx='50' cy='22.6' rx='4.2' ry='5.6' fill='%23F9A825'/%3E%3Cellipse cx='50' cy='23.2' rx='2.9' ry='3.9' fill='%231565C0'/%3E%3Cellipse cx='50' cy='23.6' rx='1.5' ry='2' fill='%230A1F44'/%3E%3C/g%3E%3C/g%3E%3Cg transform='rotate(-64 50 64)'%3E%3Cg class='q' style='animation-delay:-0.07s'%3E%3Cpath d='M50 64 Q43 44 50 18 Q57 44 50 64Z' fill='%232F7D3B' opacity='.75'/%3E%3Cpath d='M50 64 V24' stroke='%239CCC65' stroke-width='.6'/%3E%3Cellipse cx='50' cy='22' rx='5.6' ry='7.4' fill='%231B5E20'/%3E%3Cellipse cx='50' cy='22.6' rx='4.2' ry='5.6' fill='%23F9A825'/%3E%3Cellipse cx='50' cy='23.2' rx='2.9' ry='3.9' fill='%231565C0'/%3E%3Cellipse cx='50' cy='23.6' rx='1.5' ry='2' fill='%230A1F44'/%3E%3C/g%3E%3C/g%3E%3Cg transform='rotate(-48 50 64)'%3E%3Cg class='q' style='animation-delay:-0.14s'%3E%3Cpath d='M50 64 Q43 44 50 18 Q57 44 50 64Z' fill='%232F7D3B' opacity='.75'/%3E%3Cpath d='M50 64 V24' stroke='%239CCC65' stroke-width='.6'/%3E%3Cellipse cx='50' cy='22' rx='5.6' ry='7.4' fill='%231B5E20'/%3E%3Cellipse cx='50' cy='22.6' rx='4.2' ry='5.6' fill='%23F9A825'/%3E%3Cellipse cx='50' cy='23.2' rx='2.9' ry='3.9' fill='%231565C0'/%3E%3Cellipse cx='50' cy='23.6' rx='1.5' ry='2' fill='%230A1F44'/%3E%3C/g%3E%3C/g%3E%3Cg transform='rotate(-32 50 64)'%3E%3Cg class='q' style='animation-delay:-0.21s'%3E%3Cpath d='M50 64 Q43 44 50 18 Q57 44 50 64Z' fill='%232F7D3B' opacity='.75'/%3E%3Cpath d='M50 64 V24' stroke='%239CCC65' stroke-width='.6'/%3E%3Cellipse cx='50' cy='22' rx='5.6' ry='7.4' fill='%231B5E20'/%3E%3Cellipse cx='50' cy='22.6' rx='4.2' ry='5.6' fill='%23F9A825'/%3E%3Cellipse cx='50' cy='23.2' rx='2.9' ry='3.9' fill='%231565C0'/%3E%3Cellipse cx='50' cy='23.6' rx='1.5' ry='2' fill='%230A1F44'/%3E%3C/g%3E%3C/g%3E%3Cg transform='rotate(-16 50 64)'%3E%3Cg class='q' style='animation-delay:-0.00s'%3E%3Cpath d='M50 64 Q43 44 50 18 Q57 44 50 64Z' fill='%232F7D3B' opacity='.75'/%3E%3Cpath d='M50 64 V24' stroke='%239CCC65' stroke-width='.6'/%3E%3Cellipse cx='50' cy='22' rx='5.6' ry='7.4' fill='%231B5E20'/%3E%3Cellipse cx='50' cy='22.6' rx='4.2' ry='5.6' fill='%23F9A825'/%3E%3Cellipse cx='50' cy='23.2' rx='2.9' ry='3.9' fill='%231565C0'/%3E%3Cellipse cx='50' cy='23.6' rx='1.5' ry='2' fill='%230A1F44'/%3E%3C/g%3E%3C/g%3E%3Cg transform='rotate(0 50 64)'%3E%3Cg class='q' style='animation-delay:-0.07s'%3E%3Cpath d='M50 64 Q43 44 50 18 Q57 44 50 64Z' fill='%232F7D3B' opacity='.75'/%3E%3Cpath d='M50 64 V24' stroke='%239CCC65' stroke-width='.6'/%3E%3Cellipse cx='50' cy='22' rx='5.6' ry='7.4' fill='%231B5E20'/%3E%3Cellipse cx='50' cy='22.6' rx='4.2' ry='5.6' fill='%23F9A825'/%3E%3Cellipse cx='50' cy='23.2' rx='2.9' ry='3.9' fill='%231565C0'/%3E%3Cellipse cx='50' cy='23.6' rx='1.5' ry='2' fill='%230A1F44'/%3E%3C/g%3E%3C/g%3E%3Cg transform='rotate(16 50 64)'%3E%3Cg class='q' style='animation-delay:-0.14s'%3E%3Cpath d='M50 64 Q43 44 50 18 Q57 44 50 64Z' fill='%232F7D3B' opacity='.75'/%3E%3Cpath d='M50 64 V24' stroke='%239CCC65' stroke-width='.6'/%3E%3Cellipse cx='50' cy='22' rx='5.6' ry='7.4' fill='%231B5E20'/%3E%3Cellipse cx='50' cy='22.6' rx='4.2' ry='5.6' fill='%23F9A825'/%3E%3Cellipse cx='50' cy='23.2' rx='2.9' ry='3.9' fill='%231565C0'/%3E%3Cellipse cx='50' cy='23.6' rx='1.5' ry='2' fill='%230A1F44'/%3E%3C/g%3E%3C/g%3E%3Cg transform='rotate(32 50 64)'%3E%3Cg class='q' style='animation-delay:-0.21s'%3E%3Cpath d='M50 64 Q43 44 50 18 Q57 44 50 64Z' fill='%232F7D3B' opacity='.75'/%3E%3Cpath d='M50 64 V24' stroke='%239CCC65' stroke-width='.6'/%3E%3Cellipse cx='50' cy='22' rx='5.6' ry='7.4' fill='%231B5E20'/%3E%3Cellipse cx='50' cy='22.6' rx='4.2' ry='5.6' fill='%23F9A825'/%3E%3Cellipse cx='50' cy='23.2' rx='2.9' ry='3.9' fill='%231565C0'/%3E%3Cellipse cx='50' cy='23.6' rx='1.5' ry='2' fill='%230A1F44'/%3E%3C/g%3E%3C/g%3E%3Cg transform='rotate(48 50 64)'%3E%3Cg class='q' style='animation-delay:-0.00s'%3E%3Cpath d='M50 64 Q43 44 50 18 Q57 44 50 64Z' fill='%232F7D3B' opacity='.75'/%3E%3Cpath d='M50 64 V24' stroke='%239CCC65' stroke-width='.6'/%3E%3Cellipse cx='50' cy='22' rx='5.6' ry='7.4' fill='%231B5E20'/%3E%3Cellipse cx='50' cy='22.6' rx='4.2' ry='5.6' fill='%23F9A825'/%3E%3Cellipse cx='50' cy='23.2' rx='2.9' ry='3.9' fill='%231565C0'/%3E%3Cellipse cx='50' cy='23.6' rx='1.5' ry='2' fill='%230A1F44'/%3E%3C/g%3E%3C/g%3E%3Cg transform='rotate(64 50 64)'%3E%3Cg class='q' style='animation-delay:-0.07s'%3E%3Cpath d='M50 64 Q43 44 50 18 Q57 44 50 64Z' fill='%232F7D3B' opacity='.75'/%3E%3Cpath d='M50 64 V24' stroke='%239CCC65' stroke-width='.6'/%3E%3Cellipse cx='50' cy='22' rx='5.6' ry='7.4' fill='%231B5E20'/%3E%3Cellipse cx='50' cy='22.6' rx='4.2' ry='5.6' fill='%23F9A825'/%3E%3Cellipse cx='50' cy='23.2' rx='2.9' ry='3.9' fill='%231565C0'/%3E%3Cellipse cx='50' cy='23.6' rx='1.5' ry='2' fill='%230A1F44'/%3E%3C/g%3E%3C/g%3E%3Cg transform='rotate(80 50 64)'%3E%3Cg class='q' style='animation-delay:-0.14s'%3E%3Cpath d='M50 64 Q43 44 50 18 Q57 44 50 64Z' fill='%232F7D3B' opacity='.75'/%3E%3Cpath d='M50 64 V24' stroke='%239CCC65' stroke-width='.6'/%3E%3Cellipse cx='50' cy='22' rx='5.6' ry='7.4' fill='%231B5E20'/%3E%3Cellipse cx='50' cy='22.6' rx='4.2' ry='5.6' fill='%23F9A825'/%3E%3Cellipse cx='50' cy='23.2' rx='2.9' ry='3.9' fill='%231565C0'/%3E%3Cellipse cx='50' cy='23.6' rx='1.5' ry='2' fill='%230A1F44'/%3E%3C/g%3E%3C/g%3E%3Cg transform='rotate(-72 50 64)'%3E%3Cpath d='M50 64 Q45 50 50 36 Q55 50 50 64Z' fill='%2343A047' opacity='.8'/%3E%3Cellipse cx='50' cy='38' rx='3.4' ry='4.4' fill='%23F9A825'/%3E%3Cellipse cx='50' cy='38.5' rx='2.2' ry='3' fill='%231976D2'/%3E%3Cellipse cx='50' cy='38.8' rx='1' ry='1.4' fill='%230A1F44'/%3E%3C/g%3E%3Cg transform='rotate(-56 50 64)'%3E%3Cpath d='M50 64 Q45 50 50 36 Q55 50 50 64Z' fill='%2343A047' opacity='.8'/%3E%3Cellipse cx='50' cy='38' rx='3.4' ry='4.4' fill='%23F9A825'/%3E%3Cellipse cx='50' cy='38.5' rx='2.2' ry='3' fill='%231976D2'/%3E%3Cellipse cx='50' cy='38.8' rx='1' ry='1.4' fill='%230A1F44'/%3E%3C/g%3E%3Cg transform='rotate(-40 50 64)'%3E%3Cpath d='M50 64 Q45 50 50 36 Q55 50 50 64Z' fill='%2343A047' opacity='.8'/%3E%3Cellipse cx='50' cy='38' rx='3.4' ry='4.4' fill='%23F9A825'/%3E%3Cellipse cx='50' cy='38.5' rx='2.2' ry='3' fill='%231976D2'/%3E%3Cellipse cx='50' cy='38.8' rx='1' ry='1.4' fill='%230A1F44'/%3E%3C/g%3E%3Cg transform='rotate(-24 50 64)'%3E%3Cpath d='M50 64 Q45 50 50 36 Q55 50 50 64Z' fill='%2343A047' opacity='.8'/%3E%3Cellipse cx='50' cy='38' rx='3.4' ry='4.4' fill='%23F9A825'/%3E%3Cellipse cx='50' cy='38.5' rx='2.2' ry='3' fill='%231976D2'/%3E%3Cellipse cx='50' cy='38.8' rx='1' ry='1.4' fill='%230A1F44'/%3E%3C/g%3E%3Cg transform='rotate(-8 50 64)'%3E%3Cpath d='M50 64 Q45 50 50 36 Q55 50 50 64Z' fill='%2343A047' opacity='.8'/%3E%3Cellipse cx='50' cy='38' rx='3.4' ry='4.4' fill='%23F9A825'/%3E%3Cellipse cx='50' cy='38.5' rx='2.2' ry='3' fill='%231976D2'/%3E%3Cellipse cx='50' cy='38.8' rx='1' ry='1.4' fill='%230A1F44'/%3E%3C/g%3E%3Cg transform='rotate(8 50 64)'%3E%3Cpath d='M50 64 Q45 50 50 36 Q55 50 50 64Z' fill='%2343A047' opacity='.8'/%3E%3Cellipse cx='50' cy='38' rx='3.4' ry='4.4' fill='%23F9A825'/%3E%3Cellipse cx='50' cy='38.5' rx='2.2' ry='3' fill='%231976D2'/%3E%3Cellipse cx='50' cy='38.8' rx='1' ry='1.4' fill='%230A1F44'/%3E%3C/g%3E%3Cg transform='rotate(24 50 64)'%3E%3Cpath d='M50 64 Q45 50 50 36 Q55 50 50 64Z' fill='%2343A047' opacity='.8'/%3E%3Cellipse cx='50' cy='38' rx='3.4' ry='4.4' fill='%23F9A825'/%3E%3Cellipse cx='50' cy='38.5' rx='2.2' ry='3' fill='%231976D2'/%3E%3Cellipse cx='50' cy='38.8' rx='1' ry='1.4' fill='%230A1F44'/%3E%3C/g%3E%3Cg transform='rotate(40 50 64)'%3E%3Cpath d='M50 64 Q45 50 50 36 Q55 50 50 64Z' fill='%2343A047' opacity='.8'/%3E%3Cellipse cx='50' cy='38' rx='3.4' ry='4.4' fill='%23F9A825'/%3E%3Cellipse cx='50' cy='38.5' rx='2.2' ry='3' fill='%231976D2'/%3E%3Cellipse cx='50' cy='38.8' rx='1' ry='1.4' fill='%230A1F44'/%3E%3C/g%3E%3Cg transform='rotate(56 50 64)'%3E%3Cpath d='M50 64 Q45 50 50 36 Q55 50 50 64Z' fill='%2343A047' opacity='.8'/%3E%3Cellipse cx='50' cy='38' rx='3.4' ry='4.4' fill='%23F9A825'/%3E%3Cellipse cx='50' cy='38.5' rx='2.2' ry='3' fill='%231976D2'/%3E%3Cellipse cx='50' cy='38.8' rx='1' ry='1.4' fill='%230A1F44'/%3E%3C/g%3E%3Cg transform='rotate(72 50 64)'%3E%3Cpath d='M50 64 Q45 50 50 36 Q55 50 50 64Z' fill='%2343A047' opacity='.8'/%3E%3Cellipse cx='50' cy='38' rx='3.4' ry='4.4' fill='%23F9A825'/%3E%3Cellipse cx='50' cy='38.5' rx='2.2' ry='3' fill='%231976D2'/%3E%3Cellipse cx='50' cy='38.8' rx='1' ry='1.4' fill='%230A1F44'/%3E%3C/g%3E%3C/g%3E%3Cg class='bd'%3E%3Cpath d='M47 84 L46 92 M53 84 L54 92' stroke='%23B0957A' stroke-width='1.3' stroke-linecap='round'/%3E%3Cellipse cx='50' cy='76' rx='7.5' ry='9' fill='%230D47A1'/%3E%3Cpath d='M44 74 C46 82 54 84 57 78 C55 86 46 88 44 74Z' fill='%238D6E63'/%3E%3Cpath d='M47 72 C45 62 47 52 50 47 C53 52 54 62 53 72Z' fill='url(%23n)'/%3E%3Cg class='hd'%3E%3Ccircle cx='51' cy='45' r='3.6' fill='%231E88E5'/%3E%3Cellipse cx='52.2' cy='44.2' rx='1.5' ry='.9' fill='%23FFF'/%3E%3Ccircle cx='52.4' cy='44.3' r='.5' fill='%23111'/%3E%3Cpath d='M54.3 45 L57.5 45.8 L54.3 46.6Z' fill='%23C9A26B'/%3E%3Cpath d='M50 41.6 L48.6 36.4 M51 41.4 L51 36 M52 41.6 L53.4 36.4' stroke='%231E88E5' stroke-width='.5'/%3E%3Ccircle cx='48.6' cy='36.2' r='.9' fill='%231E88E5'/%3E%3Ccircle cx='51' cy='35.8' r='.9' fill='%231E88E5'/%3E%3Ccircle cx='53.4' cy='36.2' r='.9' fill='%231E88E5'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}
 .blk.sc1,.scsample.sc1{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='xMidYMid slice'%3E%3Cdefs%3E%3ClinearGradient id='b' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%232E4A66'/%3E%3Cstop offset='.55' stop-color='%237E9DB4'/%3E%3Cstop offset='.56' stop-color='%231C6E92'/%3E%3Cstop offset='1' stop-color='%230B3A55'/%3E%3C/linearGradient%3E%3Cpath id='w' d='M0 0 Q12.5 -7 25 0 T50 0 T75 0 T100 0 T125 0 T150 0 T175 0 T200 0 V60 H0Z'/%3E%3C/defs%3E%3Cstyle%3E.w1%7Banimation:mv 5s linear infinite%7D.w2%7Banimation:mv 3.6s linear infinite%7D.w3%7Banimation:mv 2.6s linear infinite%7D@keyframes mv%7Bfrom%7Btransform:translateX(0)%7Dto%7Btransform:translateX(-50px)%7D%7D.bob%7Banimation:bob 2.6s ease-in-out infinite%7D@keyframes bob%7B50%25%7Btransform:translateY(-2.5px)%7D%7D.dr%7Banimation:dr 2.6s ease-out infinite;opacity:0%7D@keyframes dr%7B0%25,40%25%7Bopacity:0;transform:translate(0,0)%7D50%25%7Bopacity:1%7D100%25%7Bopacity:0;transform:translate(var(--x),-18px)%7D%7D.cl%7Banimation:cl 14s linear infinite%7D@keyframes cl%7Bfrom%7Btransform:translateX(-30px)%7Dto%7Btransform:translateX(110px)%7D%7D.gl%7Banimation:gl 9s linear infinite%7D@keyframes gl%7Bfrom%7Btransform:translate(-20px,0)%7Dto%7Btransform:translate(120px,-6px)%7D%7D.wg%7Banimation:wg .45s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:center%7D@keyframes wg%7Bto%7Btransform:scaleY(-.5)%7D%7D%3C/style%3E%3Crect width='100' height='100' fill='url(%23b)'/%3E%3Cg class='cl'%3E%3Cellipse cx='10' cy='18' rx='12' ry='4' fill='%239FB4C6' opacity='.7'/%3E%3Cellipse cx='18' cy='15' rx='8' ry='4' fill='%23B5C7D5' opacity='.7'/%3E%3C/g%3E%3Cg class='gl'%3E%3Cpath class='wg' d='M10 30 q3 -3 6 0 q3 -3 6 0' fill='none' stroke='%23F2F5F8' stroke-width='1.2' stroke-linecap='round'/%3E%3C/g%3E%3Cg class='bob'%3E%3Cg transform='translate(0 58)'%3E%3Cuse class='w1' href='%23w' fill='%2322769A'/%3E%3C/g%3E%3C/g%3E%3Cpath d='M74 100 L78 68 L86 62 L94 66 L100 64 V100Z' fill='%232B2F36'/%3E%3Cpath d='M78 68 L86 62 L90 66 L82 72Z' fill='%233C424B'/%3E%3Cg class='bob' style='animation-delay:-1s'%3E%3Cg transform='translate(0 70)'%3E%3Cuse class='w2' href='%23w' fill='%23155F84'/%3E%3Cuse class='w2' href='%23w' fill='none' stroke='%23D7EEF7' stroke-width='1.2' opacity='.8'/%3E%3C/g%3E%3C/g%3E%3Cg transform='translate(84 66)'%3E%3Ccircle class='dr' r='1.6' fill='%23EAF6FB' style='--x:-8px'/%3E%3Ccircle class='dr' r='1.2' fill='%23EAF6FB' style='--x:-3px;animation-delay:-.2s'/%3E%3Ccircle class='dr' r='1.4' fill='%23EAF6FB' style='--x:4px;animation-delay:-.4s'/%3E%3Ccircle class='dr' r='1' fill='%23EAF6FB' style='--x:-12px;animation-delay:-.6s'/%3E%3Ccircle class='dr' r='1.8' fill='%23FFFFFF' style='--x:1px;animation-delay:-.1s'/%3E%3C/g%3E%3Cg class='bob' style='animation-delay:-2s'%3E%3Cg transform='translate(0 82)'%3E%3Cuse class='w3' href='%23w' fill='%230C4A6B'/%3E%3Cuse class='w3' href='%23w' fill='none' stroke='%23FFFFFF' stroke-width='1.6' stroke-dasharray='6 4' opacity='.85'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}
@@ -853,6 +900,11 @@ select.inp{font-family:var(--font-ui,inherit);font-size:16px;appearance:auto}
   var IS_CLAUDE = !!(window.claude && typeof window.claude.use === 'function');
   // the Android app (APK) opens this same site; it adds "EPadavinodamApp" to its browser name
   var IN_APK = /EPadavinodamApp|; wv\)/.test(navigator.userAgent), IS_ANDROID = /Android/i.test(navigator.userAgent);
+  // the app's version (from its browser name): version 4 brought the phone's own file picker for the admin's photo / PDF buttons
+  var APK_VER = (function () { var m = /EPadavinodamApp\/(\d+)/.exec(navigator.userAgent); return m ? +m[1] : 0; })();
+  function apkPickNote() {
+    return IN_APK && APK_VER < 4 ? '<p class="note scanwarn">ఈ యాప్ పాత వెర్షన్‌లో “ఫైల్ ఎంచుకోండి” పనిచేయదు. కొత్త యాప్ (వెర్షన్ 4) ఇన్‌స్టాల్ చేయండి, లేదా అప్పటిదాకా ఈ నిర్వాహణ పేజీని ఫోన్ Chrome‌లో తెరవండి: <b>uvsubbaiah-spec.github.io/e-padavinodam</b></p>' : '';
+  }
   // the blog itself (telugupadavinodam.blogspot.com, its new theme loads this app over the old layout): the same screens; files from the website
   var IN_BLOG = !IS_CLAUDE && !!window.EPV_IN_BLOG && !/[?&]embed=1(&|$)/.test(location.search);
   var APPBASE = IN_BLOG ? 'https://uvsubbaiah-spec.github.io/e-padavinodam/' : '';
@@ -991,7 +1043,7 @@ select.inp{font-family:var(--font-ui,inherit);font-size:16px;appearance:auto}
   } catch (e) {}
   ['font', 'fontGrid', 'fontClue', 'fontHead'].forEach(function (k) { if (S.prefs[k] === 'Hind Guntur') S.prefs[k] = k === 'fontHead' ? 'Ramabhadra' : 'Noto Sans Telugu'; });   // Hind Guntur cannot join ళ్ళ
   if (!S.prefs.blkV) { S.prefs.blk = S.prefs.rain === false ? 'plain' : 'nature'; S.prefs.blkV = 1; }
-  if ((S.prefs.zoomV || 0) < 3) { S.prefs.zoom = 'auto'; S.prefs.zoomV = 3; }
+  if ((S.prefs.zoomV || 0) < 4) { S.prefs.zoom = 'auto'; S.prefs.zoomV = 4; }   // 0.28: the board opens zoomed to about 7 columns
   if ((S.prefs.blkV || 0) < 2) { if (S.prefs.blk !== 'plain') S.prefs.blk = 'post'; S.prefs.blkV = 2; }   // the post's own picture (as on the blog) is now the default
   if (!S.prefs.order) S.prefs.order = 'use';
   if ((S.prefs.kbV || 0) < 1) { S.prefs.keypad = 'phone'; S.prefs.kbV = 1; }
@@ -1003,7 +1055,7 @@ select.inp{font-family:var(--font-ui,inherit);font-size:16px;appearance:auto}
   function saveOthers(a) { try { localStorage.setItem(LSO, JSON.stringify(a)); } catch (e) {} }
   function snapshot() { return { prefs: S.prefs, prog: S.prog, lastVariant: S.lastVariant, profile: S.profile }; }
   function loadPlayer(o) {
-    S.prefs = Object.assign(JSON.parse(JSON.stringify(PREF_DEFAULTS)), o.prefs || {}); if ((S.prefs.zoomV || 0) < 3) S.prefs.zoom = 'auto'; S.prefs.zoomV = 3; S.prefs.blkV = 2;
+    S.prefs = Object.assign(JSON.parse(JSON.stringify(PREF_DEFAULTS)), o.prefs || {}); if ((S.prefs.zoomV || 0) < 4) S.prefs.zoom = 'auto'; S.prefs.zoomV = 4; S.prefs.blkV = 2;
     if ((S.prefs.kbV || 0) < 1) { S.prefs.keypad = 'phone'; S.prefs.kbV = 1; }
     S.prog = o.prog || {}; S.lastVariant = typeof o.lastVariant === 'number' ? o.lastVariant : -1; S.profile = o.profile;
     CUR = null; MODELS = {}; save(); applyPrefs();
@@ -1032,7 +1084,7 @@ select.inp{font-family:var(--font-ui,inherit);font-size:16px;appearance:auto}
   function greeting() { var h = new Date().getHours(); return h < 12 ? 'శుభోదయం' : h < 17 ? 'నమస్కారం' : 'శుభ సాయంత్రం'; }
   function prog(id) { if (!S.prog[id]) S.prog[id] = freshProgress(); return S.prog[id]; }
   var D = S.draft;
-  var U = { panel: 'keys', tab: 'A', cons: null, conj: null, shown: {}, confirm: '', showVariant: null, query: '', busy: '', status: null, imports: null, importSel: {}, emode: 'black', er: 0, ec: 0, edir: 'A', etab: 'A', srcUrls: [], ctl: null };
+  var U = { panel: 'keys', tab: 'A', cons: null, conj: null, shown: {}, confirm: '', showVariant: null, query: '', busy: '', status: null, imports: null, importSel: {}, emode: 'black', er: 0, ec: 0, edir: 'A', etab: 'A', ctl: null };
 
   // Telugu fonts from Google Fonts: name, size factor (evens out how big each one draws), heaviest weight used, where it suits (g grid, c clues, h headings), feel
   var FONTLIST = [
@@ -1433,10 +1485,26 @@ select.inp{font-family:var(--font-ui,inherit);font-size:16px;appearance:auto}
   }
 
   /* ================= views: reader ================= */
-  function statusPill(id) {
-    var P = S.prog[id];
-    if (P && P.done) return '<span class="pill ok">పూర్తయింది</span>';
-    if (P && P.started) return '<span class="pill mid">మధ్యలో</span>';
+  // where the player stands with a puzzle: finished, filled by ఆటో, every square filled but some letters wrong, under way, or new
+  function progState(p) {
+    var P = S.prog[p.id];
+    if (!P) return { k: 'new' };
+    if (P.done) return { k: 'done' };
+    if (!P.started && !P.revealed) return { k: 'new' };
+    var m = model(p), L = P.letters || {}, filled = 0, wrong = 0;
+    for (var r = 0; r < m.R; r++) for (var c = 0; c < m.C; c++) {
+      if (!m.isW(r, c)) continue; var k = key(r, c), v = L[k];
+      if (v) { filled++; if (m.hasAns && String(v).normalize('NFC') !== String(m.sol(k)).normalize('NFC')) wrong++; }
+    }
+    if (m.whites && filled === m.whites) return wrong ? { k: 'full', wrong: wrong } : { k: P.revealed || P.auto ? 'auto' : 'done' };
+    return { k: 'mid' };
+  }
+  function statusPill(p) {
+    var st = progState(p);
+    if (st.k === 'done') return '<span class="pill ok">పూర్తయింది</span>';
+    if (st.k === 'auto') return '<span class="pill ok">ఆటోతో పూర్తి</span>';
+    if (st.k === 'full') return '<span class="pill bad">' + st.wrong + ' తప్పులు</span>';
+    if (st.k === 'mid') return '<span class="pill mid">మధ్యలో</span>';
     return '<span class="pill new">కొత్తది</span>';
   }
   function miniGrid(p) {
@@ -1447,8 +1515,19 @@ select.inp{font-family:var(--font-ui,inherit);font-size:16px;appearance:auto}
   function puzzleRow(p) {
     var sub = p.date ? p.date + ' · ' + weekday(p.date) : 'అభ్యాసం', P = S.prog[p.id], has = P && (P.started || P.done), ask = U.confirm === 'reset-' + p.id;
     if (has && P.used > 1) sub += ' · ' + agoText(P.used);
-    return '<div class="rowwrap"><a class="rowlink" href="#play-' + esc(p.id) + '"><span class="tile">' + I.grid + '</span><span class="t"><b>' + esc(p.title) + '</b><small>' + esc(sub) + '</small></span>' + statusPill(p.id) + '</a>' +
+    return '<div class="rowwrap"><a class="rowlink" href="#play-' + esc(p.id) + '"><span class="tile">' + I.grid + '</span><span class="t"><b>' + esc(p.title) + '</b><small>' + esc(sub) + '</small></span>' + statusPill(p) + '</a>' +
       (has ? '<button class="rowreset' + (ask ? ' ask' : '') + '" data-act="reset-post" data-id="' + esc(p.id) + '" aria-label="' + esc((p.date || p.title) + ' — మొదటి నుంచి') + '">' + (ask ? 'ఖచ్చితమా?' : '↺') + '</button>' : '') + '</div>';
+  }
+  // the list under the newest puzzle. ఆడిన క్రమం: the newest unplayed puzzle of every other paper first (a new సాక్షి puzzle must not
+  // hide behind played ఈనాడు ones), then the ones played most recently; తేదీ క్రమం: newest first
+  function homeList(hero) {
+    var l = byUse().filter(function (p) { return p !== hero; });
+    if (S.prefs.order === 'date') return l.slice(0, 4);
+    var seen = {}, fresh = [];
+    seen[hero.paper || 'eenadu'] = true;
+    sorted().forEach(function (p) { var pp = p.paper || 'eenadu'; if (p === hero || seen[pp]) return; seen[pp] = true; if (!lastUse(p.id)) fresh.push(p); });
+    var rest = l.filter(function (p) { return fresh.indexOf(p) < 0; });
+    return fresh.concat(rest).slice(0, Math.max(4, fresh.length + 3));
   }
   function agoText(t) { var d = Math.floor((Date.now() - t) / 864e5); return d <= 0 ? 'ఈరోజు ఆడారు' : d === 1 ? 'నిన్న ఆడారు' : d + ' రోజుల క్రితం ఆడారు'; }
   function orderSwitchHTML() { var o = S.prefs.order === 'date' ? 'date' : 'use'; return '<div class="seg small" role="group" aria-label="క్రమం"><button data-act="order" data-v="use" aria-pressed="' + (o === 'use') + '">ఆడిన క్రమం</button><button data-act="order" data-v="date" aria-pressed="' + (o === 'date') + '">తేదీ క్రమం</button></div>'; }
@@ -1456,12 +1535,13 @@ select.inp{font-family:var(--font-ui,inherit);font-size:16px;appearance:auto}
     var list = sorted(), hero = list[0] || SAMPLE, m = model(hero), P = S.prog[hero.id] || freshProgress();
     var L = P.letters || {}, filled = 0; for (var k in L) { var a = k.split(','); if (L[k] && m.isW(+a[0], +a[1])) filled++; }
     var pct = Math.round(filled / Math.max(1, m.whites) * 100);
-    var status = P.done ? 'పూర్తయింది · ' + fmt(P.doneTime) : (P.started ? 'మధ్యలో ఉంది' : 'ఇంకా మొదలుపెట్టలేదు');
-    var cta = P.done ? 'అభినందనలు చూడండి' : (P.started ? 'కొనసాగించండి' : 'ఆడటం మొదలుపెట్టండి');
+    var hs = progState(hero);
+    var status = P.done ? 'పూర్తయింది · ' + fmt(P.doneTime) : hs.k === 'auto' ? 'ఆటోతో పూర్తి చేశారు' : hs.k === 'done' ? 'అన్నీ సరైనవే — పూర్తయింది' : hs.k === 'full' ? 'అన్ని గడులూ నిండాయి — ' + hs.wrong + ' గడుల్లో తప్పులు' : (P.started ? 'మధ్యలో ఉంది' : 'ఇంకా మొదలుపెట్టలేదు');
+    var cta = P.done ? 'అభినందనలు చూడండి' : hs.k === 'full' ? 'తప్పులు సరిచేయండి' : hs.k === 'auto' || hs.k === 'done' ? 'గడి చూడండి' : (P.started ? 'కొనసాగించండి' : 'ఆడటం మొదలుపెట్టండి');
     var months = {}, mlist = [];
     list.forEach(function (p) { var mn = monthName(p.date); if (!months[mn]) { months[mn] = 0; mlist.push(mn); } months[mn]++; });
     var chips = mlist.map(function (mn) { return '<button class="mchip" data-act="month" data-v="' + esc(mn) + '" style="border:0;text-align:left"><b>' + esc(mn) + '</b><small>' + months[mn] + (months[mn] === 1 ? ' పోస్టు' : ' పోస్టులు') + '</small></button>'; }).join('');
-    var recent = byUse().filter(function (p) { return p !== hero; }).slice(0, 4).map(puzzleRow).join('');
+    var recent = homeList(hero).map(puzzleRow).join('');
     var emptyMsg = DATA_STATE === 'loading' ? (IS_CLAUDE ? 'పోస్టులు లోడ్ అవుతున్నాయి…' : 'బ్లాగ్ నుంచి పోస్టులు లోడ్ అవుతున్నాయి…')
       : (!IS_CLAUDE && BLOG_STATE === 'error') ? 'బ్లాగ్‌ను చేరుకోలేకపోయాం. ఇంటర్నెట్ కనెక్షన్ చూసి యాప్‌ను మళ్ళీ తెరవండి. అప్పటిదాకా కింది అభ్యాసం ఆడొచ్చు.'
       : (IS_CLAUDE ? 'ఇంకా ఏ పోస్టూ ప్రచురించలేదు. తాళం గుర్తు నుంచి బ్లాగ్ పోస్టులు దిగుమతి చేయవచ్చు లేదా కొత్త పద వినోదం అప్‌లోడ్ చేయవచ్చు.' : 'బ్లాగ్‌లో ఇంకా పద వినోదం పోస్టులు లేవు.');
@@ -1607,12 +1687,22 @@ select.inp{font-family:var(--font-ui,inherit);font-size:16px;appearance:auto}
     if (!CUR || !CUR.m.hasAns || CUR.P.done || hintLocked()) return '';
     return '<button class="cbhint" data-act="hint" data-keepfocus aria-label="సూచన">' + bulb(30) + '<span>సూచన</span></button>';
   }
-  var ZOOMS = [1, 1.25, 1.5, 1.75, 2], COARSE = !!(window.matchMedia && matchMedia('(pointer: coarse)').matches);
+  var ZOOMS = [1, 1.25, 1.5, 1.75, 2, 2.5], ZMAX = 2.5, COARSE = !!(window.matchMedia && matchMedia('(pointer: coarse)').matches);
   function zoomLevel() { if (S.prefs.zoom === 'auto' || S.prefs.zoom == null) return autoZoom(); var z = +S.prefs.zoom || 1; return ZOOMS.indexOf(z) >= 0 ? z : 1; }
+  // the board opens zoomed: on a phone or tablet about 7 columns fill the width (a 12×12 board shows a 7×7 corner, the rest is a
+  // swipe away); on a computer the whole board shows, with squares no smaller than 34 px
   function autoZoom() {
     var C = CUR && CUR.m ? CUR.m.C : 10, cell = Math.min(window.innerWidth - 32, 520) / Math.max(1, C), need = COARSE ? 40 : 34;
-    for (var i = 0; i < ZOOMS.length; i++) if (cell * ZOOMS[i] >= need) return ZOOMS[i];
-    return ZOOMS[ZOOMS.length - 1];
+    var z = Math.max(1, need / cell);
+    if ((COARSE || window.innerWidth < 640) && C > 7) z = Math.max(z, C / 7);
+    return Math.min(ZMAX, Math.round(z * 100) / 100);
+  }
+  // the − / + buttons go to the next step from wherever the board is (also from the automatic zoom, which may sit between steps)
+  function zoomStep(dir) {
+    var z = zoomLevel(), i;
+    if (dir > 0) { for (i = 0; i < ZOOMS.length; i++) if (ZOOMS[i] > z + 0.1) return ZOOMS[i]; return ZMAX; }
+    for (i = ZOOMS.length - 1; i >= 0; i--) if (ZOOMS[i] < z - 0.1) return ZOOMS[i];
+    return 1;
   }
   // when zoomed, keep the selected square in view
   function keepCurVisible(force) {
@@ -1620,7 +1710,10 @@ select.inp{font-family:var(--font-ui,inherit);font-size:16px;appearance:auto}
     if (!force && !U.follow) return; U.follow = false;
     var el = view.querySelector('.cell.is-cur') || view.querySelector('.cell.is-pre'); if (el && el.scrollIntoView) el.scrollIntoView({ block: view.classList.contains('typing') ? 'center' : 'nearest', inline: zoomLevel() > 1 ? 'center' : 'nearest' });
   }
-  function subText() { var p = CUR.p, m = CUR.m; return (p.date ? p.date + ' · ' : '') + filledCount() + '/' + m.whites + ' నిండాయి' + (m.hasAns ? '' : ' · జవాబులు లేవు'); }
+  function subText() {
+    var p = CUR.p, m = CUR.m, f = filledCount(), w = f === m.whites && m.hasAns && !CUR.P.done ? wrongKeys().length : 0;
+    return (p.date ? p.date + ' · ' : '') + f + '/' + m.whites + ' నిండాయి' + (w ? ' · ' + w + ' తప్పులు (✓ నొక్కండి)' : '') + (m.hasAns ? '' : ' · జవాబులు లేవు');
+  }
   // one picture for all the black squares of a post, as on the blog; weekly posts step through the 13 scenes in turn
   var SCENE_COUNT = 13;
   function postPic(p) { var u = p.blk || p.blkImg || BLOG_BLK[pkey(p)] || ''; if (/^http:\/\//i.test(u)) u = 'https://' + u.slice(7); return /^https:\/\/[^"'()\s]+$/.test(u) ? u : ''; }
@@ -1701,7 +1794,7 @@ select.inp{font-family:var(--font-ui,inherit);font-size:16px;appearance:auto}
     return '<section class="play">' +
       '<header class="pbar">' + (EMBED ? '<a class="ghostbtn" href="' + esc(location.origin + location.pathname + '#play-' + id) + '" target="_blank" rel="noopener" aria-label="పూర్తి యాప్‌లో తెరవండి" title="పూర్తి యాప్‌లో తెరవండి">' + I.ext + '</a>' : '<a class="ghostbtn" href="' + (isDraft ? '#edit' : '#home') + '" aria-label="వెనక్కి">' + I.back + '</a>') +
       '<div class="t"><h1>' + (isDraft ? 'డ్రాఫ్ట్ పరీక్ష · ' : '') + esc(p.title) + '</h1><p id="psub">' + esc(subText()) + '</p></div>' +
-      '<button class="ghostbtn" data-act="zoom-out" aria-label="గడి చిన్నగా"' + (zoomLevel() <= 1 ? ' disabled' : '') + '>' + I.zout + '</button><button class="ghostbtn" data-act="zoom-in" aria-label="గడి పెద్దగా"' + (zoomLevel() >= 2 ? ' disabled' : '') + '>' + I.zin + '</button>' +
+      '<button class="ghostbtn" data-act="zoom-out" aria-label="గడి చిన్నగా"' + (zoomLevel() <= 1 ? ' disabled' : '') + '>' + I.zout + '</button><button class="ghostbtn" data-act="zoom-in" aria-label="గడి పెద్దగా"' + (zoomLevel() >= ZMAX ? ' disabled' : '') + '>' + I.zin + '</button>' +
       recBtnHTML() + '<button class="ghostbtn" data-act="check" aria-label="సరిచూడు">' + I.check + '</button></header>' +
       '<div class="ptools gutter"><div class="seg" role="group" aria-label="కష్టత"><button data-act="pref" data-k="hard" data-v="0" aria-pressed="' + (!hard && !autoOn()) + '">సులభం</button><button data-act="pref" data-k="hard" data-v="1" aria-pressed="' + (hard && !autoOn()) + '">కష్టం</button>' + (autoCan() ? '<button data-act="auto-start" aria-pressed="' + autoOn() + '">ఆటో</button>' : '') + '</div>' +
       timer + '<span id="hintslot">' + hintSlotHTML() + '</span>' + (P.started && !isDraft ? '<button class="ghostbtn resetbtn' + (U.confirm === 'reset-' + id ? ' ask' : '') + '" data-act="reset-post" data-id="' + esc(id) + '" aria-label="మొదటి నుంచి">' + (U.confirm === 'reset-' + id ? 'ఖచ్చితమా?' : '↺') + '</button>' : '') + '</div>' +
@@ -2002,7 +2095,7 @@ select.inp{font-family:var(--font-ui,inherit);font-size:16px;appearance:auto}
       '<section class="sec"><h2 class="sec-h">Android యాప్‌లో రాబోయేవి</h2><div class="box"><ul class="soon"><li>కొత్త పద వినోదం వస్తే నోటిఫికేషన్</li><li>English భాషలో యాప్</li></ul>' + (IS_CLAUDE ? '' : '<p class="note">ఆఫ్‌లైన్: ఒకసారి తెరిచిన తర్వాత ఇంటర్నెట్ లేకున్నా యాప్, చివరిసారి లోడ్ అయిన పోస్టులు తెరుచుకుంటాయి.</p>') + '</div></section>' +
       '<section class="sec"><h2 class="sec-h">ఆట పురోగతి</h2><div class="box"><p class="note">మీ అమరికలు, ఆట పురోగతి ఈ పరికరంలోనే సేవ్ అవుతాయి.</p><button class="wide-btn ter" data-act="resetall">' + (U.confirm === 'resetall' ? 'ఖచ్చితమా? అన్ని ఆటల పురోగతి పోతుంది — మళ్ళీ నొక్కండి' : 'అన్ని ఆటల పురోగతి తుడిచివేయండి') + '</button></div></section>' +
       (!IS_CLAUDE ? '<section class="sec"><h2 class="sec-h">నిర్వాహణ</h2><div class="box"><p class="note">' + (ADMIN ? 'ఈ పరికరంలో నిర్వాహకుడిగా ప్రవేశించారు: కొత్త పద వినోదం (ఫోటో / PDF నుంచి కూడా), మార్పులు, ప్రచురణ.' : 'బ్లాగ్ నిర్వాహకుడి కోసం మాత్రమే: కొత్త పద వినోదం చేర్చడం, ఆధారాలు సరిదిద్దడం.') + '</p><a class="wide-btn ' + (ADMIN ? 'pri' : 'ter') + '" href="#admin">' + I.lock + (ADMIN ? ' నిర్వాహణ పేజీ తెరవండి' : ' నిర్వాహకుడి ప్రవేశం') + '</a></div></section>' : '') +
-      '<footer style="display:flex;flex-direction:column;align-items:center;gap:2px;text-align:center">' + (IN_BLOG ? '<a href="/?classic=1" style="font-weight:600;padding:10px 0">బ్లాగ్‌ను పాత రూపంలో చూడండి</a><a href="' + APPBASE + '" target="_blank" rel="noopener" style="padding:4px 0 10px">వెబ్‌సైట్ / ఆండ్రాయిడ్ యాప్</a>' : '<a href="' + BLOG + '" target="_blank" rel="noopener" style="font-weight:600;padding:10px 0">బ్లాగ్ తెరవండి · telugupadavinodam.blogspot.com</a>') + '<span style="font-family:var(--font-display);font-size:22px;color:var(--title)">ఈ-పద వినోదం</span><span class="note">వెర్షన్ 0.27' + (IS_CLAUDE ? ' · స్టూడియో' : IN_BLOG ? ' · బ్లాగ్' : '') + '</span></footer></div>';
+      '<footer style="display:flex;flex-direction:column;align-items:center;gap:2px;text-align:center">' + (IN_BLOG ? '<a href="/?classic=1" style="font-weight:600;padding:10px 0">బ్లాగ్‌ను పాత రూపంలో చూడండి</a><a href="' + APPBASE + '" target="_blank" rel="noopener" style="padding:4px 0 10px">వెబ్‌సైట్ / ఆండ్రాయిడ్ యాప్</a>' : '<a href="' + BLOG + '" target="_blank" rel="noopener" style="font-weight:600;padding:10px 0">బ్లాగ్ తెరవండి · telugupadavinodam.blogspot.com</a>') + '<span style="font-family:var(--font-display);font-size:22px;color:var(--title)">ఈ-పద వినోదం</span><span class="note">వెర్షన్ 0.28' + (IS_CLAUDE ? ' · స్టూడియో' : IN_BLOG ? ' · బ్లాగ్' : '') + '</span></footer></div>';
   }
 
   /* ================= admin: who may manage ================= */
@@ -2516,7 +2609,8 @@ select.inp{font-family:var(--font-ui,inherit);font-size:16px;appearance:auto}
     var nd = newDraft(R, C);
     for (var r = 0; r < Math.min(R, D.R); r++) for (var c = 0; c < Math.min(C, D.C); c++) { nd.black[r][c] = D.black[r][c]; nd.ans[r][c] = D.ans[r][c]; }
     Object.keys(D.nums).forEach(function (k) { var x = k.split(','); if (+x[0] < R && +x[1] < C) nd.nums[k] = D.nums[k]; });
-    nd.id = D.id; nd.title = D.title; nd.date = D.date; nd.paper = D.paper; nd.clues = D.clues; nd.src = D.src; nd.url = D.url; nd.postId = D.postId;
+    nd.id = D.id; nd.title = D.title; nd.date = D.date; nd.paper = D.paper; nd.clues = D.clues; nd.src = D.src; nd.url = D.url; nd.postId = D.postId; nd.uid = D.uid;
+    ['blkImg', 'finImg', 'curBlk', 'curFin', 'ansFile', 'ansBy'].forEach(function (k) { if (D[k] != null) nd[k] = D[k]; });
     D = nd; saveDraft();
   }
   function draftFromAI(j, fallbackDate) {
@@ -2658,7 +2752,7 @@ select.inp{font-family:var(--font-ui,inherit);font-size:16px;appearance:auto}
       return smartImages(kind, files, lim.images.maxCount);
     }).then(function (blobs) {
       if (!blobs.length) throw { code: 'no_images' };
-      keepSourceImage(kind, blobs[0]);
+      keepSourceImage(kind, blobs);
       var prompt = PROMPT_PUZZLE;
       if (kind === 'answers') {
         var pz = draftToPuzzle(D, true);
@@ -2674,7 +2768,7 @@ select.inp{font-family:var(--font-ui,inherit);font-size:16px;appearance:auto}
         applyAnswers(D, j.answers); saveDraft();
         U.status = { kind: 'ok', text: 'జవాబులు నింపాం. ప్రతి గడినీ ఒకసారి చూసి సరిదిద్దండి.' }; U.emode = 'ans'; render(); return;
       }
-      stashDraft(); D = draftFromAI(j || {}, date); D.src = 'upload'; saveDraft();
+      stashDraft(); D = draftFromAI(j || {}, date); D.src = 'upload'; saveDraft(); srcAdopt();
       setTimeout(function () { readPendingAnswers(aiRead); }, 0);
       U.status = { kind: 'ok', text: 'డ్రాఫ్ట్ సిద్ధం. గడి, సంఖ్యలు, ఆధారాలు చిత్రంతో పోల్చి సరిచూడండి, తర్వాత ప్రచురించండి.' };
       location.hash = '#edit';
@@ -3088,8 +3182,7 @@ select.inp{font-family:var(--font-ui,inherit);font-size:16px;appearance:auto}
       SC.page = i; SC.cv = r.cv; SC.W = r.cv.width; SC.H = r.cv.height; SC.src = r.src; SC.srcs[i] = r.src;
       SC.data = r.cv.getContext('2d').getImageData(0, 0, SC.W, SC.H).data;
       if (SC.kind === 'answers' || (SC.gridPage >= 0 && i !== SC.gridPage)) return;   // the editor keeps showing the puzzle's grid page
-      U.srcUrls.forEach(function (u) { URL.revokeObjectURL(u); });
-      return new Promise(function (res) { r.cv.toBlob(function (b) { U.srcUrls = b ? [URL.createObjectURL(b)] : []; res(); }, 'image/jpeg', 0.85); });
+      return new Promise(function (res) { r.cv.toBlob(function (b) { if (b) srcStage([b], ['పద వినోదం పేజీ']); res(); }, 'image/jpeg', 0.85); });
     });
   }
   function pageSrc(i) {
@@ -3649,7 +3742,7 @@ select.inp{font-family:var(--font-ui,inherit);font-size:16px;appearance:auto}
     for (var r = 0; r < SC.R; r++) for (var c = 0; c < SC.C; c++) d.black[r][c] = scanBlack(r, c);
     d.date = String(SC.date || '').trim(); d.src = 'upload'; d.paper = paperOf(SC.paper).id; d.title = paperOf(d.paper).title;
     d.clues = parseClueText(SC.ocr.A, 'A').concat(parseClueText(SC.ocr.D, 'D')).map(function (c) { return { d: c.d, n: c.n, len: c.len, text: c.text }; });
-    stashDraft(); D = d; draftAutoNumber(); U.er = 0; U.ec = 0; U.emode = 'ans'; U.edir = 'A';
+    stashDraft(); D = d; draftAutoNumber(); srcAdopt(); U.er = 0; U.ec = 0; U.emode = 'ans'; U.edir = 'A';
     U.status = { kind: 'ok', text: 'డ్రాఫ్ట్ సిద్ధం: ' + d.clues.length + ' ఆధారాలు. సంఖ్యలు, ఆధారాలు చిత్రంతో పోల్చి సరిచూడండి; జవాబులు “జవాబులు” లో టైప్ చేయండి లేదా జవాబుల చిత్రం నుంచి నింపండి.' };
     saveDraft();
     if (U.pendingAns) { var pa = U.pendingAns; U.pendingAns = null; scanOpen('answers', pa); return; }
@@ -3775,17 +3868,105 @@ select.inp{font-family:var(--font-ui,inherit);font-size:16px;appearance:auto}
       return chain;
     }).then(function () {
       var cmpP = mergeAnswers(D, pg, 'phone');
-      TPROG = null; U.busy = ''; saveDraft(); U.emode = 'sheet'; U.srcOpen = true;
-      try { (shown || big).toBlob(function (b) { if (b) { if (U.ansGrid) URL.revokeObjectURL(U.ansGrid); U.ansGrid = URL.createObjectURL(b); if (route() === 'edit') render(); } }, 'image/jpeg', 0.85); } catch (e) {}
-      try { SC.cv.toBlob(function (b) { if (b) U.srcUrls = U.srcUrls.slice(0, 1).concat([URL.createObjectURL(b)]); if (route() === 'edit') render(); }, 'image/jpeg', 0.85); } catch (e) {}
+      TPROG = null; U.busy = ''; saveDraft(); U.emode = 'sheet';
+      try { (shown || big).toBlob(function (b) { if (b) { if (U.ansGrid) URL.revokeObjectURL(U.ansGrid); U.ansGrid = URL.createObjectURL(b); srcAdd('g', [b], ['జవాబుల గడి']); if (route() === 'edit') render(); } }, 'image/jpeg', 0.85); } catch (e) {}
+      try { SC.cv.toBlob(function (b) { if (b) srcAdd('a', [b], ['జవాబుల పేజీ']); }, 'image/jpeg', 0.85); } catch (e) {}
       U.status = { kind: 'ok', text: cmpP ? 'Gemini, ఫోన్ రీడర్ — రెండూ చదివాయి: ' + cmpP.same + ' గడుల్లో ఒకే అక్షరం (సరైనవి అయ్యే అవకాశం ఎక్కువ), ' + cmpP.diff + ' గడుల్లో తేడా — పసుపు గడులను పేపర్‌తో చూసి సరిచేయండి (Gemini అక్షరం ఉంచాం).' : cells.length + ' గడుల్లో ' + got + ' అక్షరాలు చదివాం. ప్రతి గడినీ జవాబుల చిత్రంతో పోల్చి సరిదిద్దండి (పై “మూల చిత్రం” లో పేపర్ ఉంది).' };
       location.hash = '#edit';
     }, function (e) { TPROG = null; U.busy = ''; U.status = { kind: 'err', text: 'చదవడం కుదరలేదు (' + ((e && e.message) || e || 'error') + ').' }; render(); });
   }
-  function keepSourceImage(kind, blob) {
-    var u = URL.createObjectURL(blob); U.srcOpen = true;
-    if (kind === 'answers') U.srcUrls = U.srcUrls.slice(0, 1).concat([u]);
-    else { U.srcUrls.forEach(function (x) { URL.revokeObjectURL(x); }); U.srcUrls = [u]; }
+  // the pictures Gemini / Claude were given: the puzzle's pages (a new draft follows) or the answers page, kept for the editor's viewer
+  function keepSourceImage(kind, blobs) {
+    blobs = [].concat(blobs || []).filter(Boolean); if (!blobs.length) return;
+    var close = !!U.smartHit && blobs.length > 1;   // a PDF: the last picture is the close-up of the grid
+    var labels = blobs.map(function (b, i) { return close && i === blobs.length - 1 ? (kind === 'answers' ? 'జవాబుల గడి' : 'గడి (దగ్గరగా)') : (kind === 'answers' ? 'జవాబుల పేజీ' : 'పేజీ') + (blobs.length - (close ? 1 : 0) > 1 ? ' ' + (i + 1) : ''); });
+    if (kind === 'answers') srcAdd('a', blobs, labels); else srcStage(blobs, labels);
+  }
+
+  /* ================= admin: the paper beside the editor ================= */
+  // The pictures a draft was made from (the puzzle's page, the answers page and grid, or any photo / PDF added just to look at) are kept
+  // on this phone with the draft (IndexedDB, by the draft's uid), so they are there again when the draft is reopened. The editor shows
+  // them above the board (beside it on a wide screen), with zoom; the panel folds to one line when it is in the way.
+  var SRC_NEW = '(new)', SRCDB = null, SRCV = { uid: '', items: [], sel: 0, z: 0 }, SRCZ = [100, 150, 200, 300, 400];
+  function srcDb() {
+    if (!SRCDB) { SRCDB = new Promise(function (res, rej) {
+      try { var q = indexedDB.open('epv-src', 1); q.onupgradeneeded = function () { q.result.createObjectStore('src'); }; q.onsuccess = function () { res(q.result); }; q.onerror = function () { rej(q.error); }; }
+      catch (e) { rej(e); }
+    }); SRCDB.catch(function () { SRCDB = null; }); }
+    return SRCDB;
+  }
+  function srcTx(mode, fn) {
+    return srcDb().then(function (db) { return new Promise(function (res, rej) { var tx = db.transaction('src', mode), q = fn(tx.objectStore('src')); tx.oncomplete = function () { res(q && q.result); }; tx.onerror = tx.onabort = function () { rej(tx.error); }; }); });
+  }
+  function srcReset(uid) { SRCV.items.forEach(function (it) { try { URL.revokeObjectURL(it.url); } catch (e) {} }); SRCV = { uid: uid, items: [], sel: 0, z: 0 }; }
+  function srcLoad(uid) {
+    if (!uid || SRCV.uid === uid) return Promise.resolve(SRCV);
+    if (SRCV.loading && SRCV.loading.uid === uid) return SRCV.loading.p;
+    var mine = SRCV, p = srcTx('readonly', function (st) { return st.get(uid); }).catch(function () { return null; }).then(function (rec) {
+      if (SRCV !== mine) return SRCV;   // something newer took the viewer meanwhile
+      srcReset(uid);
+      ((rec && rec.items) || []).forEach(function (it) { if (it && it.blob) SRCV.items.push({ k: it.k, label: it.label, blob: it.blob, url: URL.createObjectURL(it.blob) }); });
+      return SRCV;
+    });
+    SRCV.loading = { uid: uid, p: p };
+    return p;
+  }
+  function srcSave() {
+    if (!SRCV.uid || SRCV.uid === SRC_NEW) return;
+    var uid = SRCV.uid, rec = { t: Date.now(), items: SRCV.items.map(function (it) { return { k: it.k, label: it.label, blob: it.blob }; }) };
+    srcTx('readwrite', function (st) { return rec.items.length ? st.put(rec, uid) : st.delete(uid); }).catch(function () {});
+  }
+  function srcPut(kind, blobs, labels) {
+    SRCV.items = SRCV.items.filter(function (it) { if (it.k.charAt(0) !== kind) return true; try { URL.revokeObjectURL(it.url); } catch (e) {} return false; });
+    blobs.forEach(function (b, i) { SRCV.items.push({ k: kind + i, label: labels[i] || labels[0] || '', blob: b, url: URL.createObjectURL(b) }); });
+    var ord = 'pagx'; SRCV.items.sort(function (a, b) { return (ord.indexOf(a.k.charAt(0)) - ord.indexOf(b.k.charAt(0))) || (+a.k.slice(1) - +b.k.slice(1)); });
+    for (var i = 0; i < SRCV.items.length; i++) if (SRCV.items[i].k === kind + '0') { SRCV.sel = i; break; }
+    SRCV.z = 0; S.prefs.srcHide = false;
+  }
+  // a new puzzle being read: its pages wait here until its draft exists (srcAdopt)
+  function srcStage(blobs, labels) { srcReset(SRC_NEW); srcPut('p', blobs, labels); }
+  function srcAdopt() { if (SRCV.uid !== SRC_NEW || !D) return; if (!D.uid) saveDraft(); SRCV.uid = D.uid; srcSave(); }
+  // kind 'a' answers pages, 'g' the answers grid close-up, 'x' a file added only to look at: they belong to the open draft
+  function srcAdd(kind, blobs, labels) {
+    blobs = (blobs || []).filter(Boolean); if (!blobs.length || !D) return;
+    if (!D.uid) saveDraft();
+    var uid = D.uid;
+    srcLoad(uid).then(function () { if (SRCV.uid !== uid) return; srcPut(kind, blobs, labels); srcSave(); if (route() === 'edit') render(); });
+  }
+  // any photo or PDF, just to look at while editing (e.g. a published post being corrected): PDF pages are drawn as pictures
+  function srcAddFiles(files) {
+    var list = Array.prototype.slice.call(files || []); if (!list.length || !D) return;
+    U.status = { kind: 'wait', text: 'ఫైల్ తెరుస్తున్నాం…' }; render();
+    var blobs = [], labels = [], chain = Promise.resolve();
+    loadPages(list).then(function (pages) {
+      pages.slice(0, 8).forEach(function (pg, i) { chain = chain.then(function () { return pg.blob ? pg.blob : renderPage(pg, 1800).then(function (r) { return new Promise(function (res) { r.cv.toBlob(res, 'image/jpeg', 0.85); }); }); }).then(function (b) { if (b) { blobs.push(b); labels.push('ఫైల్ ' + (i + 1)); } }); });
+      return chain;
+    }).then(function () {
+      if (!blobs.length) throw new Error('none');
+      if (blobs.length === 1) labels = ['ఫైల్'];
+      U.status = { kind: 'ok', text: 'మూల ఫైల్ జోడించాం — ఎడిటర్ పైన చూడవచ్చు (ఈ ఫోన్‌లో ఈ డ్రాఫ్ట్‌తో ఉంటుంది).' };
+      srcAdd('x', blobs, labels);
+    }).catch(function () { U.status = { kind: 'err', text: 'ఫైల్ తెరవలేకపోయాం (ఫోటో లేదా PDF ఇవ్వండి).' }; render(); });
+  }
+  // drafts that are gone take their pictures with them
+  function srcPrune() {
+    var keepU = {}; (S.drafts || []).forEach(function (x) { if (x.uid) keepU[x.uid] = 1; }); if (D && D.uid) keepU[D.uid] = 1;
+    srcTx('readwrite', function (st) { var q = st.getAllKeys(); q.onsuccess = function () { (q.result || []).forEach(function (k) { if (!keepU[k]) st.delete(k); }); }; return q; }).catch(function () {});
+  }
+  function srcViewHTML() {
+    if (!D) return '';
+    if (D.uid && SRCV.uid !== D.uid && !(SRCV.loading && SRCV.loading.uid === D.uid)) srcLoad(D.uid).then(function () { if (route() === 'edit' && D && SRCV.uid === D.uid && SRCV.items.length) render(); });
+    var add = '<label class="smallbtn srcadd" for="src-add" style="cursor:pointer" aria-label="మూల ఫైల్ జోడించండి" title="మూల ఫైల్ జోడించండి">+ ఫైల్</label><input id="src-add" type="file" accept="image/jpeg,image/png,image/webp,application/pdf" multiple style="position:absolute;width:1px;height:1px;opacity:0">';
+    var its = SRCV.uid === D.uid ? SRCV.items : [];
+    if (!its.length) return '<div class="srcv is-empty"><span class="lbl">మూల ఫైల్ (పేపర్ ఫోటో / PDF) పక్కనే చూస్తూ సరిదిద్దాలంటే:</span>' + add + '</div>';
+    var sel = Math.min(SRCV.sel, its.length - 1), it = its[sel], hide = !!S.prefs.srcHide, z = SRCZ[SRCV.z] || 100;
+    var tabs = its.length > 1 ? '<div class="seg small srctabs" role="group" aria-label="మూల చిత్రాలు">' + its.map(function (x, i) { return '<button data-act="src-sel" data-v="' + i + '" aria-pressed="' + (i === sel) + '">' + esc(x.label) + '</button>'; }).join('') + '</div>' : '<span class="srcname">' + esc(it.label) + '</span>';
+    return '<section class="srcv' + (hide ? ' is-hidden' : '') + '" aria-label="మూల ఫైల్">' +
+      '<div class="srcbar"><b>మూల ఫైల్</b>' + (hide ? '' : tabs) + '<span class="srcsp"></span>' +
+        (hide ? '' : '<button class="ghostbtn" data-act="src-zoom" data-v="-1" aria-label="చిన్నగా"' + (SRCV.z <= 0 ? ' disabled' : '') + '>' + I.zout + '</button><button class="smallbtn srcfit" data-act="src-zoom" data-v="0" aria-label="పూర్తిగా చూపు">' + z + '%</button><button class="ghostbtn" data-act="src-zoom" data-v="1" aria-label="పెద్దగా"' + (SRCV.z >= SRCZ.length - 1 ? ' disabled' : '') + '>' + I.zin + '</button>' + add) +
+        '<button class="smallbtn" data-act="src-hide" aria-expanded="' + !hide + '">' + (hide ? 'చూపించు' : 'దాచు') + '</button></div>' +
+      (hide ? '' : '<div class="srcbox" data-scroll="srcv"><img src="' + it.url + '" alt="' + esc(it.label) + '" style="width:' + z + '%;max-width:' + (z === 100 ? '100%' : 'none') + '"></div>') +
+    '</section>';
   }
   function isPdf(f) { return /pdf$/i.test(f.type) || /\.pdf$/i.test(f.name); }
   // PDFs: only the pages that matter (the grid page and its clue pages, or the page with last week's answers) and a close-up of the grid
@@ -3839,7 +4020,7 @@ select.inp{font-family:var(--font-ui,inherit);font-size:16px;appearance:auto}
         var df = patDiff(sh.pat, D.R, D.C, D.black);
         if (df != null && df > Math.max(2, 0.03 * D.R * D.C)) throw { code: 'wrong_answers', error: wrongWeekText(df, files) };
       }
-      keepSourceImage(kind, blobs[0]);
+      keepSourceImage(kind, blobs);
       return Promise.all(blobs.map(blobToB64));
     }).then(function (datas) {
       var prompt = PROMPT_PUZZLE;
@@ -3934,7 +4115,7 @@ select.inp{font-family:var(--font-ui,inherit);font-size:16px;appearance:auto}
         : who + ' జవాబులు నింపింది.' + (nBad ? ' ' + nBad + ' గడులు సందేహం (పసుపు).' : '') + ' “జవాబులు” లో గడిని నొక్కి నేరుగా మార్చవచ్చు. ఇంకా నమ్మకంగా ఉండాలంటే “ఫోన్‌లోనే” తో కూడా చదివించండి — రెండూ ఒకటే చెప్పిన గడులు సరైనవి, తేడా ఉన్నవి మాత్రమే పసుపులో.' }; U.emode = 'sheet'; render(); return;
     }
     stashDraft(); D = draftFromAI(j || {}, date); D.src = 'upload';
-    var fixNote = gridFromPaper(D); saveDraft();
+    var fixNote = gridFromPaper(D); saveDraft(); srcAdopt();
     U.status = { kind: 'ok', text: who + ' డ్రాఫ్ట్ చేసింది.' + fixNote + ' గడి, సంఖ్యలు, ఆధారాలు చిత్రంతో పోల్చి సరిచూడండి, తర్వాత ప్రచురించండి.' };
     location.hash = '#edit';
     readPendingAnswers(geminiRead);
@@ -3943,7 +4124,7 @@ select.inp{font-family:var(--font-ui,inherit);font-size:16px;appearance:auto}
   /* ================= views: website admin ================= */
   function upPickersHTML() {
     var acc = 'accept="image/jpeg,image/png,image/webp,application/pdf"';
-    return '<div class="file"><label class="lbl" for="up-files">1 · పద వినోదం (గడి + ఆధారాలు) — ఫోటో(లు) లేదా PDF</label><input id="up-files" type="file" ' + acc + ' multiple></div>' +
+    return apkPickNote() + '<div class="file"><label class="lbl" for="up-files">1 · పద వినోదం (గడి + ఆధారాలు) — ఫోటో(లు) లేదా PDF</label><input id="up-files" type="file" ' + acc + ' multiple></div>' +
       '<div class="file"><label class="lbl" for="up-ans">2 · జవాబుల గడి — ఫోటో లేదా PDF (ఐచ్ఛికం)</label><input id="up-ans" type="file" ' + acc + '><p class="note">జవాబులు తర్వాతి వారం పేపర్‌లో వస్తాయి కాబట్టి వాటిని విడిగా ఇవ్వండి. ఇప్పుడు లేకపోతే తర్వాత డ్రాఫ్ట్‌లోని “జవాబులు” కార్డ్ నుంచి ఇవ్వొచ్చు. పద వినోదం చదవగానే జవాబులు కూడా చదివి అదే డ్రాఫ్ట్‌లో నింపుతాం.</p></div>';
   }
   function webLoginView() {
@@ -4053,7 +4234,7 @@ select.inp{font-family:var(--font-ui,inherit);font-size:16px;appearance:auto}
   }
   function openImport(p) {
     stashDraft(); D = draftFromPuzzle(Object.assign({ title: 'ఈనాడు పద వినోదం', date: '', clues: [], nums: {} }, p));
-    D.id = ''; D.postId = ''; D.src = 'upload'; U.er = 0; U.ec = 0; U.emode = 'ans'; U.srcUrls = []; U.imports = null; saveDraft();
+    D.id = ''; D.postId = ''; D.src = 'upload'; U.er = 0; U.ec = 0; U.emode = 'ans'; U.imports = null; saveDraft();
     U.status = { kind: 'ok', text: 'డ్రాఫ్ట్‌గా తెరిచాం' + (p.date ? ' (' + p.date + ')' : '') + '. సరిచూసి “బ్లాగ్‌లో ప్రచురించండి” నొక్కండి.' };
     location.hash = '#edit'; render();
   }
@@ -4405,8 +4586,7 @@ select.inp{font-family:var(--font-ui,inherit);font-size:16px;appearance:auto}
     var nA = D.clues.filter(function (c) { return c.d === 'A'; }).length, nD = D.clues.length - nA;
     return '<section class="play" style="overflow-y:auto" data-scroll="edit">' +
       '<header class="ebar"><a class="ghostbtn" href="#admin" aria-label="నిర్వాహణకు వెనక్కి">' + I.back + '</a><h1>' + (D.id ? 'పోస్ట్ మార్పు' : 'కొత్త పోస్ట్ డ్రాఫ్ట్') + '</h1></header>' +
-      '<div class="page gutter" style="gap:18px">' + statusBox() +
-        (U.srcUrls.length ? '<details' + (U.srcOpen ? ' open' : '') + '><summary class="lbl" style="cursor:pointer">మూల చిత్రం చూడండి' + (U.srcUrls.length > 1 ? ' (పద వినోదం, జవాబులు)' : '') + '</summary><div class="srcimgs">' + U.srcUrls.map(function (u) { return '<img src="' + u + '" alt="అప్‌లోడ్ చేసిన పద వినోదం చిత్రం">'; }).join('') + '</div></details>' : '') +
+      '<div class="page gutter edpage">' + srcViewHTML() + '<div class="edmain">' + statusBox() +
         '<div class="box"><div class="row2"><div class="fld"><label class="lbl" for="d-title">శీర్షిక</label><input id="d-title" class="inp" data-df="title" value="' + esc(D.title) + '"></div><div class="fld"><label class="lbl" for="d-date">తేదీ</label><input id="d-date" class="inp" data-df="date" inputmode="numeric" placeholder="DD.MM.YYYY" value="' + esc(D.date) + '"></div></div>' +
         '<div class="fld"><label class="lbl" for="d-paper">పత్రిక</label><select id="d-paper" class="inp">' + paperOptions(D.paper) + '</select></div>' +
         '<div class="row3"><div class="fld"><label class="lbl" for="d-rows">వరుసలు</label><input id="d-rows" class="inp sm" type="number" min="3" max="25" value="' + D.R + '"></div><div class="fld"><label class="lbl" for="d-cols">నిలువు వరుసలు</label><input id="d-cols" class="inp sm" type="number" min="3" max="25" value="' + D.C + '"></div><div class="fld"><span class="lbl">&nbsp;</span><button class="smallbtn" style="min-height:40px" data-act="resize">పరిమాణం మార్చు</button></div></div></div>' +
@@ -4422,14 +4602,14 @@ select.inp{font-family:var(--font-ui,inherit);font-size:16px;appearance:auto}
         (busy ? '<div class="status"><span>' + (U.busy === 'ai' ? 'Gemini ఇంకా చదువుతోంది — అది ముగిసే వరకు ప్రచురించే బటన్లు ఆగుతాయి.' : U.busy === 'ocr' || U.busy === 'scan' ? 'ఫోన్ ఇంకా చదువుతోంది — అది ముగిసే వరకు ప్రచురించే బటన్లు ఆగుతాయి.' : 'పని జరుగుతోంది — ముగిసే వరకు ప్రచురించే బటన్లు ఆగుతాయి.') + '</span>' + (U.busy === 'ai' ? '<button class="smallbtn" data-act="ai-stop">ఆపండి</button>' : '') + '</div>' : '') +
         '<div class="savebar"><button class="wide-btn sec" data-act="draft-save">' + I.save + ' డ్రాఫ్ట్ సేవ్ చేయండి</button><small>' + (D.edited ? 'మార్పులు ఈ ఫోన్‌లో తానుగా సేవ్ అవుతాయి · చివరి మార్పు ' + hhmm(D.edited) : '') + ((S.drafts || []).some(function (x) { return x.uid === D.uid; }) ? ' · సేవ్ చేసిన డ్రాఫ్ట్‌ల్లో ఉంది' : '') + '</small></div>' +
         '<button class="wide-btn link" data-act="draft-drop">' + (U.confirm === 'drop' ? 'ఖచ్చితమా? డ్రాఫ్ట్ పోతుంది — మళ్ళీ నొక్కండి' : 'డ్రాఫ్ట్ వదిలేయండి') + '</button>' +
-      '</div></section>';
+      '</div></div></section>';
   }
   // answers come from a separate picture (Eenadu prints them the next week): one card in every editing mode
   function ansCardHTML(m) {
     var hid = 'style="position:absolute;width:1px;height:1px;opacity:0"', acc = 'accept="image/jpeg,image/png,image/webp,application/pdf"', busy = U.busy ? ' aria-disabled="true"' : '';
     var btns = IS_CLAUDE ? '<label class="wide-btn ter" for="ans-files" style="cursor:pointer"' + busy + '>Claude తో చదవండి</label><input id="ans-files" type="file" ' + acc + ' ' + hid + '>'
       : '<label class="wide-btn ter" for="ans-gem" style="cursor:pointer"' + busy + '>Gemini తో</label><label class="wide-btn ter" for="ans-scan" style="cursor:pointer"' + busy + '>ఫోన్‌లోనే</label><input id="ans-gem" type="file" ' + acc + ' ' + hid + '><input id="ans-scan" type="file" ' + acc + ' ' + hid + '>';
-    return '<div class="anscard' + (m.hasAns ? ' is-full' : '') + '"><b>' + (m.hasAns ? 'జవాబులు అన్నీ ఉన్నాయి' : 'జవాబులు: ' + m.missingAns + ' గడులు ఖాళీ') + '</b><small>' + (m.hasAns ? 'కొత్త జవాబుల చిత్రంతో మళ్ళీ నింపాలంటే:' : 'జవాబుల గడి ఫోటో / PDF ఇవ్వండి (విడిగా), లేదా “జవాబులు” లో టైప్ చేయండి.') + '</small><div class="btnrow">' + btns + '</div></div>';
+    return '<div class="anscard' + (m.hasAns ? ' is-full' : '') + '"><b>' + (m.hasAns ? 'జవాబులు అన్నీ ఉన్నాయి' : 'జవాబులు: ' + m.missingAns + ' గడులు ఖాళీ') + '</b><small>' + (m.hasAns ? 'కొత్త జవాబుల చిత్రంతో మళ్ళీ నింపాలంటే:' : 'జవాబుల గడి ఫోటో / PDF ఇవ్వండి (విడిగా), లేదా “జవాబులు” లో టైప్ చేయండి.') + '</small><div class="btnrow">' + btns + '</div>' + apkPickNote() + '</div>';
   }
   function editPut(v) {
     if (D.black[U.er][U.ec]) return;
@@ -4464,7 +4644,8 @@ select.inp{font-family:var(--font-ui,inherit);font-size:16px;appearance:auto}
   }
   function render() {
     var r = route(), keep = {};
-    view.querySelectorAll('[data-scroll]').forEach(function (el) { keep[el.getAttribute('data-scroll')] = el.scrollTop; });
+    document.documentElement.classList.toggle('wide-edit', r === 'edit');   // a wide screen shows the paper beside the editor
+    view.querySelectorAll('[data-scroll]').forEach(function (el) { keep[el.getAttribute('data-scroll')] = el.scrollTop; keep[el.getAttribute('data-scroll') + ':x'] = el.scrollLeft; });
     var ae = document.activeElement, fsel = null, fpos = null;
     if (ae && view.contains(ae) && /^(INPUT|TEXTAREA)$/.test(ae.tagName) && ae.type !== 'file') { fsel = focusKey(ae); try { fpos = [ae.selectionStart, ae.selectionEnd]; } catch (e) {} }
     var html;
@@ -4482,7 +4663,7 @@ select.inp{font-family:var(--font-ui,inherit);font-size:16px;appearance:auto}
     if (fimg) fimg.onerror = function () { fimg.parentNode.innerHTML = '<span class="finart">' + congrats((CUR && CUR.P.variant) || 0) + '</span>'; };
     var fixed = r.indexOf('play-') === 0 && !!CUR;
     view.classList.toggle('is-fixed', fixed);
-    view.querySelectorAll('[data-scroll]').forEach(function (el) { var v = keep[el.getAttribute('data-scroll')]; if (v) el.scrollTop = v; });
+    view.querySelectorAll('[data-scroll]').forEach(function (el) { var v = keep[el.getAttribute('data-scroll')], vx = keep[el.getAttribute('data-scroll') + ':x']; if (v) el.scrollTop = v; if (vx) el.scrollLeft = vx; });
     if (fsel) { var ne = view.querySelector(fsel); if (ne && ne !== document.activeElement) { try { ne.focus({ preventScroll: true }); if (fpos && fpos[0] != null) ne.setSelectionRange(fpos[0], fpos[1]); } catch (e) {} } }
     if (TE && !document.body.contains(TE.el)) { var nf = document.activeElement; if (nf && teField(nf)) teStrip(nf); else teHide(); }
     var apw = view.querySelector('#adm-pw');   // the admin sign-in: the cursor waits in the password box
@@ -4517,6 +4698,7 @@ select.inp{font-family:var(--font-ui,inherit);font-size:16px;appearance:auto}
       }
       if (r === 'play-draft' && S.prog.draft) { S.prog.draft = freshProgress(); }
       if ((r === 'admin' || r === 'edit') && lastRoute && lastRoute !== 'admin' && lastRoute !== 'edit' && lastRoute !== 'play-draft' && lastRoute !== 'scan') U.status = null;
+      if (r === 'admin' && ADMIN && !U.srcPruned) { U.srcPruned = true; setTimeout(srcPrune, 3000); }
     }
     lastRoute = r; render();
   }
@@ -4553,8 +4735,7 @@ select.inp{font-family:var(--font-ui,inherit);font-size:16px;appearance:auto}
       case 'panel-type': U.panel = 'type'; U.cons = null; U.conj = null; render(); var tpi = document.getElementById('tl-in'); if (tpi) tpi.focus(); break;
       case 'panel-keys': U.panel = S.prefs.keypad === 'phone' ? 'type' : 'keys'; render(); break;
       case 'zoom-in': case 'zoom-out':
-        var zi = ZOOMS.indexOf(zoomLevel()) + (a === 'zoom-in' ? 1 : -1);
-        S.prefs.zoom = ZOOMS[Math.max(0, Math.min(ZOOMS.length - 1, zi))]; U.follow = true; save(); render();
+        S.prefs.zoom = zoomStep(a === 'zoom-in' ? 1 : -1); U.follow = true; save(); render();
         toast('గడి ' + Math.round(S.prefs.zoom * 100) + '%' + (S.prefs.zoom > 1 ? ' — పక్కకు జరిపి చూడండి' : ''));
         break;
       case 'kb-te': U.panel = 'keys'; S.prefs.keypad = 'app'; save(); if (document.activeElement) document.activeElement.blur(); render(); break;
@@ -4720,9 +4901,9 @@ select.inp{font-family:var(--font-ui,inherit);font-size:16px;appearance:auto}
       case 'draft-save': if (!D) break; saveDraft(); keepDraft(D); render(); break;
       case 'draft-open': var kd = (S.drafts || []).filter(function (x) { return x.uid === v; })[0]; if (!kd) break;
         if (D && D.uid !== kd.uid) stashDraft();
-        D = JSON.parse(JSON.stringify(kd)); delete D.saved; U.er = 0; U.ec = 0; U.emode = 'ans'; U.srcUrls = []; U.status = { kind: 'ok', text: 'సేవ్ చేసిన డ్రాఫ్ట్ తెరిచాం: ' + draftLabel(D) }; saveDraft(); location.hash = '#edit'; break;
-      case 'draft-del': if (U.confirm !== 'ddel-' + v) { U.confirm = 'ddel-' + v; render(); break; } U.confirm = ''; dropKept(v); render(); break;
-      case 'blank': stashDraft(); D = newDraft(12, 12); var ud = document.getElementById('up-date'); D.date = ud ? ud.value.trim() : ''; U.er = 0; U.ec = 0; U.emode = 'black'; U.srcUrls = []; saveDraft(); location.hash = '#edit'; break;
+        D = JSON.parse(JSON.stringify(kd)); delete D.saved; U.er = 0; U.ec = 0; U.emode = 'ans'; U.status = { kind: 'ok', text: 'సేవ్ చేసిన డ్రాఫ్ట్ తెరిచాం: ' + draftLabel(D) }; saveDraft(); location.hash = '#edit'; break;
+      case 'draft-del': if (U.confirm !== 'ddel-' + v) { U.confirm = 'ddel-' + v; render(); break; } U.confirm = ''; dropKept(v); srcPrune(); render(); break;
+      case 'blank': stashDraft(); D = newDraft(12, 12); var ud = document.getElementById('up-date'); D.date = ud ? ud.value.trim() : ''; U.er = 0; U.ec = 0; U.emode = 'black'; saveDraft(); location.hash = '#edit'; break;
       case 'imp-read': var ta = document.getElementById('imp-paste'); if (!ta || !ta.value.trim()) { toast('ముందు ఫీడ్ టెక్స్ట్ అతికించండి.'); break; } runImport([ta.value]); break;
       case 'imp-toggle': var iid = t.getAttribute('data-id'); U.importSel[iid] = !U.importSel[iid]; render(); break;
       case 'imp-all': var all = U.imports.every(function (p) { return U.importSel[p.id]; }); U.imports.forEach(function (p) { U.importSel[p.id] = !all; }); render(); break;
@@ -4732,7 +4913,7 @@ select.inp{font-family:var(--font-ui,inherit);font-size:16px;appearance:auto}
         var merged = PUZZLES.filter(function (p) { return !ids[p.id]; }).concat(chosen.map(function (p) { var c = Object.assign({}, p); delete c.exists; return c; }));
         savePuzzles(merged, chosen.length + ' పోస్టులు ప్రచురించాం. అవి ఇప్పుడు హోమ్, ఆర్కైవ్‌లో ఉన్నాయి.', function () { U.imports = null; U.importSel = {}; });
         break;
-      case 'edit-pub': var ep = findPuzzle(t.getAttribute('data-id')); if (!ep) break; stashDraft(); D = draftFromPuzzle(ep); U.er = 0; U.ec = 0; U.emode = 'black'; U.srcUrls = []; saveDraft(); location.hash = '#edit'; break;
+      case 'edit-pub': var ep = findPuzzle(t.getAttribute('data-id')); if (!ep) break; stashDraft(); D = draftFromPuzzle(ep); U.er = 0; U.ec = 0; U.emode = 'black'; saveDraft(); location.hash = '#edit'; break;
       case 'del-pub':
         var did = t.getAttribute('data-id');
         if (U.confirm !== 'del:' + did) { U.confirm = 'del:' + did; render(); break; }
@@ -4746,6 +4927,17 @@ select.inp{font-family:var(--font-ui,inherit);font-size:16px;appearance:auto}
         if (U.emode === 'num') { var ni = document.getElementById('num-in'); if (ni) ni.focus(); }
         break;
       case 'emode': U.emode = v; U.cons = null; U.conj = null; render(); break;
+      case 'src-sel': SRCV.sel = +v || 0; SRCV.z = 0; render(); break;
+      case 'src-hide': S.prefs.srcHide = !S.prefs.srcHide; save(); render(); break;
+      case 'src-zoom':
+        var sbx = view.querySelector('.srcbox'), fx = 0.5, fy = 0;
+        if (sbx && sbx.scrollWidth) { fx = (sbx.scrollLeft + sbx.clientWidth / 2) / sbx.scrollWidth; fy = (sbx.scrollTop + sbx.clientHeight / 2) / sbx.scrollHeight; }
+        SRCV.z = +v === 0 ? 0 : Math.max(0, Math.min(SRCZ.length - 1, SRCV.z + (+v)));
+        render();
+        var sb2 = view.querySelector('.srcbox'), sim = sb2 && sb2.querySelector('img');
+        var place = function () { if (!sb2) return; sb2.scrollLeft = Math.max(0, fx * sb2.scrollWidth - sb2.clientWidth / 2); sb2.scrollTop = SRCV.z ? Math.max(0, fy * sb2.scrollHeight - sb2.clientHeight / 2) : 0; };
+        if (sim && !sim.complete) sim.onload = place; else place();
+        break;
       case 'eflip': U.edir = U.edir === 'A' ? 'D' : 'A'; render(); break;
       case 'auto-num': draftAutoNumber(); toast('సంఖ్యలు ఆటోగా వేశాం. ఈనాడు సంఖ్యల వరుస వేరుగా ఉంటే చేతితో సరిదిద్దండి.'); render(); break;
       case 'num-set': var nv = parseInt((document.getElementById('num-in') || {}).value, 10); if (nv > 0 && !D.black[U.er][U.ec]) { D.nums[key(U.er, U.ec)] = nv; saveDraft(); render(); } else toast('తెల్ల గడి ఎంచుకుని సంఖ్య ఇవ్వండి.'); break;
@@ -4789,7 +4981,7 @@ select.inp{font-family:var(--font-ui,inherit);font-size:16px;appearance:auto}
         break;
       case 'draft-drop':
         if (U.confirm !== 'drop') { U.confirm = 'drop'; render(); break; }
-        forgetDraft(); D = null; S.draft = null; U.confirm = ''; save(); location.hash = '#admin'; break;
+        forgetDraft(); D = null; S.draft = null; U.confirm = ''; save(); srcPrune(); location.hash = '#admin'; break;
     }
   });
   function selectText(id) { var el = document.getElementById(id); if (!el) return; var rg = document.createRange(); rg.selectNodeContents(el); var sl = window.getSelection(); sl.removeAllRanges(); sl.addRange(rg); toast('లింక్‌ను ఎంచుకున్నాం — కాపీ చేయండి.'); }
@@ -4823,6 +5015,7 @@ select.inp{font-family:var(--font-ui,inherit);font-size:16px;appearance:auto}
     }
     if (t.id === 'imp-files' && t.files.length) { Promise.all(Array.prototype.map.call(t.files, readFileText)).then(runImport, function () { U.status = { kind: 'err', text: 'ఫైల్ తెరవలేకపోయాం.' }; render(); }); }
     if (t.id === 'ans-files' && t.files.length) aiRead('answers', t.files);
+    if (t.id === 'src-add' && t.files.length) srcAddFiles(t.files);
     if (t.hasAttribute && t.hasAttribute('data-pick') && t.files.length) uploadPic(t.getAttribute('data-pick'), t.files[0]);
     if (t.id === 'ans-gem' && t.files.length) geminiRead('answers', t.files);
     if (t.id === 'ans-scan' && t.files.length) scanOpen('answers', t.files);

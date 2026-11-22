@@ -45,9 +45,17 @@ Answer colours follow the blog: a right letter turns grey with a green border an
 
 **ఆటో** (next to సులభం / కష్టం, on puzzles that have answers) fills the answers by itself, always starting from the first clue on the board: it goes clue by clue, shows each clue on the clue bar and writes only the squares that are empty or wrong, letter by letter. Squares the player already got right are left alone and skipped. Pause, next clue, stop and three speeds are under the board. Auto-filled letters count as hints; in the ఆధారాలు list, letters that came from a hint or ఆటో are shown on an orange background. Afterwards **గడి ఖాళీ చేసి మీరే ఆడండి** empties the grid to play it yourself.
 
-A puzzle opens at the biggest zoom (200%) with the keyboard hidden; the first tap on a square brings the keyboard back. The bar above the clue scrolls the board sideways (drag it or use its arrows). On a computer the arrow keys move the selected square across and down, and the board scrolls along.
+A puzzle opens zoomed so that about 7 columns fill a phone's width (a 12×12 board shows a 7×7 corner; swipe for the rest), with the keyboard hidden; the first tap on a square brings the keyboard back. On a computer the whole board shows. The − / + buttons step from there (100% to 250%). The bar above the clue scrolls the board sideways (drag it or use its arrows). On a computer the arrow keys move the selected square across and down, and the board scrolls along.
 
 **Finding a post:** the home page has a search box (పోస్ట్ వెతకండి): type a date in any common form (01.11.2026, 1/11, 1-11-26, 01112026), a month (నవంబర్ or nov), a year (2025) or part of the title, and tap the post in the list that appears. The archive search understands the same forms.
+
+## New in 0.28
+
+- **Header and modes stay while playing:** the top bar (title, date, how many squares are filled, zoom − / +, the record button, ✓) and the సులభం / కష్టం / ఆటో row with the timer stay on screen while typing, on the blog and in the app alike, only a little smaller. The row wraps instead of cutting off its words on narrow phones.
+- **Zoom:** see *Typing answers* (about 7 columns on a phone).
+- **Home list:** in ఆడిన క్రమం the newest puzzle of every other paper that you have not opened yet comes first (a new సాక్షి puzzle is no longer hidden behind played ఈనాడు ones), then the ones played most recently.
+- **Status:** a puzzle finished with ఆటో shows **ఆటోతో పూర్తి** (it used to stay “మధ్యలో”), and a board with every square filled but some letters wrong shows **N తప్పులు** on the home page and on the puzzle's top bar (✓ marks them).
+- **The paper beside the editor (admin):** the photo / PDF a draft was read from (the puzzle's page, the answers page and grid) is shown above the editor on a phone — it stays in view while you scroll, zooms with − / +, and **దాచు** folds it to one line — and beside the editor on a computer. It is kept on that phone with the draft, so it is there again when the draft is reopened. **+ ఫైల్** adds any photo or PDF just to look at (for example when correcting a published post).
 
 ## Look
 
@@ -61,7 +69,7 @@ The black squares show the post's own picture from the blog (the GIF chosen for 
 
 On a computer (Chrome or Edge), the red circle on the puzzle's top bar records the screen, as the blog's రికార్డు చేయండి button does. The browser asks which tab or screen to share; pick this tab. Press the red button again, or the floating "ఆపు" pill, to stop; the video is saved to Downloads named after the puzzle date (for example `180525.mp4`). Phones' browsers cannot record the screen, so on a phone use the phone's own screen recorder (Android: quick settings → Screen record). The blog's rain picture or plain black can be chosen instead. Phones set to reduce motion get still pictures.
 
-The magnifier buttons on the puzzle's top bar zoom the grid from 100% to 200% (it then scrolls sideways); pinch-zoom on the phone works too.
+The magnifier buttons on the puzzle's top bar zoom the grid from 100% to 250% (it then scrolls sideways); pinch-zoom on the phone works too.
 
 ## Keeping posts up to date
 
@@ -174,7 +182,7 @@ The APK built in Android Studio opens this site full-screen. Name the signed rel
 
 For an update, raise `versionCode` (and `versionName`) in `app/build.gradle.kts`, build with the **same keystore**, and upload with the same file name. Content changes never need a new APK: the app always shows the live site.
 
-Version 3 of `MainActivity.kt` adds the file picker, so the admin page's **ఫోటో లేదా PDF** button works inside the app (older APKs ignore the button; use Chrome there).
+**Version 4 of `MainActivity.kt` (0.28)** opens Android's own file picker (Files, Downloads, Drive, Photos) for the admin page's photo / PDF buttons: photos and PDFs can be chosen together, one or several. Copy it over `app/src/main/java/com/telugupadavinodam/app/MainActivity.kt`, raise `versionCode`, build and upload as above. The site knows the app's version from its browser name (`EPadavinodamApp/4`): inside an older app the admin page says that choosing a file needs the new app (or Chrome) instead of a button that does nothing.
 
 ## Putting it on the Play Store (optional)
 
