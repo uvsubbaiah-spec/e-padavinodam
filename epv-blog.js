@@ -3101,7 +3101,7 @@
         if (SRCV.uid !== uid) return;
         if (r[0].blobs.length) srcPut('p', r[0].blobs, r[0].labels);
         if (r[1].blobs.length) srcPut('a', r[1].blobs, r[1].labels);
-        SRCV.sel = 0; srcSave(); if (route() === 'edit') render();
+        SRCV.sel = r[0].blobs.length ? Math.min(r[0].pick || 0, r[0].blobs.length - 1) : 0; srcSave(); if (route() === 'edit') render();   // the grid's page first
         var key = D && D.uid === uid ? srcKeyOf(D) : ''; if (key) srcToDrive(uid, key, true);
       });
     }).catch(function () {});
@@ -3111,12 +3111,14 @@
     files = files || []; if (!files.length) return Promise.resolve({ blobs: [], labels: [] });
     return loadPages(files).then(function (pages) {
       var idx = pages.map(function (x, i) { return i; }), blobs = [], chain = Promise.resolve();
-      if (pages.length > 10) idx = hint >= 0 ? idx.filter(function (i) { return i >= hint - 1 && i <= hint + 2; }) : idx.slice(0, 4);
+      // a PDF of many pages (a web page or a whole paper printed out): the grid's page and the pages beside it, where the clues are
+      if (pages.length > 3 && hint >= 0) idx = idx.filter(function (i) { return i >= hint - 1 && i <= hint + 1; });
+      else if (pages.length > 10) idx = idx.slice(0, 4);
       idx.forEach(function (i) {
         chain = chain.then(function () { var pg = pages[i]; return pg.blob ? driveBlob(pg.blob) : renderPage(pg, 1800).then(function (r) { return new Promise(function (res) { r.cv.toBlob(res, 'image/jpeg', 0.85); }); }); })
           .then(function (b) { if (b) blobs.push(b); }, function () {});
       });
-      return chain.then(function () { return { blobs: blobs, labels: blobs.map(function (x, i) { return base + (blobs.length > 1 ? ' ' + (i + 1) : ''); }) }; });
+      return chain.then(function () { return { blobs: blobs, pick: Math.max(0, idx.indexOf(hint)), labels: blobs.map(function (x, i) { return base + (blobs.length > 1 ? ' ' + (i + 1) : ''); }) }; });
     });
   }
   // kind 'a' answers pages, 'g' the answers grid close-up, 'x' a file added only to look at: they belong to the open draft
