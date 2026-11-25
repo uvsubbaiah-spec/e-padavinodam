@@ -2135,7 +2135,7 @@ select.inp{font-family:var(--font-ui,inherit);font-size:16px;appearance:auto}
       '<section class="sec"><h2 class="sec-h">Android యాప్‌లో రాబోయేవి</h2><div class="box"><ul class="soon"><li>కొత్త పద వినోదం వస్తే నోటిఫికేషన్</li><li>English భాషలో యాప్</li></ul>' + (IS_CLAUDE ? '' : '<p class="note">ఆఫ్‌లైన్: ఒకసారి తెరిచిన తర్వాత ఇంటర్నెట్ లేకున్నా యాప్, చివరిసారి లోడ్ అయిన పోస్టులు తెరుచుకుంటాయి.</p>') + '</div></section>' +
       '<section class="sec"><h2 class="sec-h">ఆట పురోగతి</h2><div class="box"><p class="note">మీ అమరికలు, ఆట పురోగతి ఈ పరికరంలోనే సేవ్ అవుతాయి.</p><button class="wide-btn ter" data-act="resetall">' + (U.confirm === 'resetall' ? 'ఖచ్చితమా? అన్ని ఆటల పురోగతి పోతుంది — మళ్ళీ నొక్కండి' : 'అన్ని ఆటల పురోగతి తుడిచివేయండి') + '</button></div></section>' +
       (!IS_CLAUDE ? '<section class="sec"><h2 class="sec-h">నిర్వాహణ</h2><div class="box"><p class="note">' + (ADMIN ? 'ఈ పరికరంలో నిర్వాహకుడిగా ప్రవేశించారు: కొత్త పద వినోదం (ఫోటో / PDF నుంచి కూడా), మార్పులు, ప్రచురణ.' : 'బ్లాగ్ నిర్వాహకుడి కోసం మాత్రమే: కొత్త పద వినోదం చేర్చడం, ఆధారాలు సరిదిద్దడం.') + '</p><a class="wide-btn ' + (ADMIN ? 'pri' : 'ter') + '" href="#admin">' + I.lock + (ADMIN ? ' నిర్వాహణ పేజీ తెరవండి' : ' నిర్వాహకుడి ప్రవేశం') + '</a></div></section>' : '') +
-      '<footer style="display:flex;flex-direction:column;align-items:center;gap:2px;text-align:center">' + (IN_BLOG ? '<a href="/?classic=1" style="font-weight:600;padding:10px 0">బ్లాగ్‌ను పాత రూపంలో చూడండి</a><a href="' + APPBASE + '" target="_blank" rel="noopener" style="padding:4px 0 10px">వెబ్‌సైట్ / ఆండ్రాయిడ్ యాప్</a>' : '<a href="' + BLOG + '" target="_blank" rel="noopener" style="font-weight:600;padding:10px 0">బ్లాగ్ తెరవండి · telugupadavinodam.blogspot.com</a>') + '<span style="font-family:var(--font-display);font-size:22px;color:var(--title)">ఈ-పద వినోదం</span><span class="note">వెర్షన్ 0.30' + (IS_CLAUDE ? ' · స్టూడియో' : IN_BLOG ? ' · బ్లాగ్' : '') + (IN_APK ? ' · Android యాప్ ' + (APK_VER || '1') : '') + '</span></footer></div>';
+      '<footer style="display:flex;flex-direction:column;align-items:center;gap:2px;text-align:center">' + (IN_BLOG ? '<a href="/?classic=1" style="font-weight:600;padding:10px 0">బ్లాగ్‌ను పాత రూపంలో చూడండి</a><a href="' + APPBASE + '" target="_blank" rel="noopener" style="padding:4px 0 10px">వెబ్‌సైట్ / ఆండ్రాయిడ్ యాప్</a>' : '<a href="' + BLOG + '" target="_blank" rel="noopener" style="font-weight:600;padding:10px 0">బ్లాగ్ తెరవండి · telugupadavinodam.blogspot.com</a>') + '<span style="font-family:var(--font-display);font-size:22px;color:var(--title)">ఈ-పద వినోదం</span><span class="note">వెర్షన్ 0.31' + (IS_CLAUDE ? ' · స్టూడియో' : IN_BLOG ? ' · బ్లాగ్' : '') + (IN_APK ? ' · Android యాప్ ' + (APK_VER || '1') : '') + '</span></footer></div>';
   }
 
   /* ================= admin: who may manage ================= */
@@ -2472,7 +2472,7 @@ select.inp{font-family:var(--font-ui,inherit);font-size:16px;appearance:auto}
   }
   function keepPublished(d, url) { if (!d) return; d.published = Date.now(); d.pubUrl = url || ''; keepDraft(d, true); if (d.uid) srcToDrive(d.uid, srcKeyOf(d), true); }
   function blogPublish(pz, draft) {
-    U.busy = 'publish'; U.status = { kind: 'wait', text: 'ఈ తేదీ పోస్ట్ బ్లాగ్‌లో ఇప్పటికే ఉందో చూస్తున్నాం…' }; render();
+    U.busy = 'publish'; U.status = { kind: 'wait', text: 'ఈ తేదీ ' + paperOf(pz.paper).te + ' పోస్ట్ బ్లాగ్‌లో ఇప్పటికే ఉందో చూస్తున్నాం…' }; render();
     var title = postTitle(pz);
     // an older admin script (before version 5) lost post bodies: do not publish through it
     var myPaper = paperOf(pz.paper).id;
@@ -3033,13 +3033,16 @@ select.inp{font-family:var(--font-ui,inherit);font-size:16px;appearance:auto}
   }
   // every grid on a page: Eenadu's pink-lined one, and any table of thin lines (other papers); the same grid found both ways
   // is kept once (the pink reading, as before)
+  // two boxes are the same grid when they mostly cover each other (a small grid inside a bigger box — last week's answers
+  // beside a sudoku, inside one pink frame — is a grid of its own)
+  function sameBox(o, g) {
+    var ix = Math.max(0, Math.min(o.x1, g.x1) - Math.max(o.x0, g.x0)), iy = Math.max(0, Math.min(o.y1, g.y1) - Math.max(o.y0, g.y0)), a = (o.x1 - o.x0) * (o.y1 - o.y0), b = (g.x1 - g.x0) * (g.y1 - g.y0);
+    return ix * iy > 0.6 * Math.max(a, b);
+  }
   function findGrids(d, W, H) {
     var out = [], pk = findGrid(d, W, H);
     if (pk) { pk.kind = 'pink'; out.push(pk); }
-    genericGrids(d, W, H).forEach(function (g) {
-      var dup = out.some(function (o) { var ix = Math.max(0, Math.min(o.x1, g.x1) - Math.max(o.x0, g.x0)), iy = Math.max(0, Math.min(o.y1, g.y1) - Math.max(o.y0, g.y0)); return ix * iy > 0.5 * Math.min((o.x1 - o.x0) * (o.y1 - o.y0), (g.x1 - g.x0) * (g.y1 - g.y0)); });
-      if (!dup) out.push(g);
-    });
+    genericGrids(d, W, H).forEach(function (g) { if (!out.some(function (o) { return sameBox(o, g); })) out.push(g); });
     return out;
   }
   // per square: share of coloured samples (Eenadu's stars, leaves, flowers) and of dark ones (black squares or letters); `br`:
@@ -3110,7 +3113,7 @@ select.inp{font-family:var(--font-ui,inherit);font-size:16px;appearance:auto}
       var cs = it.cands.filter(function (c) { return c.cross; }).sort(function (a, b) { return (a.filled - b.filled) || (b.area - a.area); });
       delete it.grid; if (cs[0]) { it.grid = cs[0].grid; it.ink = cs[0].ink; it.filled = cs[0].filled; it.area = cs[0].area; it.pat = cs[0].pat; }
     }
-    function overlaps(o, g) { var ix = Math.max(0, Math.min(o.x1, g.x1) - Math.max(o.x0, g.x0)), iy = Math.max(0, Math.min(o.y1, g.y1) - Math.max(o.y0, g.y0)); return ix * iy > 0.5 * Math.min((o.x1 - o.x0) * (o.y1 - o.y0), (g.x1 - g.x0) * (g.y1 - g.y0)); }
+    function overlaps(o, g) { return sameBox(o, g); }
     pages.forEach(function (pg, i) {
       chain = chain.then(function () { if (note) note(i); return renderPage(pg, 1200); }).then(function (r) {
         var W = r.cv.width, H = r.cv.height, d = r.cv.getContext('2d').getImageData(0, 0, W, H).data, it = { i: i, W: W, H: H, cands: [], pg: pg };
@@ -3168,6 +3171,8 @@ select.inp{font-family:var(--font-ui,inherit);font-size:16px;appearance:auto}
       var same = c.filter(function (x) { return x.grid.R === D.R && x.grid.C === D.C; });
       if (same.length) c = same;
     }
+    // answers: only a grid with letters in it; an empty grid is a puzzle (this week's), never the answers — the admin is told
+    if (kind === 'answers' && !c.length) { if (SC) SC.noFilled = all.length > 0; return null; }
     if (!c.length) c = all;
     c.sort(function (a, b) { return b.area - a.area; });
     return c[0] || null;
@@ -3184,7 +3189,7 @@ select.inp{font-family:var(--font-ui,inherit);font-size:16px;appearance:auto}
       SC = { files: Array.prototype.slice.call(files || []), kind: kind, pages: pages, page: -1, gridPage: -1, mode: 'grid', zoom: 1, quad: null, boxes: [], R: kind === 'answers' && D ? D.R : 12, C: kind === 'answers' && D ? D.C : 12, vals: null, thr: 1, flip: {}, ocr: { A: '', D: '' }, date: date, paper: paper, srcs: {} };
       return analysePages(pages, function (i) { scanMsg('పేజీలు చూస్తున్నాం… ' + (i + 1) + ' / ' + pages.length); }, kind);
     }).then(function (info) {
-      SC.info = info;
+      SC.info = info; if (window.__epvDebug) window.__epvSC = SC;
       var hit = pickGridPage(info, kind);
       return scanPage(hit ? hit.i : 0).then(function () {
         if (!hit) return;
@@ -3204,7 +3209,7 @@ select.inp{font-family:var(--font-ui,inherit);font-size:16px;appearance:auto}
       U.busy = '';
       var found = SC.quad && SC.auto, ans = kind === 'answers';
       U.status = found ? { kind: 'ok', text: (ans ? 'జవాబుల గడి పేజీ ' + (SC.gridPage + 1) + ' లో దొరికింది' + matchNote() + '.' : 'గడి పేజీ ' + (SC.gridPage + 1) + ' లో దొరికింది (' + SC.R + '×' + SC.C + '). ఆధారాలు చదువుతున్నాం…') }
-        : { kind: 'ok', text: ans ? 'జవాబుల గడి చుట్టూ వేలితో పెట్టె గీయండి (ఎరుపు గీతలు గడి గీతలపై పడేలా మూలల చుక్కలు లాగండి), తర్వాత “జవాబులు చదివి డ్రాఫ్ట్‌లో నింపండి” నొక్కండి.' : 'గడి తానుగా దొరకలేదు. గడి చుట్టూ, ఆధారాల చుట్టూ వేలితో పెట్టెలు గీయండి.' };
+        : { kind: 'ok', text: ans ? (SC.noFilled ? 'ఈ ఫైల్‌లో అక్షరాలున్న జవాబుల గడి కనిపించలేదు — ఉన్నది ఖాళీ పద వినోదం గడి (ఆ వారం పజిల్). జవాబులు తర్వాతి వారం పేపర్‌లోని “గతవారం సమాధానాలు” లో ఉంటాయి; ఆ పేజీ ఇవ్వండి, లేదా ' : '') + 'జవాబుల గడి చుట్టూ వేలితో పెట్టె గీయండి (ఎరుపు గీతలు గడి గీతలపై పడేలా మూలల చుక్కలు లాగండి), తర్వాత “జవాబులు చదివి డ్రాఫ్ట్‌లో నింపండి” నొక్కండి.' : 'గడి తానుగా దొరకలేదు. గడి చుట్టూ, ఆధారాల చుట్టూ వేలితో పెట్టెలు గీయండి.' };
       location.hash = '#scan'; if (route() === 'scan') render();
       // found by itself: read straight away; the admin reviews the result on this screen and in the draft
       if (found && !ans && SC.boxes.length) setTimeout(scanOCR, 60);
@@ -4966,7 +4971,8 @@ select.inp{font-family:var(--font-ui,inherit);font-size:16px;appearance:auto}
       case 'publish-blog':
         var bp = draftToPuzzle(D, false), why = v === 'draft' ? (bp.date && /^\d{2}\.\d{2}\.\d{4}$/.test(bp.date) ? '' : 'ముందు తేదీ (DD.MM.YYYY) ఇవ్వండి.') : draftReadyForBlog(bp);
         if (why) { U.status = { kind: 'err', text: why }; render(); toast(why); break; }
-        if (PUZZLES.some(function (p) { return p.date === bp.date && p.postId; }) && U.confirm !== 'dup') { U.confirm = 'dup'; toast(bp.date + ' తేదీతో బ్లాగ్‌లో ఇప్పటికే పోస్ట్ ఉంది. అయినా కొత్తగా వేయాలంటే మళ్ళీ నొక్కండి.'); break; }
+        // the same paper's post of that date only: another paper's puzzle of the same date (ఈనాడు and సాక్షి on 01.11) is a post of its own
+        if (PUZZLES.some(function (p) { return p.postId && pkey(p) === pkey(bp); }) && U.confirm !== 'dup') { U.confirm = 'dup'; toast(bp.date + ' ' + paperOf(bp.paper).te + ' పోస్ట్ బ్లాగ్‌లో ఇప్పటికే ఉంది. అయినా వేయాలంటే మళ్ళీ నొక్కండి (అదే పోస్ట్ సరిదిద్దుతాం).'); break; }
         U.confirm = ''; blogPublish(bp, v === 'draft'); break;
       case 'update-blog':
         var up = draftToPuzzle(D, false), why2 = draftReadyForBlog(up);

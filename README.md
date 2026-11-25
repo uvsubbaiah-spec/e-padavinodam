@@ -49,6 +49,13 @@ A puzzle opens zoomed so that about 7 columns fill a phone's width (a 12×12 boa
 
 **Finding a post:** the home page has a search box (పోస్ట్ వెతకండి): type a date in any common form (01.11.2026, 1/11, 1-11-26, 01112026), a month (నవంబర్ or nov), a year (2025) or part of the title, and tap the post in the list that appears. The archive search understands the same forms.
 
+## New in 0.30 and 0.31
+
+- **The paper's files stay with the post:** the photos / PDFs chosen at **1** and **2** are shown beside the editor as soon as the puzzle is read (the grid's page first) and go to your Google Drive at once (**✓ Drive** on the viewer); they are not asked for or sent again. Answer files given later in the editor are kept the same way; **+ ఫైల్** adds more.
+- **Phone reader, answers:** on a page with both an empty puzzle grid and a small filled answers grid (Eenadu's e-paper page: this week's పదకేళి beside “గతవారం సమాధానాలు”), the answers are now read from the grid that has letters in it, and the red lines are drawn on that grid. A file with only an empty grid is never taken as the answers: the app says so and asks for next week's page (or a box drawn by hand).
+- **The app keeps itself up to date:** each time the Android app (or a phone browser tab) comes back to the screen it looks for a new version. The version is shown at the bottom of అమరికలు (Settings), with the Android app's own number.
+- **Black squares never go black:** if the post's picture cannot load on a phone, the rain picture shows instead.
+
 ## New in 0.28 and 0.29
 
 - **Header and modes stay while playing:** the top bar (title, date, how many squares are filled, zoom − / +, the record button, ✓) and the సులభం / కష్టం / ఆటో row with the timer stay on screen while typing, on the blog and in the app alike, only a little smaller. The row wraps instead of cutting off its words on narrow phones.
